@@ -5,7 +5,7 @@
 **Course:** CO3133 – Bài tập lớn môn Học Sâu và Ứng dụng (2025-2026)  
 **Instructor:** TS. Lê Thành Sách
 
-🌐 **Landing Page & Reports:** [🔗 ML4u AI Research Page](https://caotaytang.github.io/DL_page/)
+🌐 **Landing Page & Reports:** [🔗 ML4u - Học Sâu và Ứng dụng CO3133](https://caotaytang.github.io/DL_page/)
 
 ---
 
@@ -29,7 +29,7 @@ Mỗi bài tập lớn được triển khai với luồng nghiên cứu sâu, b
 - Tiền xử lý dữ liệu & Data Augmentation.
 - Xây dựng mô hình với các block hiện đại (ResNet, Vision Transformer, Transformer, LSTM).
 - Fine-tune các pre-trained models, đánh giá & so sánh hiệu suất qua Accuracy, F1-Score.
-- Viết báo cáo chuẩn hóa theo phong cách *AI Research Paper* và thảo luận kết quả nghiên cứu.
+- Viết báo cáo chuẩn hóa và thảo luận kết quả nghiên cứu cho môn Học Sâu và Ứng dụng CO3133.
 
 ---
 
@@ -38,7 +38,7 @@ Mỗi bài tập lớn được triển khai với luồng nghiên cứu sâu, b
 ```text
 DL_page/
 │── assets/
-│   │── css/                    # Custom CSS (AI Research style)
+│   │── css/                    # Custom CSS
 │   │── images/                 # Hình ảnh trích xuất từ EDA và Charts
 │   │── js/                     # Scripts tương tác (Intersection Observers)
 │── DL_Assignment1_Image.ipynb  # Notebook thực nghiệm dữ liệu Ảnh
