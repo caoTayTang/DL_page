@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTL1 - Phân loại Văn bản</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
+        
+        <article class="report-content">
+            <header class="report-meta">
+                <h1 class="report-title">BTL 1: Phân loại Văn bản (NLP)</h1>
+                <p>Khảo sát các RNN và mô hình phân loại chuỗi Transformer cho tác vụ phân loại văn bản y khoa / review.</p>
+            </header>
+
+            <section class="content-section">
+                <h3>1. Tiền xử lý văn bản (Text Processing)</h3>
+                <p>Dữ liệu dạng text thường chứa nhiễu, URL, và stop words. Quá trình tiền xử lý bao gồm tokenization (BPE/WordPiece) và padding sequence để chuyển đổi câu thành ma trận tensor input.</p>
+                
+                <div class="figures-grid">
+                    <figure class="figure">
+                        <img src="assets/images/text_task_out_0.png" alt="Sentence Length Distribution">
+                        <figcaption>Hình 1: Phân bố số lượng tokens trong câu. Support cho việc chọn max_seq_length.</figcaption>
+                    </figure>
+                    <figure class="figure">
+                        <img src="assets/images/text_task_out_1.png" alt="Loss curve">
+                        <figcaption>Hình 2: Biểu đồ hội tụ qua các epochs khi dùng BERT tokenizer.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h3>2. LSTM vs Transformers (BERT)</h3>
+                <p>Nghiên cứu đối chiếu khả năng xử lý ngữ cảnh dài của **LSTM hai chiều (BiLSTM)** đối với kiến trúc **Transformers (DistilBERT)**. DistilBERT nhanh chóng chứng minh ưu thế về khả năng attention toàn cục, cho chỉ số F1-Score vượt trên 10% đỉnh tại epoch 15 so với đường cơ sở LSTM.</p>
+                
+                <div class="figures-grid">
+                    <figure class="figure">
+                        <img src="assets/images/text_task_out_2.png" alt="Model Evaluation">
+                        <figcaption>Hình 3: Đánh giá AUC / ROC Curve của DistilBERT Classification.</figcaption>
+                    </figure>
+                    <figure class="figure">
+                        <img src="assets/images/text_task_out_3.png" alt="Results Overview">
+                        <figcaption>Hình 4: Trực quan hóa ma trận biểu diễn từ (Word Embeddings) sau huấn luyện (tSNE / PCA).</figcaption>
+                    </figure>
+                </div>
+            </section>
+        </article>
+    </div>
+</body>
+</html>

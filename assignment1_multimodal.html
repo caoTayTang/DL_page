@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTL1 - Phân loại Đa mô thức</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
+        
+        <article class="report-content">
+            <header class="report-meta">
+                <h1 class="report-title">BTL 1: Phân loại Đa phương thức (Multimodal)</h1>
+                <p>Nghiên cứu mô hình kết hợp Ảnh và Văn bản thông qua Zero-shot và Few-shot Learning.</p>
+            </header>
+
+            <section class="content-section">
+                <h3>1. Tổng quan Đa phương thức (VQA & CLIP)</h3>
+                <p>Thay vì huấn luyện mô hình dự đoán nhãn tĩnh, nhóm tiến hành trích xuất Feature Embeddings từ cả nhánh Text (Text Encoder) và nhánh Image (Image Encoder), ánh xạ chúng vào cùng một không gian hình học. Điển hình sử dụng kiến trúc CLIP của OpenAI.</p>
+            </section>
+
+            <section class="content-section">
+                <h3>2. Zero-shot vs Few-shot Classification</h3>
+                <p><strong>Zero-shot:</strong> Sử dụng Text prompt dưới dạng "A photo of {class_name}" để map với ảnh mà không cần bất kỳ mẫu train nào. Zero-shot phát huy sức mạnh đáng gờm tại đa dataset.</p>
+                <p><strong>Few-shot:</strong> Bằng cách kết hợp thêm bộ phận Learnable Prompt (CoOp / CLIP-Adapter) sử dụng với 1-5 shots mỗi lớp, độ nhạy của độ chính xác có thể tăng thêm từ $5\% \rightarrow 10\%$.</p>
+                
+                <div class="figures-grid">
+                    <figure class="figure">
+                        <img src="assets/images/image_task_out_2.png" alt="Zero shot accuracy comparisons">
+                        <figcaption>Hình 1: Đồ thị so sánh Zero-shot Accuracy vs Fine-tune Linear Probe.</figcaption>
+                    </figure>
+                    <figure class="figure">
+                        <img src="assets/images/text_task_out_4.png" alt="Failure cases Multimodal">
+                        <figcaption>Hình 2: Phân tích các trường hợp Multimodal Align thất bại do mâu thuẫn semantic image-text.</figcaption>
+                    </figure>
+                </div>
+            </section>
+        </article>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTL1 - Phân loại Ảnh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
+        
+        <article class="report-content">
+            <header class="report-meta">
+                <h1 class="report-title">BTL 1: Phân loại Ảnh (CNN & ViT)</h1>
+                <p>Khảo sát hiệu năng và thời gian hội tụ của các kiến trúc thị giác máy tính trên dữ liệu ảnh.</p>
+            </header>
+
+            <section class="content-section">
+                <h3>1. Khám phá Dữ liệu (EDA)</h3>
+                <p>Quá trình xây dựng mô hình phân loại ảnh bắt đầu với việc tiền xử lý và tăng cường (Data Augmentation) để giảm overfitting. Tập dữ liệu bao gồm các hình ảnh kích thước lớn, yêu cầu resize và normalize trước khi đưa vào PyTorch DataLoader.</p>
+                
+                <div class="figures-grid">
+                    <figure class="figure">
+                        <img src="assets/images/image_task_out_0.png" alt="EDA Charts">
+                        <figcaption>Hình 1: Thống kê số lượng mẫu và phân bố Class của dữ liệu ảnh.</figcaption>
+                    </figure>
+                    <figure class="figure">
+                        <img src="assets/images/image_task_out_1.png" alt="Sample Images">
+                        <figcaption>Hình 2: Trực quan hóa một vài mẫu dữ liệu ảnh ngẫu nhiên sau khi Augmentation.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h3>2. Huấn luyện (Training) & Đánh giá (Evaluation)</h3>
+                <p>Hai kiến trúc được so sánh trực tiếp là <strong>Convolutional Neural Networks</strong> (Ví dụ: ResNet, EfficientNet) và <strong>Vision Transformers</strong> (ViT-Base).</p>
+                <p>ViT yêu cầu tập dữ liệu lớn để học được các representation mạnh do không có các inductive biases của Convolution layer. Trong khi đó, CNN hội tụ nhanh hơn trên các tập dữ liệu trung bình.</p>
+                
+                <div class="figures-grid">
+                    <figure class="figure">
+                        <img src="assets/images/image_task_out_3.png" alt="Training Metrics">
+                        <figcaption>Hình 3: Đồ thị Loss và Accuracy trong quá trình huấn luyện mô hình Ảnh.</figcaption>
+                    </figure>
+                    <figure class="figure">
+                        <img src="assets/images/image_task_out_4.png" alt="Model Evaluation">
+                        <figcaption>Hình 4: Confusion Matrix đánh giá sự phân loại sai giữa các cặp lớp khó phân biệt.</figcaption>
+                    </figure>
+                </div>
+            </section>
+        </article>
+    </div>
+</body>
+</html>
