@@ -445,13 +445,13 @@
         <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
 
         <header class="hero">
-            <h1>BTL 1 - Image Classification Report (CNN, ViT, Swin)</h1>
+            <h1>BTL 1 - Image Classification Report</h1>
             <p>
                 Trang báo cáo tổng hợp cho notebook Assignment 1, tập trung vào pipeline từ EDA, thiết kế mô hình,
-                huấn luyện trên 8 cấu hình (4 backbone x Aug/No-Aug), đến phân tích lỗi bằng GradCAM/EigenCAM.
+                huấn luyện trên 8 cấu hình (4 backbone x Aug/No-Aug), trực quan hóa bằng GradCAM/EigenCAM.
             </p>
             <div class="chip-row">
-                <span class="chip">Dataset: Animals-10</span>
+                <a href="https://www.kaggle.com/datasets/alessiocorrado99/animals10/data" class="chip">Dataset: Animals-10</a>
                 <span class="chip">Framework: PyTorch + timm</span>
                 <span class="chip">Tracking: Weights & Biases</span>
                 <span class="chip">Target: 10 lớp ảnh</span>
@@ -477,8 +477,7 @@
             </div>
             <p>
                 Bài toán là phân loại ảnh động vật đa lớp, đầu vào ảnh RGB được resize về 224x224 và chuẩn hóa theo
-                cấu hình từng backbone. Mục tiêu là tối ưu hiệu năng tổng quát hóa (macro F1/Accuracy) và đánh giá khả năng
-                hội tụ khi thay đổi kiến trúc và augmentation.
+                cấu hình từng backbone. Mục tiêu là tối ưu hiệu năng tổng quát hóa (macro F1/Accuracy) và đánh giá kết quả khi thay đổi backbone và augmentation.
             </p>
             <div class="kpis">
                 <div class="kpi">
@@ -490,7 +489,7 @@
                     <div class="value">10 classes</div>
                 </div>
                 <div class="kpi">
-                    <div class="label">Tiêu chí chính</div>
+                    <div class="label">Metrics</div>
                     <div class="value">Macro F1 + Accuracy</div>
                 </div>
                 <div class="kpi">
@@ -506,8 +505,7 @@
                 <h2>EDA (Exploratory Data Analysis)</h2>
             </div>
             <p>
-                Trực quan hóa phân bố mẫu theo lớp và xem nhanh ảnh sau bước resize/augmentation để kiểm tra chất lượng dữ liệu.
-                Bạn có thể thay trực tiếp các placeholder bằng ảnh xuất từ notebook.
+                Trực quan hóa phân bố mẫu theo lớp và vài sample ảnh trước bước resize/augmentation để kiểm tra chất lượng dữ liệu.
             </p>
             <div class="grid-2">
                 <figure class="card-figure auto-map" data-map="eda-1">
@@ -517,14 +515,6 @@
                 <figure class="card-figure auto-map" data-map="eda-2">
                     <img src="assets/images/image_task_out_1.png" alt="Minh họa ảnh mẫu sau augmentation">
                     <figcaption>Ảnh mẫu ngẫu nhiên sau tiền xử lý và augmentation.</figcaption>
-                </figure>
-                <figure class="card-figure auto-map" data-map="eda-3">
-                    <div class="img-placeholder">Placeholder - EDA image #3 (thêm biểu đồ chất lượng ảnh, mean/std...)</div>
-                    <figcaption>Vùng giữ chỗ cho EDA bổ sung.</figcaption>
-                </figure>
-                <figure class="card-figure auto-map" data-map="eda-4">
-                    <div class="img-placeholder">Placeholder - EDA image #4 (thêm ví dụ outlier / class khó)</div>
-                    <figcaption>Vùng giữ chỗ cho phân tích ảnh khó.</figcaption>
                 </figure>
             </div>
         </section>
