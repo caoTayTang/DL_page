@@ -1,56 +1,946 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="assets/images/hcmut.webp">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTL1 - Phân loại Ảnh</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/hcmut.webp">
+    <title>BTL1 - Image Classification Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f5f7ef;
+            --ink: #1e2a24;
+            --muted: #53615a;
+            --panel: #fefcf7;
+            --line: #d8dfd2;
+            --accent: #f0652a;
+            --accent-2: #1f9d8b;
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 0% 0%, #dcefcf 0%, transparent 35%),
+                radial-gradient(circle at 100% 0%, #f7d6b6 0%, transparent 38%),
+                var(--bg);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .progress-track {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.45);
+            z-index: 999;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width 0.15s linear;
+        }
+
+        .container {
+            width: min(1180px, 92vw);
+            margin: 0 auto;
+            padding: 2rem 0 4rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            margin-bottom: 1.2rem;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+        }
+
+        .back-link:hover {
+            border-color: var(--accent);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: calc(var(--radius) + 8px);
+            background:
+                linear-gradient(135deg, #fffaf0 0%, #f2fff8 52%, #f9f4ea 100%);
+            padding: 2.2rem;
+            margin-bottom: 1.4rem;
+            box-shadow: 0 22px 42px rgba(64, 86, 72, 0.14);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            right: -90px;
+            bottom: -110px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(31, 157, 139, 0.32), transparent 70%);
+        }
+
+        .hero h1 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(1.9rem, 3.6vw, 3rem);
+            line-height: 1.2;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 760px;
+            margin-bottom: 1.2rem;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            font-size: 0.85rem;
+            padding: 0.35rem 0.65rem;
+            border: 1px solid #cad7cc;
+            border-radius: 999px;
+            background: #fff;
+            color: #294239;
+            font-weight: 700;
+        }
+
+        .chip.mono {
+            font-family: "Consolas", "Courier New", monospace;
+            font-weight: 700;
+        }
+
+        .toc {
+            position: sticky;
+            top: 14px;
+            z-index: 10;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            background: rgba(254, 252, 247, 0.86);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(5px);
+            padding: 0.75rem;
+            border-radius: 14px;
+            margin-bottom: 1.2rem;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #2f3f38;
+            font-size: 0.82rem;
+            padding: 0.4rem 0.55rem;
+            border-radius: 9px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .toc a:hover,
+        .toc a.active {
+            color: #122019;
+            background: #fff;
+            border-color: #bfd1c3;
+        }
+
+        .section-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 2.2vw, 1.7rem);
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+
+        .section-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 0.7rem;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px dashed #d3dacd;
+            padding-bottom: 0.55rem;
+        }
+
+        .section-head .idx {
+            font-family: "Space Grotesk", sans-serif;
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+        }
+
+        .section-card p {
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 0.7rem;
+            margin-top: 0.35rem;
+        }
+
+        .kpi {
+            background: #fff;
+            border: 1px solid #d8e1d7;
+            border-radius: 13px;
+            padding: 0.8rem;
+        }
+
+        .kpi .label {
+            color: #5d6f67;
+            font-size: 0.83rem;
+        }
+
+        .kpi .value {
+            font-weight: 800;
+            font-size: 1.02rem;
+            margin-top: 0.12rem;
+            color: #1f2d26;
+        }
+
+        .grid-2,
+        .grid-4 {
+            display: grid;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+        figure.card-figure {
+            border: 1px solid #d6ddd2;
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        figure.card-figure:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 22px rgba(41, 65, 54, 0.13);
+        }
+
+        .card-figure img,
+        .img-placeholder {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-placeholder {
+            border-bottom: 1px solid #dae3d6;
+            background: repeating-linear-gradient(
+                -45deg,
+                #ecf2e9,
+                #ecf2e9 12px,
+                #f7fbf6 12px,
+                #f7fbf6 24px
+            );
+            color: #627469;
+            font-weight: 700;
+            text-align: center;
+            padding: 1.2rem 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-figure figcaption {
+            padding: 0.65rem 0.8rem;
+            font-size: 0.86rem;
+            color: #4f6258;
+        }
+
+        .code-box {
+            margin-top: 0.75rem;
+            background: #1f2724;
+            border-radius: 12px;
+            overflow: auto;
+            border: 1px solid #34403b;
+        }
+
+        .code-box pre {
+            color: #ecf7f0;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            padding: 1rem;
+            min-width: 480px;
+        }
+
+        .backbone-card {
+            border: 1px solid #d8dfd3;
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .backbone-card .head {
+            padding: 0.7rem;
+            border-bottom: 1px solid #e1e8dc;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .training-tabs {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+
+        .tab-btn,
+        .filter-btn {
+            border: 1px solid #bccbc0;
+            background: #fff;
+            color: #274038;
+            border-radius: 10px;
+            padding: 0.45rem 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.82rem;
+        }
+
+        .tab-btn.active,
+        .filter-btn.active {
+            background: #223730;
+            color: #f2fff7;
+            border-color: #223730;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .confusion-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .compare-item {
+            border: 1px solid #dae2d6;
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .compare-item .title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 0.45rem 0.6rem;
+            border-bottom: 1px solid #e1e8de;
+            color: #32453d;
+        }
+
+        .compare-item .img-placeholder {
+            height: 170px;
+            font-size: 0.84rem;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 20, 16, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .lightbox.open { display: flex; }
+
+        .lightbox img {
+            width: min(1100px, 96vw);
+            max-height: 90vh;
+            border-radius: 14px;
+            border: 2px solid #f2f6f3;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            color: white;
+            font-size: 1.9rem;
+            cursor: pointer;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        @media (max-width: 980px) {
+            .compare-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 680px) {
+            .container { width: min(100%, 94vw); }
+            .hero { padding: 1.35rem; }
+            .section-card { border-radius: 16px; }
+            .card-figure img,
+            .img-placeholder { height: 180px; }
+            .compare-row { grid-template-columns: 1fr; }
+            .code-box pre { min-width: 100%; }
+        }
+    </style>
 </head>
 <body>
+    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
     <div class="container">
         <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
-        
-        <article class="report-content">
-            <header class="report-meta">
-                <h1 class="report-title">BTL 1: Phân loại Ảnh (CNN & ViT)</h1>
-                <p>Khảo sát hiệu năng và thời gian hội tụ của các kiến trúc thị giác máy tính trên dữ liệu ảnh.</p>
-            </header>
 
-            <section class="content-section">
-                <h3>1. Khám phá Dữ liệu (EDA)</h3>
-                <p>Quá trình xây dựng mô hình phân loại ảnh bắt đầu với việc tiền xử lý và tăng cường (Data Augmentation) để giảm overfitting. Tập dữ liệu bao gồm các hình ảnh kích thước lớn, yêu cầu resize và normalize trước khi đưa vào PyTorch DataLoader.</p>
-                
-                <div class="figures-grid">
-                    <figure class="figure">
-                        <img src="assets/images/image_task_out_0.png" alt="EDA Charts">
-                        <figcaption>Hình 1: Thống kê số lượng mẫu và phân bố Class của dữ liệu ảnh.</figcaption>
-                    </figure>
-                    <figure class="figure">
-                        <img src="assets/images/image_task_out_1.png" alt="Sample Images">
-                        <figcaption>Hình 2: Trực quan hóa một vài mẫu dữ liệu ảnh ngẫu nhiên sau khi Augmentation.</figcaption>
+        <header class="hero">
+            <h1>BTL 1 - Image Classification Report (CNN, ViT, Swin)</h1>
+            <p>
+                Trang báo cáo tổng hợp cho notebook Assignment 1, tập trung vào pipeline từ EDA, thiết kế mô hình,
+                huấn luyện trên 8 cấu hình (4 backbone x Aug/No-Aug), đến phân tích lỗi bằng GradCAM/EigenCAM.
+            </p>
+            <div class="chip-row">
+                <span class="chip">Dataset: Animals-10</span>
+                <span class="chip">Framework: PyTorch + timm</span>
+                <span class="chip">Tracking: Weights & Biases</span>
+                <span class="chip">Target: 10 lớp ảnh</span>
+                <span class="chip mono">Auto-map: assets/images/*</span>
+            </div>
+        </header>
+
+        <nav class="toc" id="toc">
+            <a href="#intro">Giới thiệu</a>
+            <a href="#eda">EDA</a>
+            <a href="#data-split">Data Split & Loader</a>
+            <a href="#backbone">Backbone</a>
+            <a href="#head">Custom Head</a>
+            <a href="#training">Training</a>
+            <a href="#comparison">So sánh mô hình</a>
+            <a href="#experiments">Kết quả thực nghiệm</a>
+        </nav>
+
+        <section class="section-card reveal" id="intro">
+            <div class="section-head">
+                <span class="idx">01</span>
+                <h2>Giới thiệu và mô tả bài toán</h2>
+            </div>
+            <p>
+                Bài toán là phân loại ảnh động vật đa lớp, đầu vào ảnh RGB được resize về 224x224 và chuẩn hóa theo
+                cấu hình từng backbone. Mục tiêu là tối ưu hiệu năng tổng quát hóa (macro F1/Accuracy) và đánh giá khả năng
+                hội tụ khi thay đổi kiến trúc và augmentation.
+            </p>
+            <div class="kpis">
+                <div class="kpi">
+                    <div class="label">Bài toán</div>
+                    <div class="value">Multi-class Classification</div>
+                </div>
+                <div class="kpi">
+                    <div class="label">Số lớp</div>
+                    <div class="value">10 classes</div>
+                </div>
+                <div class="kpi">
+                    <div class="label">Tiêu chí chính</div>
+                    <div class="value">Macro F1 + Accuracy</div>
+                </div>
+                <div class="kpi">
+                    <div class="label">Số cấu hình chạy</div>
+                    <div class="value">8 experiments</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="eda">
+            <div class="section-head">
+                <span class="idx">02</span>
+                <h2>EDA (Exploratory Data Analysis)</h2>
+            </div>
+            <p>
+                Trực quan hóa phân bố mẫu theo lớp và xem nhanh ảnh sau bước resize/augmentation để kiểm tra chất lượng dữ liệu.
+                Bạn có thể thay trực tiếp các placeholder bằng ảnh xuất từ notebook.
+            </p>
+            <div class="grid-2">
+                <figure class="card-figure auto-map" data-map="eda-1">
+                    <img src="assets/images/image_task_out_0.png" alt="Phân bố lớp dữ liệu Animals-10">
+                    <figcaption>Phân bố số lượng mẫu theo từng lớp.</figcaption>
+                </figure>
+                <figure class="card-figure auto-map" data-map="eda-2">
+                    <img src="assets/images/image_task_out_1.png" alt="Minh họa ảnh mẫu sau augmentation">
+                    <figcaption>Ảnh mẫu ngẫu nhiên sau tiền xử lý và augmentation.</figcaption>
+                </figure>
+                <figure class="card-figure auto-map" data-map="eda-3">
+                    <div class="img-placeholder">Placeholder - EDA image #3 (thêm biểu đồ chất lượng ảnh, mean/std...)</div>
+                    <figcaption>Vùng giữ chỗ cho EDA bổ sung.</figcaption>
+                </figure>
+                <figure class="card-figure auto-map" data-map="eda-4">
+                    <div class="img-placeholder">Placeholder - EDA image #4 (thêm ví dụ outlier / class khó)</div>
+                    <figcaption>Vùng giữ chỗ cho phân tích ảnh khó.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="data-split">
+            <div class="section-head">
+                <span class="idx">03</span>
+                <h2>Cách chia Data Split và DataLoader</h2>
+            </div>
+            <p>
+                Dữ liệu được chia stratified theo tỉ lệ 70/15/15 để đảm bảo phân phối lớp ổn định giữa train/val/test.
+                Mỗi model dùng transform riêng dựa trên data config từ timm.
+            </p>
+            <div class="kpis">
+                <div class="kpi"><div class="label">Train</div><div class="value">70%</div></div>
+                <div class="kpi"><div class="label">Validation</div><div class="value">15%</div></div>
+                <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
+                <div class="kpi"><div class="label">Batch size</div><div class="value">32</div></div>
+            </div>
+            <div class="code-box">
+<pre>def make_splits(root, train_ratio=0.70, val_ratio=0.15, seed=42):
+    base = ImageFolder(root)
+    labels = [s[1] for s in base.samples]
+    indices = list(range(len(labels)))
+    train_idx, temp_idx, y_train, y_temp = train_test_split(
+        indices, labels, test_size=1-train_ratio, stratify=labels, random_state=seed
+    )
+    rel_val = val_ratio / (1 - train_ratio)
+    val_idx, test_idx, _, _ = train_test_split(
+        temp_idx, y_temp, test_size=1-rel_val, stratify=y_temp, random_state=seed
+    )
+    return train_idx, val_idx, test_idx</pre>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="backbone">
+            <div class="section-head">
+                <span class="idx">04</span>
+                <h2>Lựa chọn mô hình Backbone (4 loại)</h2>
+            </div>
+            <p>
+                So sánh 2 đại diện CNN (ResNet18, EfficientNet-B0) và 2 Transformer-based models (ViT-B16, Swin-T).
+                Mỗi backbone có ảnh minh họa kiến trúc để người đọc nắm nhanh ưu/nhược điểm.
+            </p>
+            <div class="grid-4">
+                <div class="backbone-card">
+                    <div class="head"><span>ResNet18</span><span>CNN</span></div>
+                    <figure class="card-figure auto-map" data-map="backbone-resnet18">
+                        <div class="img-placeholder">Placeholder backbone ResNet18</div>
+                        <figcaption>Residual learning, hội tụ nhanh và baseline mạnh.</figcaption>
                     </figure>
                 </div>
-            </section>
-
-            <section class="content-section">
-                <h3>2. Huấn luyện (Training) & Đánh giá (Evaluation)</h3>
-                <p>Hai kiến trúc được so sánh trực tiếp là <strong>Convolutional Neural Networks</strong> (Ví dụ: ResNet, EfficientNet) và <strong>Vision Transformers</strong> (ViT-Base).</p>
-                <p>ViT yêu cầu tập dữ liệu lớn để học được các representation mạnh do không có các inductive biases của Convolution layer. Trong khi đó, CNN hội tụ nhanh hơn trên các tập dữ liệu trung bình.</p>
-                
-                <div class="figures-grid">
-                    <figure class="figure">
-                        <img src="assets/images/image_task_out_3.png" alt="Training Metrics">
-                        <figcaption>Hình 3: Đồ thị Loss và Accuracy trong quá trình huấn luyện mô hình Ảnh.</figcaption>
-                    </figure>
-                    <figure class="figure">
-                        <img src="assets/images/image_task_out_4.png" alt="Model Evaluation">
-                        <figcaption>Hình 4: Confusion Matrix đánh giá sự phân loại sai giữa các cặp lớp khó phân biệt.</figcaption>
+                <div class="backbone-card">
+                    <div class="head"><span>EfficientNetB0</span><span>CNN</span></div>
+                    <figure class="card-figure auto-map" data-map="backbone-efficientnetb0">
+                        <div class="img-placeholder">Placeholder backbone EfficientNetB0</div>
+                        <figcaption>Compound scaling, cân bằng tốt giữa acc và compute.</figcaption>
                     </figure>
                 </div>
-            </section>
-        </article>
+                <div class="backbone-card">
+                    <div class="head"><span>ViT-B16</span><span>Transformer</span></div>
+                    <figure class="card-figure auto-map" data-map="backbone-vit-b16">
+                        <div class="img-placeholder">Placeholder backbone ViT-B16</div>
+                        <figcaption>Patch tokenization, học global context tốt.</figcaption>
+                    </figure>
+                </div>
+                <div class="backbone-card">
+                    <div class="head"><span>Swin-T</span><span>Transformer</span></div>
+                    <figure class="card-figure auto-map" data-map="backbone-swin-t">
+                        <div class="img-placeholder">Placeholder backbone Swin-T</div>
+                        <figcaption>Window attention phân cấp, hiệu quả bộ nhớ.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="head">
+            <div class="section-head">
+                <span class="idx">05</span>
+                <h2>Custom Head Classifier: Code + Minh họa</h2>
+            </div>
+            <p>
+                Dùng một head chung cho mọi backbone: Linear -> BatchNorm -> ReLU -> Dropout -> Linear,
+                giúp so sánh backbone công bằng hơn và hạn chế overfitting.
+            </p>
+            <div class="grid-2">
+                <div>
+                    <div class="code-box">
+<pre>class AnimalClassifier(nn.Module):
+    def __init__(self, timm_name, n_classes, hidden_dim=512):
+        super().__init__()
+        self.backbone = timm.create_model(timm_name, pretrained=True, num_classes=0)
+        in_features = self.get_in_features()
+        self.head = nn.Sequential(
+            nn.Linear(in_features, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(hidden_dim, n_classes),
+        )
+
+    def forward(self, x):
+        return self.head(self.backbone(x))</pre>
+                    </div>
+                </div>
+                <figure class="card-figure auto-map" data-map="custom-head">
+                    <div class="img-placeholder">Placeholder sơ đồ backbone + custom head</div>
+                    <figcaption>Sơ đồ khối: Backbone (feature extractor) + MLP classifier head.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="training">
+            <div class="section-head">
+                <span class="idx">06</span>
+                <h2>Kết quả Training (WandB: loss, acc, f1, ...)</h2>
+            </div>
+            <p>
+                Chuyển tab để xem các nhóm biểu đồ train/val theo metric. Tất cả khung ảnh dưới đây là vùng gắn nhanh screenshot từ W&amp;B.
+            </p>
+
+            <div class="training-tabs" role="tablist" aria-label="Training Metrics Tabs">
+                <button class="tab-btn active" data-tab="loss">Loss Curves</button>
+                <button class="tab-btn" data-tab="acc">Accuracy Curves</button>
+                <button class="tab-btn" data-tab="f1">F1/Precision/Recall</button>
+            </div>
+
+            <div class="tab-panel active" data-panel="loss">
+                <div class="grid-2">
+                    <figure class="card-figure auto-map" data-map="train-loss"><div class="img-placeholder">WandB Train Loss (all runs)</div><figcaption>Train loss toàn bộ 8 run.</figcaption></figure>
+                    <figure class="card-figure auto-map" data-map="val-loss"><div class="img-placeholder">WandB Val Loss (all runs)</div><figcaption>Validation loss toàn bộ 8 run.</figcaption></figure>
+                </div>
+            </div>
+
+            <div class="tab-panel" data-panel="acc">
+                <div class="grid-2">
+                    <figure class="card-figure auto-map" data-map="train-acc"><div class="img-placeholder">WandB Train Accuracy</div><figcaption>Train accuracy từng backbone.</figcaption></figure>
+                    <figure class="card-figure auto-map" data-map="val-acc"><div class="img-placeholder">WandB Val Accuracy</div><figcaption>Validation accuracy từng backbone.</figcaption></figure>
+                </div>
+            </div>
+
+            <div class="tab-panel" data-panel="f1">
+                <div class="grid-2">
+                    <figure class="card-figure auto-map" data-map="val-f1"><div class="img-placeholder">WandB Val Macro F1</div><figcaption>Macro F1 theo epoch.</figcaption></figure>
+                    <figure class="card-figure auto-map" data-map="val-pr"><div class="img-placeholder">WandB Precision/Recall</div><figcaption>Macro precision/recall theo epoch.</figcaption></figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="comparison">
+            <div class="section-head">
+                <span class="idx">07</span>
+                <h2>So sánh mô hình: 4 Backbone x (Aug / No-Aug)</h2>
+            </div>
+            <p>
+                Bộ lọc dưới đây giúp xem nhanh kết quả theo điều kiện augmentation. Bao gồm biểu đồ so sánh F1 và confusion matrix của từng model.
+            </p>
+
+            <div class="training-tabs" aria-label="Augmentation Filter">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="aug">Aug</button>
+                <button class="filter-btn" data-filter="noaug">No Aug</button>
+            </div>
+
+            <div class="grid-2" id="comparisonGallery">
+                <figure class="card-figure auto-map" data-map="f1-all" data-tag="all">
+                    <div class="img-placeholder">Biểu đồ tổng hợp F1 cho 8 cấu hình</div>
+                    <figcaption>Comparison bar chart: ResNet/EffNet/ViT/Swin với Aug vs No-Aug.</figcaption>
+                </figure>
+                <figure class="card-figure auto-map" data-map="f1-aug" data-tag="aug">
+                    <div class="img-placeholder">F1 riêng nhóm Aug</div>
+                    <figcaption>Macro F1 khi bật augmentation.</figcaption>
+                </figure>
+                <figure class="card-figure auto-map" data-map="f1-noaug" data-tag="noaug">
+                    <div class="img-placeholder">F1 riêng nhóm No-Aug</div>
+                    <figcaption>Macro F1 khi không augmentation.</figcaption>
+                </figure>
+            </div>
+
+            <h3 style="margin-top: 1rem; font-size: 1.02rem;">Confusion Matrix cho từng model</h3>
+            <div class="confusion-gallery">
+                <figure class="card-figure auto-map" data-map="cm-resnet18-aug" data-tag="aug"><div class="img-placeholder">CM - ResNet18_aug</div><figcaption>Confusion Matrix ResNet18_aug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-resnet18-noaug" data-tag="noaug"><div class="img-placeholder">CM - ResNet18_noaug</div><figcaption>Confusion Matrix ResNet18_noaug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-efficientnetb0-aug" data-tag="aug"><div class="img-placeholder">CM - EfficientNetB0_aug</div><figcaption>Confusion Matrix EfficientNetB0_aug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-efficientnetb0-noaug" data-tag="noaug"><div class="img-placeholder">CM - EfficientNetB0_noaug</div><figcaption>Confusion Matrix EfficientNetB0_noaug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-vit-b16-aug" data-tag="aug"><div class="img-placeholder">CM - ViT_B16_aug</div><figcaption>Confusion Matrix ViT_B16_aug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-vit-b16-noaug" data-tag="noaug"><div class="img-placeholder">CM - ViT_B16_noaug</div><figcaption>Confusion Matrix ViT_B16_noaug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-swint-aug" data-tag="aug"><div class="img-placeholder">CM - SwinT_aug</div><figcaption>Confusion Matrix SwinT_aug</figcaption></figure>
+                <figure class="card-figure auto-map" data-map="cm-swint-noaug" data-tag="noaug"><div class="img-placeholder">CM - SwinT_noaug</div><figcaption>Confusion Matrix SwinT_noaug</figcaption></figure>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="experiments">
+            <div class="section-head">
+                <span class="idx">08</span>
+                <h2>Kết quả thực nghiệm: mẫu sai và GradCAM/EigenCAM</h2>
+            </div>
+            <p>
+                Trình bày các mẫu model dự đoán sai để phân tích failure cases, sau đó đối chiếu bản đồ kích hoạt giữa các mô hình.
+            </p>
+
+            <div class="grid-2">
+                <figure class="card-figure auto-map" data-map="misclassified-grid">
+                    <div class="img-placeholder">Grid ảnh dự đoán sai (misclassified samples)</div>
+                    <figcaption>Các mẫu fail tiêu biểu (true label vs predicted label + confidence).</figcaption>
+                </figure>
+                <figure class="card-figure auto-map" data-map="error-distribution">
+                    <div class="img-placeholder">Phân bố lỗi theo class (bar chart / table)</div>
+                    <figcaption>Tần suất lỗi theo từng lớp giúp xác định cặp lớp khó.</figcaption>
+                </figure>
+            </div>
+
+            <h3 style="margin-top: 1rem; font-size: 1.02rem;">So sánh attention map (4 model trên 1 hàng)</h3>
+            <div class="compare-row">
+                <div class="compare-item">
+                    <div class="title">ResNet18 - GradCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-resnet18"><div class="img-placeholder">Overlay placeholder</div></figure>
+                </div>
+                <div class="compare-item">
+                    <div class="title">EfficientNetB0 - GradCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-efficientnetb0"><div class="img-placeholder">Overlay placeholder</div></figure>
+                </div>
+                <div class="compare-item">
+                    <div class="title">ViT_B16 - EigenCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-vit-b16"><div class="img-placeholder">Overlay placeholder</div></figure>
+                </div>
+                <div class="compare-item">
+                    <div class="title">SwinT - EigenCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-swint"><div class="img-placeholder">Overlay placeholder</div></figure>
+                </div>
+            </div>
+        </section>
     </div>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img id="lightboxImage" alt="Preview">
+    </div>
+
+    <script>
+        const progressBar = document.getElementById("progressBar");
+        window.addEventListener("scroll", () => {
+            const scrolled = window.scrollY;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            const percent = height > 0 ? (scrolled / height) * 100 : 0;
+            progressBar.style.width = percent + "%";
+        });
+
+        const reveals = document.querySelectorAll(".reveal");
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.12 });
+        reveals.forEach((item) => sectionObserver.observe(item));
+
+        const tocLinks = document.querySelectorAll("#toc a");
+        const sections = Array.from(document.querySelectorAll("section[id]"));
+        window.addEventListener("scroll", () => {
+            const y = window.scrollY + 180;
+            let current = sections[0]?.id || "";
+            sections.forEach((sec) => {
+                if (y >= sec.offsetTop) {
+                    current = sec.id;
+                }
+            });
+            tocLinks.forEach((a) => {
+                a.classList.toggle("active", a.getAttribute("href") === "#" + current);
+            });
+        });
+
+        const tabs = document.querySelectorAll(".tab-btn");
+        const tabPanels = document.querySelectorAll(".tab-panel");
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                tabs.forEach((t) => t.classList.remove("active"));
+                tab.classList.add("active");
+                const key = tab.dataset.tab;
+                tabPanels.forEach((panel) => {
+                    panel.classList.toggle("active", panel.dataset.panel === key);
+                });
+            });
+        });
+
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const filterTargets = document.querySelectorAll("[data-tag]");
+        filterButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                filterButtons.forEach((b) => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                const mode = btn.dataset.filter;
+                filterTargets.forEach((item) => {
+                    const tag = item.dataset.tag;
+                    const show = mode === "all" || tag === "all" || tag === mode;
+                    item.style.display = show ? "block" : "none";
+                });
+            });
+        });
+
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImage = document.getElementById("lightboxImage");
+        const lightboxClose = document.getElementById("lightboxClose");
+
+        const imageBase = "assets/images/";
+        const imageMap = {
+            "eda-1": ["eda_01.png", "image_task_out_0.png"],
+            "eda-2": ["eda_02.png", "image_task_out_1.png"],
+            "eda-3": ["eda_03.png", "image_task_out_2.png"],
+            "eda-4": ["eda_04.png"],
+            "backbone-resnet18": ["backbone_resnet18.png"],
+            "backbone-efficientnetb0": ["backbone_efficientnetb0.png"],
+            "backbone-vit-b16": ["backbone_vit_b16.png"],
+            "backbone-swin-t": ["backbone_swint.png"],
+            "custom-head": ["custom_head_classifier.png"],
+            "train-loss": ["wandb_train_loss.png", "image_task_out_3.png"],
+            "val-loss": ["wandb_val_loss.png", "image_task_out_4.png"],
+            "train-acc": ["wandb_train_acc.png"],
+            "val-acc": ["wandb_val_acc.png"],
+            "val-f1": ["wandb_val_f1.png"],
+            "val-pr": ["wandb_val_precision_recall.png"],
+            "f1-all": ["comparison_f1_all.png", "model_compare_f1.png"],
+            "f1-aug": ["comparison_f1_aug.png"],
+            "f1-noaug": ["comparison_f1_noaug.png"],
+            "cm-resnet18-aug": ["cm_resnet18_aug.png"],
+            "cm-resnet18-noaug": ["cm_resnet18_noaug.png"],
+            "cm-efficientnetb0-aug": ["cm_efficientnetb0_aug.png"],
+            "cm-efficientnetb0-noaug": ["cm_efficientnetb0_noaug.png"],
+            "cm-vit-b16-aug": ["cm_vit_b16_aug.png"],
+            "cm-vit-b16-noaug": ["cm_vit_b16_noaug.png"],
+            "cm-swint-aug": ["cm_swint_aug.png"],
+            "cm-swint-noaug": ["cm_swint_noaug.png"],
+            "misclassified-grid": ["misclassified_grid.png"],
+            "error-distribution": ["error_distribution.png"],
+            "cam-resnet18": ["cam_resnet18_gradcam.png"],
+            "cam-efficientnetb0": ["cam_efficientnetb0_gradcam.png"],
+            "cam-vit-b16": ["cam_vit_b16_eigencam.png"],
+            "cam-swint": ["cam_swint_eigencam.png"]
+        };
+
+        function resolveImage(candidates, onSuccess, onFail) {
+            let idx = 0;
+            function tryNext() {
+                if (!candidates || idx >= candidates.length) {
+                    onFail();
+                    return;
+                }
+                const src = imageBase + candidates[idx];
+                idx += 1;
+                const probe = new Image();
+                probe.onload = () => onSuccess(src);
+                probe.onerror = tryNext;
+                probe.src = src;
+            }
+            tryNext();
+        }
+
+        document.querySelectorAll(".auto-map[data-map]").forEach((figure) => {
+            const key = figure.dataset.map;
+            const candidates = imageMap[key] || [];
+            resolveImage(
+                candidates,
+                (resolvedSrc) => {
+                    let media = figure.querySelector("img");
+                    if (!media) {
+                        const placeholder = figure.querySelector(".img-placeholder");
+                        media = document.createElement("img");
+                        media.alt = placeholder ? placeholder.textContent.trim() : key;
+                        if (placeholder) {
+                            placeholder.replaceWith(media);
+                        } else {
+                            figure.prepend(media);
+                        }
+                    }
+                    media.src = resolvedSrc;
+                    media.loading = "lazy";
+                },
+                () => {
+                    // Keep placeholder if no candidate file is found.
+                }
+            );
+        });
+
+        document.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLImageElement)) {
+                return;
+            }
+            if (!target.closest("figure.card-figure")) {
+                return;
+            }
+            lightboxImage.src = target.src;
+            lightboxImage.alt = target.alt;
+            lightbox.classList.add("open");
+            lightbox.setAttribute("aria-hidden", "false");
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove("open");
+            lightbox.setAttribute("aria-hidden", "true");
+            lightboxImage.src = "";
+        }
+
+        lightboxClose.addEventListener("click", closeLightbox);
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeLightbox();
+            }
+        });
+    </script>
 </body>
 </html>
