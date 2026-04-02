@@ -522,7 +522,7 @@
         <section class="section-card reveal" id="data-split">
             <div class="section-head">
                 <span class="idx">03</span>
-                <h2>Cách chia Data Split và DataLoader</h2>
+                <h2>Cách chia Data Split và Data Augmentation</h2>
             </div>
             <p>
                 Dữ liệu được chia stratified theo tỉ lệ 70/15/15 để đảm bảo phân phối lớp ổn định giữa train/val/test.
@@ -534,6 +534,9 @@
                 <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
                 <div class="kpi"><div class="label">Batch size</div><div class="value">32</div></div>
             </div>
+            <p>
+                Data augmentation bao gồm: RandomResizedCrop, RandomHorizontalFlip, RandomRotation, RandomVerticalFlip, ColorJitter, và Normalize theo config của từng backbone.
+            </p>
             <div class="code-box">
 <pre>def make_splits(root, train_ratio=0.70, val_ratio=0.15, seed=42):
     base = ImageFolder(root)
