@@ -290,6 +290,17 @@
             color: #4f6258;
         }
 
+        .card-figure.metric-plot {
+            background: #fbfdfb;
+        }
+
+        .card-figure.metric-plot img {
+            object-fit: contain;
+            background: #fff;
+            padding: 0.5rem;
+            border-bottom: 1px solid #dae3d6;
+        }
+
         .code-box {
             margin-top: 0.75rem;
             background: #1f2724;
@@ -390,6 +401,112 @@
             font-size: 0.84rem;
         }
 
+        .compare-table-card {
+            border: 1px solid #d6ddd2;
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .compare-table-card .title {
+            padding: 0.65rem 0.8rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e1e8dc;
+            color: #23352f;
+            background: #f5faf5;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+            min-width: 760px;
+        }
+
+        .ranking-table th,
+        .ranking-table td {
+            padding: 0.48rem 0.55rem;
+            border-bottom: 1px solid #edf2ec;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .ranking-table th {
+            background: #f9fcf8;
+            color: #4e6158;
+            font-size: 0.79rem;
+            font-weight: 700;
+        }
+
+        .ranking-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ranking-table .model-col {
+            min-width: 150px;
+            font-weight: 700;
+        }
+
+        .ranking-table .score-col,
+        .ranking-table .cost-col {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+        }
+
+        .ranking-table .metric-top1 {
+            background: #e8f8ed;
+            color: #17572d;
+        }
+
+        .ranking-table .metric-top2 {
+            background: #f7f9e8;
+            color: #5b5818;
+        }
+
+        .ranking-table .up::after {
+            content: " ↑";
+            color: #1e6d47;
+            font-weight: 800;
+        }
+
+        .ranking-table .down::after {
+            content: " ↓";
+            color: #8b5e1a;
+            font-weight: 800;
+        }
+
+        .table-legend {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            padding: 0.5rem 0.8rem 0.7rem;
+            border-top: 1px solid #e8eee5;
+            background: #fcfefb;
+        }
+
+        .legend-chip {
+            padding: 0.22rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            border: 1px solid #d6e2d8;
+            color: #364840;
+            font-weight: 700;
+        }
+
+        .legend-chip.top1 {
+            background: #e8f8ed;
+        }
+
+        .legend-chip.top2 {
+            background: #f7f9e8;
+        }
+
         .lightbox {
             position: fixed;
             inset: 0;
@@ -447,7 +564,7 @@
         <header class="hero">
             <h1>BTL 1 - Image Classification Report</h1>
             <p>
-                Trang báo cáo tổng hợp cho notebook Assignment 1, tập trung vào pipeline từ EDA, thiết kế mô hình,
+                Trang báo cáo tổng hợp cho Assignment 1 - phần Image Classification, tập trung vào pipeline từ EDA, thiết kế mô hình,
                 huấn luyện trên 8 cấu hình (4 backbone x Aug/No-Aug), trực quan hóa bằng GradCAM/EigenCAM.
             </p>
             <div class="chip-row">
@@ -531,7 +648,6 @@
                 <div class="kpi"><div class="label">Train</div><div class="value">70%</div></div>
                 <div class="kpi"><div class="label">Validation</div><div class="value">15%</div></div>
                 <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
-                <div class="kpi"><div class="label">Batch size</div><div class="value">32</div></div>
             </div>
             <p style="margin-top: 10px;">
                 Data augmentation (cho tập train) bao gồm: RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomGrayscale, ColorJitter, và Normalize theo config của từng backbone.
@@ -592,11 +708,10 @@
         <section class="section-card reveal" id="head">
             <div class="section-head">
                 <span class="idx">05</span>
-                <h2>Custom Head Classifier: Code + Minh họa</h2>
+                <h2>Custom Head Classifier</h2>
             </div>
             <p>
-                Dùng một head chung cho mọi backbone: Linear -> BatchNorm -> ReLU -> Dropout -> Linear,
-                giúp so sánh backbone công bằng hơn và hạn chế overfitting.
+                Dùng một head chung cho mọi backbone: Linear -> BatchNorm -> ReLU -> Dropout -> Linear.
             </p>
             <div class="grid-2">
                 <div>
@@ -620,7 +735,6 @@
                 </div>
                 <figure class="card-figure auto-map" data-map="custom-head">
                     <div class="img-placeholder">Placeholder sơ đồ backbone + custom head</div>
-                    <figcaption>Sơ đồ khối: MLP classifier head.</figcaption>
                 </figure>
             </div>
         </section>
@@ -642,23 +756,23 @@
 
             <div class="tab-panel active" data-panel="loss">
                 <div class="grid-2">
-                    <figure class="card-figure auto-map" data-map="train-loss"><div class="img-placeholder">WandB Train Loss (all runs)</div><figcaption>Train loss toàn bộ 8 run.</figcaption></figure>
-                    <figure class="card-figure auto-map" data-map="val-loss"><div class="img-placeholder">WandB Val Loss (all runs)</div><figcaption>Validation loss toàn bộ 8 run.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="train-loss"><div class="img-placeholder">WandB Train Loss (all runs)</div><figcaption>Train loss toàn bộ 8 run.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="val-loss"><div class="img-placeholder">WandB Val Loss (all runs)</div><figcaption>Validation loss toàn bộ 8 run.</figcaption></figure>
                 </div>
             </div>
 
             <div class="tab-panel" data-panel="acc">
                 <div class="grid-2">
-                    <figure class="card-figure auto-map" data-map="train-acc"><div class="img-placeholder">WandB Train Accuracy</div><figcaption>Train accuracy từng backbone.</figcaption></figure>
-                    <figure class="card-figure auto-map" data-map="val-acc"><div class="img-placeholder">WandB Val Accuracy</div><figcaption>Validation accuracy từng backbone.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="train-acc"><div class="img-placeholder">WandB Train Accuracy</div><figcaption>Train accuracy từng backbone.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="val-acc"><div class="img-placeholder">WandB Val Accuracy</div><figcaption>Validation accuracy từng backbone.</figcaption></figure>
                 </div>
             </div>
 
             <div class="tab-panel" data-panel="f1">
                 <div class="grid-2">
-                    <figure class="card-figure auto-map" data-map="val-f1"><div class="img-placeholder">WandB Val Macro F1</div><figcaption>Macro F1 theo epoch.</figcaption></figure>
-                    <figure class="card-figure auto-map" data-map="val-pr"><div class="img-placeholder">WandB Precision</div><figcaption>Macro precision theo epoch.</figcaption></figure>
-                    <figure class="card-figure auto-map" data-map="val-re"><div class="img-placeholder">WandB Recall</div><figcaption>Macro recall theo epoch.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="val-f1"><div class="img-placeholder">WandB Val Macro F1</div><figcaption>Macro F1 theo epoch.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="val-pr"><div class="img-placeholder">WandB Precision</div><figcaption>Macro precision theo epoch.</figcaption></figure>
+                    <figure class="card-figure auto-map metric-plot" data-map="val-re"><div class="img-placeholder">WandB Recall</div><figcaption>Macro recall theo epoch.</figcaption></figure>
                 </div>
             </div>
         </section>
@@ -679,18 +793,243 @@
             </div>
 
             <div class="grid-2" id="comparisonGallery">
-                <figure class="card-figure auto-map" data-map="f1-all" data-tag="all">
-                    <div class="img-placeholder">Biểu đồ tổng hợp F1 cho 8 cấu hình</div>
-                    <figcaption>Comparison bar chart: ResNet/EffNet/ViT/Swin với Aug vs No-Aug.</figcaption>
-                </figure>
-                <figure class="card-figure auto-map" data-map="f1-aug" data-tag="aug">
-                    <div class="img-placeholder">F1 riêng nhóm Aug</div>
-                    <figcaption>Macro F1 khi bật augmentation.</figcaption>
-                </figure>
-                <figure class="card-figure auto-map" data-map="f1-noaug" data-tag="noaug">
-                    <div class="img-placeholder">F1 riêng nhóm No-Aug</div>
-                    <figcaption>Macro F1 khi không augmentation.</figcaption>
-                </figure>
+                <div class="compare-table-card" data-tag="all">
+                    <div class="title">So sánh toàn bộ 8 cấu hình</div>
+                    <div class="table-scroll">
+                        <table class="ranking-table" aria-label="Bang so sanh metric tat ca cau hinh">
+                            <thead>
+                                <tr>
+                                    <th class="model-col">Model</th>
+                                    <th class="score-col up">Acc (%)</th>
+                                    <th class="score-col up">Prec (%)</th>
+                                    <th class="score-col up">Rec (%)</th>
+                                    <th class="score-col up">F1 (%)</th>
+                                    <th class="cost-col down">Params (M)</th>
+                                    <th class="cost-col down">FLOPs (G)</th>
+                                    <th class="cost-col down">Size (MB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="model-col">EfficientNetB0_noaug</td>
+                                    <td class="score-col metric-top2">98.27</td>
+                                    <td class="score-col">97.99</td>
+                                    <td class="score-col metric-top1">98.17</td>
+                                    <td class="score-col metric-top1">98.08</td>
+                                    <td class="cost-col metric-top1">4.63</td>
+                                    <td class="cost-col metric-top1">0.39</td>
+                                    <td class="cost-col metric-top1">19.15</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">EfficientNetB0_aug</td>
+                                    <td class="score-col">98.17</td>
+                                    <td class="score-col metric-top2">98.09</td>
+                                    <td class="score-col">97.91</td>
+                                    <td class="score-col">97.99</td>
+                                    <td class="cost-col metric-top1">4.63</td>
+                                    <td class="cost-col metric-top1">0.39</td>
+                                    <td class="cost-col metric-top1">19.15</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ResNet18_noaug</td>
+                                    <td class="score-col">97.51</td>
+                                    <td class="score-col">97.33</td>
+                                    <td class="score-col">97.15</td>
+                                    <td class="score-col">97.24</td>
+                                    <td class="cost-col metric-top2">11.45</td>
+                                    <td class="cost-col metric-top2">1.82</td>
+                                    <td class="cost-col metric-top2">45.89</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ResNet18_aug</td>
+                                    <td class="score-col">97.20</td>
+                                    <td class="score-col">96.95</td>
+                                    <td class="score-col">96.71</td>
+                                    <td class="score-col">96.81</td>
+                                    <td class="cost-col metric-top2">11.45</td>
+                                    <td class="cost-col metric-top2">1.82</td>
+                                    <td class="cost-col metric-top2">45.89</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">SwinT_aug</td>
+                                    <td class="score-col metric-top1">98.32</td>
+                                    <td class="score-col">98.08</td>
+                                    <td class="score-col metric-top2">98.07</td>
+                                    <td class="score-col metric-top2">98.07</td>
+                                    <td class="cost-col">27.90</td>
+                                    <td class="cost-col">4.37</td>
+                                    <td class="cost-col">111.82</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">SwinT_noaug</td>
+                                    <td class="score-col">98.19</td>
+                                    <td class="score-col metric-top1">98.16</td>
+                                    <td class="score-col">97.94</td>
+                                    <td class="score-col">98.05</td>
+                                    <td class="cost-col">27.90</td>
+                                    <td class="cost-col">4.37</td>
+                                    <td class="cost-col">111.82</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ViT_B16_aug</td>
+                                    <td class="score-col">97.30</td>
+                                    <td class="score-col">97.01</td>
+                                    <td class="score-col">96.72</td>
+                                    <td class="score-col">96.86</td>
+                                    <td class="cost-col">86.01</td>
+                                    <td class="cost-col">16.85</td>
+                                    <td class="cost-col">344.97</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ViT_B16_noaug</td>
+                                    <td class="score-col">96.51</td>
+                                    <td class="score-col">96.11</td>
+                                    <td class="score-col">96.12</td>
+                                    <td class="score-col">96.11</td>
+                                    <td class="cost-col">86.01</td>
+                                    <td class="cost-col">16.85</td>
+                                    <td class="cost-col">344.97</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-legend">
+                        <span class="legend-chip top1">Top 1 theo tung metric</span>
+                        <span class="legend-chip top2">Top 2 theo tung metric</span>
+                    </div>
+                </div>
+
+                <div class="compare-table-card" data-tag="aug">
+                    <div class="title">So sánh nhóm Aug</div>
+                    <div class="table-scroll">
+                        <table class="ranking-table" aria-label="Bang so sanh metric nhom aug">
+                            <thead>
+                                <tr>
+                                    <th class="model-col">Model</th>
+                                    <th class="score-col up">Acc (%)</th>
+                                    <th class="score-col up">Prec (%)</th>
+                                    <th class="score-col up">Rec (%)</th>
+                                    <th class="score-col up">F1 (%)</th>
+                                    <th class="cost-col down">Params (M)</th>
+                                    <th class="cost-col down">FLOPs (G)</th>
+                                    <th class="cost-col down">Size (MB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="model-col">EfficientNetB0_aug</td>
+                                    <td class="score-col metric-top2">98.17</td>
+                                    <td class="score-col metric-top1">98.09</td>
+                                    <td class="score-col metric-top2">97.91</td>
+                                    <td class="score-col metric-top2">97.99</td>
+                                    <td class="cost-col metric-top1">4.63</td>
+                                    <td class="cost-col metric-top1">0.39</td>
+                                    <td class="cost-col metric-top1">19.15</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ResNet18_aug</td>
+                                    <td class="score-col">97.20</td>
+                                    <td class="score-col">96.95</td>
+                                    <td class="score-col">96.71</td>
+                                    <td class="score-col">96.81</td>
+                                    <td class="cost-col metric-top2">11.45</td>
+                                    <td class="cost-col metric-top2">1.82</td>
+                                    <td class="cost-col metric-top2">45.89</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">SwinT_aug</td>
+                                    <td class="score-col metric-top1">98.32</td>
+                                    <td class="score-col metric-top2">98.08</td>
+                                    <td class="score-col metric-top1">98.07</td>
+                                    <td class="score-col metric-top1">98.07</td>
+                                    <td class="cost-col">27.90</td>
+                                    <td class="cost-col">4.37</td>
+                                    <td class="cost-col">111.82</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ViT_B16_aug</td>
+                                    <td class="score-col">97.30</td>
+                                    <td class="score-col">97.01</td>
+                                    <td class="score-col">96.72</td>
+                                    <td class="score-col">96.86</td>
+                                    <td class="cost-col">86.01</td>
+                                    <td class="cost-col">16.85</td>
+                                    <td class="cost-col">344.97</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-legend">
+                        <span class="legend-chip top1">Top 1 theo tung metric</span>
+                        <span class="legend-chip top2">Top 2 theo tung metric</span>
+                    </div>
+                </div>
+
+                <div class="compare-table-card" data-tag="noaug">
+                    <div class="title">So sánh nhóm No-Aug</div>
+                    <div class="table-scroll">
+                        <table class="ranking-table" aria-label="Bang so sanh metric nhom no aug">
+                            <thead>
+                                <tr>
+                                    <th class="model-col">Model</th>
+                                    <th class="score-col up">Acc (%)</th>
+                                    <th class="score-col up">Prec (%)</th>
+                                    <th class="score-col up">Rec (%)</th>
+                                    <th class="score-col up">F1 (%)</th>
+                                    <th class="cost-col down">Params (M)</th>
+                                    <th class="cost-col down">FLOPs (G)</th>
+                                    <th class="cost-col down">Size (MB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="model-col">EfficientNetB0_noaug</td>
+                                    <td class="score-col metric-top1">98.27</td>
+                                    <td class="score-col metric-top2">97.99</td>
+                                    <td class="score-col metric-top1">98.17</td>
+                                    <td class="score-col metric-top1">98.08</td>
+                                    <td class="cost-col metric-top1">4.63</td>
+                                    <td class="cost-col metric-top1">0.39</td>
+                                    <td class="cost-col metric-top1">19.15</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ResNet18_noaug</td>
+                                    <td class="score-col">97.51</td>
+                                    <td class="score-col">97.33</td>
+                                    <td class="score-col">97.15</td>
+                                    <td class="score-col">97.24</td>
+                                    <td class="cost-col metric-top2">11.45</td>
+                                    <td class="cost-col metric-top2">1.82</td>
+                                    <td class="cost-col metric-top2">45.89</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">SwinT_noaug</td>
+                                    <td class="score-col metric-top2">98.19</td>
+                                    <td class="score-col metric-top1">98.16</td>
+                                    <td class="score-col metric-top2">97.94</td>
+                                    <td class="score-col metric-top2">98.05</td>
+                                    <td class="cost-col">27.90</td>
+                                    <td class="cost-col">4.37</td>
+                                    <td class="cost-col">111.82</td>
+                                </tr>
+                                <tr>
+                                    <td class="model-col">ViT_B16_noaug</td>
+                                    <td class="score-col">96.51</td>
+                                    <td class="score-col">96.11</td>
+                                    <td class="score-col">96.12</td>
+                                    <td class="score-col">96.11</td>
+                                    <td class="cost-col">86.01</td>
+                                    <td class="cost-col">16.85</td>
+                                    <td class="cost-col">344.97</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-legend">
+                        <span class="legend-chip top1">Top 1 theo tung metric</span>
+                        <span class="legend-chip top2">Top 2 theo tung metric</span>
+                    </div>
+                </div>
             </div>
 
             <h3 style="margin-top: 1rem; font-size: 1.02rem;">Confusion Matrix cho từng model</h3>
