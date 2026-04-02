@@ -733,7 +733,7 @@
         return self.head(self.backbone(x))</pre>
                     </div>
                 </div>
-                <figure class="card-figure auto-map" data-map="custom-head">
+                <figure class="card-figure auto-map metric-plot" data-map="custom-head">
                     <div class="img-placeholder">Placeholder sơ đồ backbone + custom head</div>
                 </figure>
             </div>
@@ -1026,8 +1026,8 @@
                         </table>
                     </div>
                     <div class="table-legend">
-                        <span class="legend-chip top1">Top 1 theo tung metric</span>
-                        <span class="legend-chip top2">Top 2 theo tung metric</span>
+                        <span class="legend-chip top1">Top 1 theo từng metric</span>
+                        <span class="legend-chip top2">Top 2 theo từng metric</span>
                     </div>
                 </div>
             </div>
@@ -1128,20 +1128,34 @@
         });
 
         const filterButtons = document.querySelectorAll(".filter-btn");
-        const filterTargets = document.querySelectorAll("[data-tag]");
+        const comparisonTables = document.querySelectorAll("#comparisonGallery [data-tag]");
+        const confusionItems = document.querySelectorAll(".confusion-gallery [data-tag]");
+
+        function applyComparisonFilter(mode) {
+            // Show exactly one table for each tab: all, aug, noaug.
+            comparisonTables.forEach((item) => {
+                const tag = item.dataset.tag;
+                item.style.display = tag === mode ? "block" : "none";
+            });
+
+            // Keep confusion matrix filtering intuitive by mode.
+            confusionItems.forEach((item) => {
+                const tag = item.dataset.tag;
+                const show = mode === "all" || tag === mode;
+                item.style.display = show ? "block" : "none";
+            });
+        }
+
         filterButtons.forEach((btn) => {
             btn.addEventListener("click", () => {
                 filterButtons.forEach((b) => b.classList.remove("active"));
                 btn.classList.add("active");
-
-                const mode = btn.dataset.filter;
-                filterTargets.forEach((item) => {
-                    const tag = item.dataset.tag;
-                    const show = mode === "all" || tag === "all" || tag === mode;
-                    item.style.display = show ? "block" : "none";
-                });
+                applyComparisonFilter(btn.dataset.filter);
             });
         });
+
+        const defaultFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "all";
+        applyComparisonFilter(defaultFilter);
 
         const lightbox = document.getElementById("lightbox");
         const lightboxImage = document.getElementById("lightboxImage");
