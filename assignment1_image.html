@@ -641,7 +641,7 @@
             </div>
             <p>
                 Bài toán là phân loại ảnh động vật đa lớp, đầu vào ảnh RGB được resize về 224x224 và chuẩn hóa theo
-                cấu hình từng backbone. Mục tiêu là tối ưu hiệu năng tổng quát hóa (macro F1/Accuracy) và đánh giá kết quả khi thay đổi backbone và augmentation.
+                cấu hình từng backbone. Mục tiêu là tối ưu độ chính xác cho kết quả của mô hình (macro F1/Accuracy) và đánh giá kết quả khi thay đổi backbone và augmentation.
             </p>
             <div class="kpis">
                 <div class="kpi">
@@ -670,6 +670,9 @@
             </div>
             <p>
                 Trực quan hóa phân bố mẫu theo lớp và vài sample ảnh trước bước resize/augmentation để kiểm tra chất lượng dữ liệu.
+            </p>
+             <p>
+                Kích thước dataset: 26179 ảnh - 10 lớp
             </p>
             <div class="grid-2">
                 <figure class="card-figure auto-map" data-map="eda-1">
@@ -831,10 +834,9 @@
                 <span class="idx">07</span>
                 <h2>So sánh mô hình: 4 Backbone x (Aug / No-Aug)</h2>
             </div>
-            <p>
-                Bộ lọc dưới đây giúp xem nhanh kết quả theo điều kiện augmentation. Bao gồm biểu đồ so sánh F1 và confusion matrix của từng model.
+             <p>
+                Bảng so sánh tổng hợp các metric chính (accuracy, precision, recall, F1) và các chỉ số chi phí (số lượng tham số, FLOPs, kích thước mô hình) cho các cấu hình khác nhau.
             </p>
-
             <div class="training-tabs" aria-label="Augmentation Filter">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="aug">Aug</button>
@@ -1083,14 +1085,14 @@
 
             <h3 style="margin-top: 1rem; font-size: 1.02rem;">Confusion Matrix cho từng model</h3>
             <div class="confusion-gallery">
-                <figure class="card-figure auto-map" data-map="cm-resnet18-aug" data-tag="aug"><div class="img-placeholder">CM - ResNet18_aug</div><figcaption>Confusion Matrix ResNet18_aug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-resnet18-noaug" data-tag="noaug"><div class="img-placeholder">CM - ResNet18_noaug</div><figcaption>Confusion Matrix ResNet18_noaug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-efficientnetb0-aug" data-tag="aug"><div class="img-placeholder">CM - EfficientNetB0_aug</div><figcaption>Confusion Matrix EfficientNetB0_aug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-efficientnetb0-noaug" data-tag="noaug"><div class="img-placeholder">CM - EfficientNetB0_noaug</div><figcaption>Confusion Matrix EfficientNetB0_noaug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-vit-b16-aug" data-tag="aug"><div class="img-placeholder">CM - ViT_B16_aug</div><figcaption>Confusion Matrix ViT_B16_aug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-vit-b16-noaug" data-tag="noaug"><div class="img-placeholder">CM - ViT_B16_noaug</div><figcaption>Confusion Matrix ViT_B16_noaug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-swint-aug" data-tag="aug"><div class="img-placeholder">CM - SwinT_aug</div><figcaption>Confusion Matrix SwinT_aug</figcaption></figure>
-                <figure class="card-figure auto-map" data-map="cm-swint-noaug" data-tag="noaug"><div class="img-placeholder">CM - SwinT_noaug</div><figcaption>Confusion Matrix SwinT_noaug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-resnet18-aug" data-tag="aug"><div class="img-placeholder">CM - ResNet18_aug</div><figcaption>Confusion Matrix ResNet18_aug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-resnet18-noaug" data-tag="noaug"><div class="img-placeholder">CM - ResNet18_noaug</div><figcaption>Confusion Matrix ResNet18_noaug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-efficientnetb0-aug" data-tag="aug"><div class="img-placeholder">CM - EfficientNetB0_aug</div><figcaption>Confusion Matrix EfficientNetB0_aug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-efficientnetb0-noaug" data-tag="noaug"><div class="img-placeholder">CM - EfficientNetB0_noaug</div><figcaption>Confusion Matrix EfficientNetB0_noaug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-vit-b16-aug" data-tag="aug"><div class="img-placeholder">CM - ViT_B16_aug</div><figcaption>Confusion Matrix ViT_B16_aug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-vit-b16-noaug" data-tag="noaug"><div class="img-placeholder">CM - ViT_B16_noaug</div><figcaption>Confusion Matrix ViT_B16_noaug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-swint-aug" data-tag="aug"><div class="img-placeholder">CM - SwinT_aug</div><figcaption>Confusion Matrix SwinT_aug</figcaption></figure>
+                <figure class="card-figure auto-map metric-plot" data-map="cm-swint-noaug" data-tag="noaug"><div class="img-placeholder">CM - SwinT_noaug</div><figcaption>Confusion Matrix SwinT_noaug</figcaption></figure>
             </div>
         </section>
 
@@ -1246,8 +1248,6 @@
             "cm-vit-b16-noaug": ["img_cm_vit_noaug.png"],
             "cm-swint-aug": ["img_cm_swin_aug.png"],
             "cm-swint-noaug": ["img_cm_swin_noaug.png"],
-            "misclassified-grid": ["misclassified_grid.png"],
-            "error-distribution": ["error_distribution.png"],
             "cam-resnet18": ["cam_resnet18_gradcam.png"],
             "cam-efficientnetb0": ["cam_efficientnetb0_gradcam.png"],
             "cam-vit-b16": ["cam_vit_b16_eigencam.png"],
