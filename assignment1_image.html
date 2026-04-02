@@ -455,7 +455,6 @@
                 <span class="chip">Framework: PyTorch + timm</span>
                 <span class="chip">Tracking: Weights & Biases</span>
                 <span class="chip">Target: 10 lớp ảnh</span>
-                <span class="chip mono">Auto-map: assets/images/*</span>
             </div>
         </header>
 
@@ -509,12 +508,12 @@
             </p>
             <div class="grid-2">
                 <figure class="card-figure auto-map" data-map="eda-1">
-                    <img src="assets/images/image_task_out_0.png" alt="Phân bố lớp dữ liệu Animals-10">
+                    <img src="assets/images/image_task_out_1.png" alt="Phân bố lớp dữ liệu Animals-10">
                     <figcaption>Phân bố số lượng mẫu theo từng lớp.</figcaption>
                 </figure>
                 <figure class="card-figure auto-map" data-map="eda-2">
-                    <img src="assets/images/image_task_out_1.png" alt="Minh họa ảnh mẫu sau augmentation">
-                    <figcaption>Ảnh mẫu ngẫu nhiên sau tiền xử lý và augmentation.</figcaption>
+                    <img src="assets/images/image_task_out_0.png" alt="Minh họa ảnh mẫu sau augmentation">
+                    <figcaption>Ảnh mẫu ngẫu nhiên của dataset.</figcaption>
                 </figure>
             </div>
         </section>
@@ -535,21 +534,20 @@
                 <div class="kpi"><div class="label">Batch size</div><div class="value">32</div></div>
             </div>
             <p>
-                Data augmentation bao gồm: RandomResizedCrop, RandomHorizontalFlip, RandomRotation, RandomVerticalFlip, ColorJitter, và Normalize theo config của từng backbone.
+                Data augmentation (cho tập train) bao gồm: RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomGrayscale, ColorJitter, và Normalize theo config của từng backbone.
             </p>
             <div class="code-box">
-<pre>def make_splits(root, train_ratio=0.70, val_ratio=0.15, seed=42):
-    base = ImageFolder(root)
-    labels = [s[1] for s in base.samples]
-    indices = list(range(len(labels)))
-    train_idx, temp_idx, y_train, y_temp = train_test_split(
-        indices, labels, test_size=1-train_ratio, stratify=labels, random_state=seed
-    )
-    rel_val = val_ratio / (1 - train_ratio)
-    val_idx, test_idx, _, _ = train_test_split(
-        temp_idx, y_temp, test_size=1-rel_val, stratify=y_temp, random_state=seed
-    )
-    return train_idx, val_idx, test_idx</pre>
+<pre>transform = transforms.Compose([
+            transforms.RandomResizedCrop(IMG_SIZE, scale=(0.7, 1.0)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(p=0.1),
+            transforms.ColorJitter(brightness=0.3, contrast=0.3,
+                                   saturation=0.2, hue=0.1),
+            transforms.RandomRotation(20),
+            transforms.RandomGrayscale(p=0.05),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=mean, std=std),
+        ])</pre>
             </div>
         </section>
 
@@ -559,10 +557,9 @@
                 <h2>Lựa chọn mô hình Backbone (4 loại)</h2>
             </div>
             <p>
-                So sánh 2 đại diện CNN (ResNet18, EfficientNet-B0) và 2 Transformer-based models (ViT-B16, Swin-T).
-                Mỗi backbone có ảnh minh họa kiến trúc để người đọc nắm nhanh ưu/nhược điểm.
+                So sánh 2 đại diện CNN (ResNet18, EfficientNet-B0) và 2 Transformer-based models (ViT-B16, Swin-Tiny).
             </p>
-            <div class="grid-4">
+            <div class="grid-2">
                 <div class="backbone-card">
                     <div class="head"><span>ResNet18</span><span>CNN</span></div>
                     <figure class="card-figure auto-map" data-map="backbone-resnet18">
@@ -577,6 +574,8 @@
                         <figcaption>Compound scaling, cân bằng tốt giữa acc và compute.</figcaption>
                     </figure>
                 </div>
+            </div>
+            <div class="grid-2">
                 <div class="backbone-card">
                     <div class="head"><span>ViT-B16</span><span>Transformer</span></div>
                     <figure class="card-figure auto-map" data-map="backbone-vit-b16">
@@ -625,7 +624,7 @@
                 </div>
                 <figure class="card-figure auto-map" data-map="custom-head">
                     <div class="img-placeholder">Placeholder sơ đồ backbone + custom head</div>
-                    <figcaption>Sơ đồ khối: Backbone (feature extractor) + MLP classifier head.</figcaption>
+                    <figcaption>Sơ đồ khối: MLP classifier head.</figcaption>
                 </figure>
             </div>
         </section>
@@ -660,9 +659,10 @@
             </div>
 
             <div class="tab-panel" data-panel="f1">
-                <div class="grid-2">
+                <div class="grid-3">
                     <figure class="card-figure auto-map" data-map="val-f1"><div class="img-placeholder">WandB Val Macro F1</div><figcaption>Macro F1 theo epoch.</figcaption></figure>
-                    <figure class="card-figure auto-map" data-map="val-pr"><div class="img-placeholder">WandB Precision/Recall</div><figcaption>Macro precision/recall theo epoch.</figcaption></figure>
+                    <figure class="card-figure auto-map" data-map="val-pr"><div class="img-placeholder">WandB Precision</div><figcaption>Macro precision theo epoch.</figcaption></figure>
+                    <figure class="card-figure auto-map" data-map="val-re"><div class="img-placeholder">WandB Recall</div><figcaption>Macro recall theo epoch.</figcaption></figure>
                 </div>
             </div>
         </section>
@@ -716,21 +716,9 @@
                 <h2>Kết quả thực nghiệm: mẫu sai và GradCAM/EigenCAM</h2>
             </div>
             <p>
-                Trình bày các mẫu model dự đoán sai để phân tích failure cases, sau đó đối chiếu bản đồ kích hoạt giữa các mô hình.
+                Trình bày các mẫu model dự đoán sai để phân tích failure cases, và trực quan hóa bằng GradCAM/EigenCAM để hiểu vùng ảnh nào mô hình tập trung khi dự đoán. So sánh giữa 4 backbone để thấy sự khác biệt trong cách học đặc trưng.
             </p>
 
-            <div class="grid-2">
-                <figure class="card-figure auto-map" data-map="misclassified-grid">
-                    <div class="img-placeholder">Grid ảnh dự đoán sai (misclassified samples)</div>
-                    <figcaption>Các mẫu fail tiêu biểu (true label vs predicted label + confidence).</figcaption>
-                </figure>
-                <figure class="card-figure auto-map" data-map="error-distribution">
-                    <div class="img-placeholder">Phân bố lỗi theo class (bar chart / table)</div>
-                    <figcaption>Tần suất lỗi theo từng lớp giúp xác định cặp lớp khó.</figcaption>
-                </figure>
-            </div>
-
-            <h3 style="margin-top: 1rem; font-size: 1.02rem;">So sánh attention map (4 model trên 1 hàng)</h3>
             <div class="compare-row">
                 <div class="compare-item">
                     <div class="title">ResNet18 - GradCAM</div>
@@ -835,12 +823,13 @@
             "backbone-vit-b16": ["backbone_vit_b16.png"],
             "backbone-swin-t": ["backbone_swint.png"],
             "custom-head": ["custom_head_classifier.png"],
-            "train-loss": ["wandb_train_loss.png", "image_task_out_3.png"],
-            "val-loss": ["wandb_val_loss.png", "image_task_out_4.png"],
-            "train-acc": ["wandb_train_acc.png"],
-            "val-acc": ["wandb_val_acc.png"],
-            "val-f1": ["wandb_val_f1.png"],
-            "val-pr": ["wandb_val_precision_recall.png"],
+            "train-loss": ["img_train_loss.png", "image_task_out_3.png"],
+            "val-loss": ["img_val_loss.png", "image_task_out_4.png"],
+            "train-acc": ["img_train_acc.png"],
+            "val-acc": ["img_val_acc.png"],
+            "val-f1": ["img_val_f1.png"],
+            "val-pr": ["img_val_prec.png"],
+            "val-re": ["img_val_recall.png"],
             "f1-all": ["comparison_f1_all.png", "model_compare_f1.png"],
             "f1-aug": ["comparison_f1_aug.png"],
             "f1-noaug": ["comparison_f1_noaug.png"],
