@@ -533,7 +533,7 @@
                 <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
                 <div class="kpi"><div class="label">Batch size</div><div class="value">32</div></div>
             </div>
-            <p>
+            <p style="margin-top: 10px;">
                 Data augmentation (cho tập train) bao gồm: RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomGrayscale, ColorJitter, và Normalize theo config của từng backbone.
             </p>
             <div class="code-box">
@@ -564,14 +564,12 @@
                     <div class="head"><span>ResNet18</span><span>CNN</span></div>
                     <figure class="card-figure auto-map" data-map="backbone-resnet18">
                         <div class="img-placeholder">Placeholder backbone ResNet18</div>
-                        <figcaption>Residual learning, hội tụ nhanh và baseline mạnh.</figcaption>
                     </figure>
                 </div>
                 <div class="backbone-card">
                     <div class="head"><span>EfficientNetB0</span><span>CNN</span></div>
                     <figure class="card-figure auto-map" data-map="backbone-efficientnetb0">
                         <div class="img-placeholder">Placeholder backbone EfficientNetB0</div>
-                        <figcaption>Compound scaling, cân bằng tốt giữa acc và compute.</figcaption>
                     </figure>
                 </div>
             </div>
@@ -580,14 +578,12 @@
                     <div class="head"><span>ViT-B16</span><span>Transformer</span></div>
                     <figure class="card-figure auto-map" data-map="backbone-vit-b16">
                         <div class="img-placeholder">Placeholder backbone ViT-B16</div>
-                        <figcaption>Patch tokenization, học global context tốt.</figcaption>
                     </figure>
                 </div>
                 <div class="backbone-card">
                     <div class="head"><span>Swin-T</span><span>Transformer</span></div>
                     <figure class="card-figure auto-map" data-map="backbone-swin-t">
                         <div class="img-placeholder">Placeholder backbone Swin-T</div>
-                        <figcaption>Window attention phân cấp, hiệu quả bộ nhớ.</figcaption>
                     </figure>
                 </div>
             </div>
@@ -659,7 +655,7 @@
             </div>
 
             <div class="tab-panel" data-panel="f1">
-                <div class="grid-3">
+                <div class="grid-2">
                     <figure class="card-figure auto-map" data-map="val-f1"><div class="img-placeholder">WandB Val Macro F1</div><figcaption>Macro F1 theo epoch.</figcaption></figure>
                     <figure class="card-figure auto-map" data-map="val-pr"><div class="img-placeholder">WandB Precision</div><figcaption>Macro precision theo epoch.</figcaption></figure>
                     <figure class="card-figure auto-map" data-map="val-re"><div class="img-placeholder">WandB Recall</div><figcaption>Macro recall theo epoch.</figcaption></figure>
@@ -814,17 +810,15 @@
 
         const imageBase = "assets/images/";
         const imageMap = {
-            "eda-1": ["eda_01.png", "image_task_out_0.png"],
-            "eda-2": ["eda_02.png", "image_task_out_1.png"],
-            "eda-3": ["eda_03.png", "image_task_out_2.png"],
-            "eda-4": ["eda_04.png"],
-            "backbone-resnet18": ["backbone_resnet18.png"],
-            "backbone-efficientnetb0": ["backbone_efficientnetb0.png"],
-            "backbone-vit-b16": ["backbone_vit_b16.png"],
-            "backbone-swin-t": ["backbone_swint.png"],
-            "custom-head": ["custom_head_classifier.png"],
-            "train-loss": ["img_train_loss.png", "image_task_out_3.png"],
-            "val-loss": ["img_val_loss.png", "image_task_out_4.png"],
+            "eda-1": ["img_eda1.png"],
+            "eda-2": ["img_eda2.png"],
+            "backbone-resnet18": ["img_resnet18.png"],
+            "backbone-efficientnetb0": ["img_efficientNet.png"],
+            "backbone-vit-b16": ["img_vit.png"],
+            "backbone-swin-t": ["img_swin.png"],
+            "custom-head": ["img_head.png"],
+            "train-loss": ["img_train_loss.png"],
+            "val-loss": ["img_val_loss.png"],
             "train-acc": ["img_train_acc.png"],
             "val-acc": ["img_val_acc.png"],
             "val-f1": ["img_val_f1.png"],
