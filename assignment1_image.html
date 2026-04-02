@@ -794,7 +794,7 @@
         <section class="section-card reveal" id="training">
             <div class="section-head">
                 <span class="idx">06</span>
-                <h2>Kết quả Training (WandB: loss, acc, f1, ...)</h2>
+                <h2>Kết quả Training (Wandb log)</h2>
             </div>
             <p>
                 Chuyển tab để xem các nhóm biểu đồ train/val theo metric. Tất cả khung ảnh dưới đây là vùng gắn nhanh screenshot từ W&amp;B.
@@ -1099,28 +1099,41 @@
         <section class="section-card reveal" id="experiments">
             <div class="section-head">
                 <span class="idx">08</span>
-                <h2>Kết quả thực nghiệm: mẫu sai và GradCAM/EigenCAM</h2>
+                <h2>Kết quả thực nghiệm: trực quan hóa bằng GradCAM/EigenCAM</h2>
             </div>
             <p>
-                Trình bày các mẫu model dự đoán sai để phân tích failure cases, và trực quan hóa bằng GradCAM/EigenCAM để hiểu vùng ảnh nào mô hình tập trung khi dự đoán. So sánh giữa 4 backbone để thấy sự khác biệt trong cách học đặc trưng.
+                Trình bày các mẫu model dự đoán và phân tích, trực quan hóa bằng GradCAM/EigenCAM để hiểu vùng ảnh nào mô hình tập trung khi dự đoán. So sánh giữa 4 backbone để thấy sự khác biệt trong cách học đặc trưng.
             </p>
 
+            <head>
+                Mẫu 1:
+            </head>
             <div class="compare-row">
                 <div class="compare-item">
-                    <div class="title">ResNet18 - GradCAM</div>
-                    <figure class="card-figure auto-map" data-map="cam-resnet18"><div class="img-placeholder">Overlay placeholder</div></figure>
+                    <div class="title">CNN: ResNet18_noaug vs EfficientNetB0_noaug - GradCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-cnn1"><div class="img-placeholder">Overlay placeholder</div></figure>
                 </div>
+            </div>
+            <div class="compare-row">
                 <div class="compare-item">
-                    <div class="title">EfficientNetB0 - GradCAM</div>
-                    <figure class="card-figure auto-map" data-map="cam-efficientnetb0"><div class="img-placeholder">Overlay placeholder</div></figure>
+                    <div class="title">Transformer: SwinT_noaug vs ViT_B16_noaug - EigenCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-transformer1"><div class="img-placeholder">Overlay placeholder</div></figure>
                 </div>
+            </div>
+
+            <head>
+                Mẫu 2:
+            </head>
+            <div class="compare-row">
                 <div class="compare-item">
-                    <div class="title">ViT_B16 - EigenCAM</div>
-                    <figure class="card-figure auto-map" data-map="cam-vit-b16"><div class="img-placeholder">Overlay placeholder</div></figure>
+                    <div class="title">CNN: ResNet18_noaug vs EfficientNetB0_noaug - GradCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-cnn2"><div class="img-placeholder">Overlay placeholder</div></figure>
                 </div>
+            </div>
+            <div class="compare-row">
                 <div class="compare-item">
-                    <div class="title">SwinT - EigenCAM</div>
-                    <figure class="card-figure auto-map" data-map="cam-swint"><div class="img-placeholder">Overlay placeholder</div></figure>
+                    <div class="title">Transformer: SwinT_noaug vs ViT_B16_noaug - EigenCAM</div>
+                    <figure class="card-figure auto-map" data-map="cam-transformer2"><div class="img-placeholder">Overlay placeholder</div></figure>
                 </div>
             </div>
         </section>
@@ -1248,10 +1261,10 @@
             "cm-vit-b16-noaug": ["img_cm_vit_noaug.png"],
             "cm-swint-aug": ["img_cm_swin_aug.png"],
             "cm-swint-noaug": ["img_cm_swin_noaug.png"],
-            "cam-resnet18": ["cam_resnet18_gradcam.png"],
-            "cam-efficientnetb0": ["cam_efficientnetb0_gradcam.png"],
-            "cam-vit-b16": ["cam_vit_b16_eigencam.png"],
-            "cam-swint": ["cam_swint_eigencam.png"]
+            "cam-cnn1": ["cam_cnn1.png"],
+            "cam-cnn2": ["cam_cnn1.png"],
+            "cam-transformer1": ["cam_cnn1.png"],
+            "cam-transformer2": ["cam_cnn1.png"]
         };
 
         function resolveImage(candidates, onSuccess, onFail) {
