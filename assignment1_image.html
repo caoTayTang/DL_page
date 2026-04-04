@@ -610,6 +610,247 @@
             font-weight: 700;
         }
 
+
+        /* ─── LIVE DEMO SECTION ─────────────────────────────────── */
+        .demo-examples {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.45rem;
+            margin: 0.9rem 0 0.6rem;
+        }
+        .demo-examples-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--muted);
+        }
+        .demo-example-btn {
+            border: 1px solid #bfd1c3;
+            background: #fff;
+            color: #1e3329;
+            border-radius: 999px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: inherit;
+        }
+        .demo-example-btn:hover,
+        .demo-example-btn.active-example {
+            background: #1e3329;
+            color: #f2fff7;
+            border-color: #1e3329;
+        }
+        .demo-input-row {
+            display: flex;
+            gap: 0.6rem;
+            align-items: stretch;
+            margin: 0.5rem 0 0.65rem;
+        }
+        .demo-url-input {
+            flex: 1;
+            border: 1px solid #c5d4c8;
+            border-radius: 11px;
+            padding: 0.55rem 0.85rem;
+            font-size: 0.85rem;
+            font-family: "Consolas", "Courier New", monospace;
+            color: var(--ink);
+            background: #fff;
+            outline: none;
+            transition: border-color 0.18s;
+        }
+        .demo-url-input:focus {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 3px rgba(31,157,139,0.12);
+        }
+        .demo-run-btn {
+            border: none;
+            background: linear-gradient(135deg, var(--accent) 0%, #e04e1e 100%);
+            color: #fff;
+            border-radius: 11px;
+            padding: 0.55rem 1.2rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.18s, transform 0.18s;
+            font-family: inherit;
+        }
+        .demo-run-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .demo-run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .demo-model-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .demo-model-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            margin-right: 0.2rem;
+        }
+        .model-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid #c5d4c8;
+            border-radius: 8px;
+            padding: 0.28rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #fff;
+            color: #2a3d35;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+        .model-toggle:has(input:checked) {
+            background: #1e3329;
+            color: #f2fff7;
+            border-color: #1e3329;
+        }
+        .model-toggle input { display: none; }
+        .demo-status {
+            border-radius: 11px;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.86rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .demo-status.info  { background: #e8f4fb; color: #1a5a7a; border: 1px solid #b8d9ed; }
+        .demo-status.error { background: #fdecea; color: #8b2017; border: 1px solid #f3bcb8; }
+        .demo-status.ok    { background: #e6f9ee; color: #1a5c34; border: 1px solid #a7dfc0; }
+        .demo-results { margin-top: 0.5rem; }
+        .demo-top-row {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0.9rem;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        .demo-box-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+        .demo-preview-box {
+            border: 1px solid #d6ddd2;
+            border-radius: 13px;
+            background: #fff;
+            padding: 0.65rem;
+        }
+        .demo-preview-box img {
+            width: 100%;
+            border-radius: 9px;
+            object-fit: cover;
+            display: block;
+        }
+        .demo-prob-box {
+            border: 1px solid #d6ddd2;
+            border-radius: 13px;
+            background: #fff;
+            padding: 0.8rem 1rem;
+            overflow-x: auto;
+        }
+        /* Probability bar chart rendered in JS */
+        .prob-model-block { margin-bottom: 1rem; }
+        .prob-model-block:last-child { margin-bottom: 0; }
+        .prob-model-name {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #1e3329;
+            margin-bottom: 0.35rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .prob-model-name .prob-pred {
+            color: var(--accent);
+        }
+        .prob-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.22rem;
+        }
+        .prob-bar-label {
+            font-size: 0.75rem;
+            width: 80px;
+            flex-shrink: 0;
+            color: #3a4f45;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .prob-bar-track {
+            flex: 1;
+            height: 12px;
+            background: #edf2ec;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .prob-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent-2), #2ec4a1);
+            transition: width 0.55s cubic-bezier(0.22,1,0.36,1);
+        }
+        .prob-bar-fill.top-pred {
+            background: linear-gradient(90deg, var(--accent), #ff8c55);
+        }
+        .prob-bar-pct {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #4a6258;
+            width: 42px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        /* HF CTA box */
+        .demo-hf-wrap {
+            border: 1px solid #d6ddd2;
+            border-radius: 13px;
+            background: #fff;
+            padding: 1rem 1.1rem;
+        }
+        .demo-hf-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .demo-hf-icon { font-size: 2.5rem; line-height: 1; }
+        .demo-hf-cta p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            max-width: 500px;
+            margin: 0;
+        }
+        .demo-hf-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6f00 0%, #f5b642 100%);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 11px;
+            text-decoration: none;
+            transition: opacity 0.18s, transform 0.18s;
+        }
+        .demo-hf-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .demo-hf-note {
+            font-size: 0.78rem !important;
+            color: #7a9287 !important;
+        }
+        @media (max-width: 680px) {
+            .demo-top-row { grid-template-columns: 1fr; }
+            .demo-input-row { flex-direction: column; }
+        }
+
         @media (max-width: 980px) {
             .compare-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
@@ -655,6 +896,7 @@
             <a href="#training">Training</a>
             <a href="#comparison">So sánh mô hình</a>
             <a href="#experiments">Kết quả thực nghiệm</a>
+            <a href="#live-demo">🚀 Live Demo</a>
         </nav>
 
         <section class="section-card reveal" id="intro">
@@ -1260,6 +1502,80 @@
                 </div>
             </div>
         </section>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!--  SECTION 09 — LIVE DEMO                                 -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <section class="section-card reveal" id="live-demo">
+            <div class="section-head">
+                <span class="idx">09</span>
+                <h2>Live Demo — Thử nghiệm trực tiếp</h2>
+            </div>
+            <p>
+                Nhập URL ảnh bất kỳ (GitHub raw, Wikipedia…) để chạy phân loại trực tiếp trên cả 8 mô hình đã huấn luyện.
+                Kết quả trả về xác suất từng lớp và bản đồ GradCAM / EigenCAM để hiểu vùng ảnh mô hình tập trung vào.
+            </p>
+
+            <!-- URL input + model selector + run -->
+            <div class="demo-input-row">
+                <input
+                    type="text"
+                    id="demoUrlInput"
+                    class="demo-url-input"
+                    placeholder="https://raw.githubusercontent.com/…/image.jpg"
+                    autocomplete="off"
+                    spellcheck="false"
+                />
+                <button id="demoRunBtn" class="demo-run-btn">
+                    <span id="demoBtnLabel">▶ Chạy</span>
+                </button>
+            </div>
+
+            <!-- Model checkboxes -->
+            <div class="demo-model-toggles" id="demoModelToggles">
+                <span class="demo-model-label">Chọn model:</span>
+                <label class="model-toggle"><input type="checkbox" value="ResNet18_noaug" checked> ResNet18_noaug</label>
+                <label class="model-toggle"><input type="checkbox" value="ResNet18_aug"> ResNet18_aug</label>
+                <label class="model-toggle"><input type="checkbox" value="EfficientNetB0_noaug" checked> EffNet_noaug</label>
+                <label class="model-toggle"><input type="checkbox" value="EfficientNetB0_aug"> EffNet_aug</label>
+                <label class="model-toggle"><input type="checkbox" value="ViT_B16_noaug" checked> ViT_noaug</label>
+                <label class="model-toggle"><input type="checkbox" value="ViT_B16_aug"> ViT_aug</label>
+                <label class="model-toggle"><input type="checkbox" value="SwinT_noaug" checked> SwinT_noaug</label>
+                <label class="model-toggle"><input type="checkbox" value="SwinT_aug"> SwinT_aug</label>
+            </div>
+
+            <!-- Status message -->
+            <div id="demoStatus" class="demo-status" style="display:none;"></div>
+
+            <!-- Result area -->
+            <div id="demoResults" class="demo-results" style="display:none;">
+                <!-- Image preview + probability bars side by side -->
+                <div class="demo-top-row">
+                    <div class="demo-preview-box">
+                        <p class="demo-box-label">Ảnh đầu vào</p>
+                        <img id="demoPreviewImg" alt="Input preview" />
+                    </div>
+                    <div class="demo-prob-box" id="demoProbBox">
+                        <!-- probability bars injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Hugging Face Space embed / link -->
+                <div class="demo-hf-wrap">
+                    <p class="demo-box-label" style="margin-bottom:0.5rem;">
+                        🔥 GradCAM / EigenCAM — Hugging Face Space
+                    </p>
+                    <div class="demo-hf-cta" id="demoHFCta">
+                        <div class="demo-hf-icon">🤗</div>
+                        <p>Mở Hugging Face Space để xem bản đồ GradCAM / EigenCAM tương tác đầy đủ trên tất cả 8 model.</p>
+                        <a id="demoHFLink" href="https://huggingface.co/spaces/YOUR_HF_USERNAME/animals10" target="_blank" rel="noopener" class="demo-hf-btn">
+                            Mở Hugging Face Space ↗
+                        </a>
+                        <p class="demo-hf-note">URL ảnh đã được copy sẵn — chỉ cần paste vào ô nhập liệu trên Space.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -1484,6 +1800,246 @@
                 closeLightbox();
             }
         });
+
+        /* ─── LIVE DEMO ──────────────────────────────────────────── */
+        (function () {
+            const HF_SPACE_URL = "https://huggingface.co/spaces/YOUR_HF_USERNAME/animals10";
+
+            const CLASS_NAMES = [
+                "butterfly","cat","chicken","cow",
+                "dog","elephant","horse","sheep","spider","squirrel"
+            ];
+
+            const urlInput   = document.getElementById("demoUrlInput");
+            const runBtn     = document.getElementById("demoRunBtn");
+            const btnLabel   = document.getElementById("demoBtnLabel");
+            const statusEl   = document.getElementById("demoStatus");
+            const resultsEl  = document.getElementById("demoResults");
+            const previewImg = document.getElementById("demoPreviewImg");
+            const probBox    = document.getElementById("demoProbBox");
+            const hfLink     = document.getElementById("demoHFLink");
+
+            /* ── Example buttons ── */
+            document.querySelectorAll(".demo-example-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll(".demo-example-btn")
+                        .forEach(b => b.classList.remove("active-example"));
+                    btn.classList.add("active-example");
+                    urlInput.value = btn.dataset.url;
+                });
+            });
+
+            /* ── Model toggles: clicking the label toggles checked ── */
+            document.querySelectorAll(".model-toggle").forEach(lbl => {
+                lbl.addEventListener("click", () => {
+                    const cb = lbl.querySelector("input");
+                    cb.checked = !cb.checked;
+                });
+            });
+
+            function getSelectedModels() {
+                return Array.from(
+                    document.querySelectorAll(".model-toggle input:checked")
+                ).map(cb => cb.value);
+            }
+
+            function setStatus(msg, type) {
+                statusEl.textContent = msg;
+                statusEl.className = "demo-status " + (type || "info");
+                statusEl.style.display = "block";
+            }
+
+            function hideStatus() { statusEl.style.display = "none"; }
+
+            /* ── Probability bar renderer ── */
+            function renderProbBars(probsMap) {
+                // probsMap: { modelName: Float32Array / plain array of 10 }
+                probBox.innerHTML = "";
+                const modelNames = Object.keys(probsMap);
+                if (modelNames.length === 0) return;
+
+                // header label
+                const header = document.createElement("p");
+                header.className = "demo-box-label";
+                header.textContent = "Xác suất từng lớp (%)";
+                header.style.marginBottom = "0.65rem";
+                probBox.appendChild(header);
+
+                modelNames.forEach(name => {
+                    const probs = probsMap[name];
+                    const topIdx = probs.indexOf(Math.max(...probs));
+
+                    const block = document.createElement("div");
+                    block.className = "prob-model-block";
+
+                    const titleRow = document.createElement("div");
+                    titleRow.className = "prob-model-name";
+                    titleRow.innerHTML =
+                        `<span>${name}</span>` +
+                        `<span class="prob-pred">→ ${CLASS_NAMES[topIdx]} (${(probs[topIdx]*100).toFixed(1)}%)</span>`;
+                    block.appendChild(titleRow);
+
+                    CLASS_NAMES.forEach((cls, i) => {
+                        const row = document.createElement("div");
+                        row.className = "prob-bar-row";
+
+                        const lbl = document.createElement("div");
+                        lbl.className = "prob-bar-label";
+                        lbl.textContent = cls;
+
+                        const track = document.createElement("div");
+                        track.className = "prob-bar-track";
+                        const fill = document.createElement("div");
+                        fill.className = "prob-bar-fill" + (i === topIdx ? " top-pred" : "");
+                        fill.style.width = "0%";
+                        track.appendChild(fill);
+
+                        const pct = document.createElement("div");
+                        pct.className = "prob-bar-pct";
+                        pct.textContent = (probs[i] * 100).toFixed(1) + "%";
+
+                        row.appendChild(lbl);
+                        row.appendChild(track);
+                        row.appendChild(pct);
+                        block.appendChild(row);
+
+                        // Animate bar after paint
+                        requestAnimationFrame(() => {
+                            setTimeout(() => {
+                                fill.style.width = (probs[i] * 100).toFixed(2) + "%";
+                            }, 60);
+                        });
+                    });
+
+                    probBox.appendChild(block);
+                });
+            }
+
+            /* ── Fetch image and run through HF API (inference endpoint) ── */
+            async function runDemo() {
+                const rawUrl = urlInput.value.trim();
+                if (!rawUrl) { setStatus("⚠ Vui lòng nhập URL ảnh.", "error"); return; }
+
+                const selected = getSelectedModels();
+                if (selected.length === 0) {
+                    setStatus("⚠ Vui lòng chọn ít nhất một model.", "error");
+                    return;
+                }
+
+                // Convert GitHub blob → raw
+                let imageUrl = rawUrl;
+                if (imageUrl.includes("github.com") && imageUrl.includes("/blob/")) {
+                    imageUrl = imageUrl
+                        .replace("github.com", "raw.githubusercontent.com")
+                        .replace("/blob/", "/");
+                }
+
+                runBtn.disabled = true;
+                btnLabel.textContent = "⏳ Đang tải…";
+                setStatus("Đang tải ảnh…", "info");
+                resultsEl.style.display = "none";
+
+                // Show image preview immediately
+                previewImg.onload  = () => {};
+                previewImg.onerror = () => setStatus("✗ Không tải được ảnh — kiểm tra URL.", "error");
+                previewImg.src = imageUrl;
+
+                // Update HF Space link
+                const hfWithParam = HF_SPACE_URL +
+                    "?__theme=light" +
+                    "&url=" + encodeURIComponent(imageUrl) +
+                    "&models=" + encodeURIComponent(selected.join(","));
+                hfLink.href = hfWithParam;
+
+                // Try calling the HF Inference API (gradio /predict endpoint)
+                // Falls back gracefully if the space is sleeping / unavailable.
+                const HF_API = HF_SPACE_URL.replace(
+                    "https://huggingface.co/spaces/",
+                    "https://api-inference.huggingface.co/models/"
+                );
+
+                let probsMap = {};
+                try {
+                    btnLabel.textContent = "⏳ Đang chạy model…";
+                    setStatus("Đang gửi request tới Hugging Face Space…", "info");
+
+                    // Gradio REST API v4 — /run/predict
+                    const apiBase = HF_SPACE_URL
+                        .replace("https://huggingface.co/spaces/", "https://")
+                        .replace(/\/$/, "");
+                    // Build a Gradio-compatible URL:
+                    // e.g. https://username-spacename.hf.space/run/predict
+                    const gradioBase = HF_SPACE_URL
+                        .replace("https://huggingface.co/spaces/", "")
+                        .replace("/", "-")
+                        .toLowerCase();
+                    const gradioApiUrl =
+                        `https://${gradioBase}.hf.space/run/predict`;
+
+                    const payload = {
+                        data: [imageUrl, selected],
+                        fn_index: 0
+                    };
+
+                    const resp = await fetch(gradioApiUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const json = await resp.json();
+
+                    // Parse response — Gradio returns data[0] = prob JSON string
+                    // We expect the first output to be a JSON string of {modelName: [p0..p9]}
+                    if (json.data && json.data[0]) {
+                        const raw = json.data[0];
+                        probsMap = typeof raw === "string" ? JSON.parse(raw) : raw;
+                    }
+
+                    setStatus(" Hoàn thành! Xem GradCAM/EigenCAM trên Hugging Face Space.", "ok");
+                } catch (err) {
+                    console.warn("HF API call failed:", err);
+                    // Graceful fallback: show random-looking uniform probs to indicate space is offline
+                    setStatus(
+                        "⚠ Không kết nối được tới HF Space (có thể đang ngủ). " +
+                        "Mở Space trực tiếp để xem kết quả đầy đủ.",
+                        "error"
+                    );
+                    // Still show the image + HF link
+                }
+
+                previewImg.onload = () => {
+                    resultsEl.style.display = "block";
+                    if (Object.keys(probsMap).length > 0) {
+                        renderProbBars(probsMap);
+                    } else {
+                        probBox.innerHTML =
+                            '<p style="font-size:0.83rem;color:var(--muted);padding:0.5rem 0;">' +
+                            'Không có kết quả xác suất — mở HF Space để chạy trực tiếp.</p>';
+                    }
+                };
+                // Trigger onload if already cached
+                if (previewImg.complete && previewImg.naturalWidth > 0) {
+                    resultsEl.style.display = "block";
+                    if (Object.keys(probsMap).length > 0) renderProbBars(probsMap);
+                    else {
+                        probBox.innerHTML =
+                            '<p style="font-size:0.83rem;color:var(--muted);padding:0.5rem 0;">' +
+                            'Không có kết quả xác suất — mở HF Space để chạy trực tiếp.</p>';
+                    }
+                }
+
+                runBtn.disabled = false;
+                btnLabel.textContent = "▶ Chạy";
+            }
+
+            runBtn.addEventListener("click", runDemo);
+            urlInput.addEventListener("keydown", e => {
+                if (e.key === "Enter") runDemo();
+            });
+        })();
+
     </script>
 </body>
 </html>
