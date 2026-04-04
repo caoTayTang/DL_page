@@ -815,6 +815,14 @@
             background: #fff;
             padding: 1rem 1.1rem;
         }
+        .demo-hf-iframe {
+            width: 100%;
+            min-height: 680px;
+            border: 1px solid #d6ddd2;
+            border-radius: 12px;
+            background: #fff;
+            margin: 0.4rem 0 0.9rem;
+        }
         .demo-hf-cta {
             display: flex;
             flex-direction: column;
@@ -849,6 +857,7 @@
         @media (max-width: 680px) {
             .demo-top-row { grid-template-columns: 1fr; }
             .demo-input-row { flex-direction: column; }
+            .demo-hf-iframe { min-height: 520px; }
         }
 
         @media (max-width: 980px) {
@@ -1509,70 +1518,28 @@
         <section class="section-card reveal" id="live-demo">
             <div class="section-head">
                 <span class="idx">09</span>
-                <h2>Thử nghiệm trực tiếp (Gradio)</h2>
+                <h2>Thử nghiệm trực tiếp trên Hugging Face Space</h2>
             </div>
-            <p>
-                Nhập URL ảnh bất kỳ (GitHub raw, Wikipedia…) để chạy phân loại trực tiếp trên cả 8 mô hình đã huấn luyện.
-                Kết quả trả về xác suất từng lớp và bản đồ GradCAM / EigenCAM để hiểu vùng ảnh mô hình tập trung vào.
-            </p>
-
-            <!-- URL input + model selector + run -->
-            <div class="demo-input-row">
-                <input
-                    type="text"
-                    id="demoUrlInput"
-                    class="demo-url-input"
-                    placeholder="https://raw.githubusercontent.com/…/image.jpg"
-                    autocomplete="off"
-                    spellcheck="false"
-                />
-                <button id="demoRunBtn" class="demo-run-btn">
-                    <span id="demoBtnLabel">▶ Chạy</span>
-                </button>
-            </div>
-
-            <!-- Model checkboxes -->
-            <div class="demo-model-toggles" id="demoModelToggles">
-                <span class="demo-model-label">Chọn model:</span>
-                <label class="model-toggle"><input type="checkbox" value="ResNet18_noaug" checked> ResNet18_noaug</label>
-                <label class="model-toggle"><input type="checkbox" value="ResNet18_aug"> ResNet18_aug</label>
-                <label class="model-toggle"><input type="checkbox" value="EfficientNetB0_noaug" checked> EffNet_noaug</label>
-                <label class="model-toggle"><input type="checkbox" value="EfficientNetB0_aug"> EffNet_aug</label>
-                <label class="model-toggle"><input type="checkbox" value="ViT_B16_noaug" checked> ViT_noaug</label>
-                <label class="model-toggle"><input type="checkbox" value="ViT_B16_aug"> ViT_aug</label>
-                <label class="model-toggle"><input type="checkbox" value="SwinT_noaug" checked> SwinT_noaug</label>
-                <label class="model-toggle"><input type="checkbox" value="SwinT_aug"> SwinT_aug</label>
-            </div>
-
-            <!-- Status message -->
-            <div id="demoStatus" class="demo-status" style="display:none;"></div>
-
-            <!-- Result area -->
-            <div id="demoResults" class="demo-results" style="display:none;">
-                <!-- Image preview + probability bars side by side -->
-                <div class="demo-top-row">
-                    <div class="demo-preview-box">
-                        <p class="demo-box-label">Ảnh đầu vào</p>
-                        <img id="demoPreviewImg" alt="Input preview" />
-                    </div>
-                    <div class="demo-prob-box" id="demoProbBox">
-                        <!-- probability bars injected by JS -->
-                    </div>
-                </div>
-
-                <!-- Hugging Face Space embed / link -->
-                <div class="demo-hf-wrap">
-                    <p class="demo-box-label" style="margin-bottom:0.5rem;">
-                        🔥 GradCAM / EigenCAM — Hugging Face Space
+             
+            <div class="demo-hf-wrap">
+                <p class="demo-box-label" style="margin-bottom:0.5rem;">
+                    GradCAM / EigenCAM - Hugging Face Space
+                </p>
+                <iframe
+                    class="demo-hf-iframe"
+                    src="https://thuanluong-animals10.hf.space"
+                    title="Animals10 Demo Space"
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+                <div class="demo-hf-cta">
+                    <p>
+                        Nếu trình duyệt chặn nhúng iframe, bấm nút bên dưới để mở Space ở tab mới.
                     </p>
-                    <div class="demo-hf-cta" id="demoHFCta">
-                        <div class="demo-hf-icon">🤗</div>
-                        <p>Mở Hugging Face Space để xem bản đồ GradCAM / EigenCAM tương tác đầy đủ trên tất cả 8 model.</p>
-                        <a id="demoHFLink" href="https://huggingface.co/spaces/YOUR_HF_USERNAME/animals10" target="_blank" rel="noopener" class="demo-hf-btn">
-                            Mở Hugging Face Space ↗
-                        </a>
-                        <p class="demo-hf-note">URL ảnh đã được copy sẵn — chỉ cần paste vào ô nhập liệu trên Space.</p>
-                    </div>
+                    <a href="https://huggingface.co/spaces/ThuanLuong/animals10" target="_blank" rel="noopener" class="demo-hf-btn">
+                        Mở Hugging Face Space
+                    </a>
                 </div>
             </div>
         </section>
@@ -1800,245 +1767,6 @@
                 closeLightbox();
             }
         });
-
-        /* ─── LIVE DEMO ──────────────────────────────────────────── */
-        (function () {
-            const HF_SPACE_URL = "https://huggingface.co/spaces/ThuanLuong/animals10";
-
-            const CLASS_NAMES = [
-                "butterfly","cat","chicken","cow",
-                "dog","elephant","horse","sheep","spider","squirrel"
-            ];
-
-            const urlInput   = document.getElementById("demoUrlInput");
-            const runBtn     = document.getElementById("demoRunBtn");
-            const btnLabel   = document.getElementById("demoBtnLabel");
-            const statusEl   = document.getElementById("demoStatus");
-            const resultsEl  = document.getElementById("demoResults");
-            const previewImg = document.getElementById("demoPreviewImg");
-            const probBox    = document.getElementById("demoProbBox");
-            const hfLink     = document.getElementById("demoHFLink");
-
-            /* ── Example buttons ── */
-            document.querySelectorAll(".demo-example-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    document.querySelectorAll(".demo-example-btn")
-                        .forEach(b => b.classList.remove("active-example"));
-                    btn.classList.add("active-example");
-                    urlInput.value = btn.dataset.url;
-                });
-            });
-
-            /* ── Model toggles: clicking the label toggles checked ── */
-            document.querySelectorAll(".model-toggle").forEach(lbl => {
-                lbl.addEventListener("click", () => {
-                    const cb = lbl.querySelector("input");
-                    cb.checked = !cb.checked;
-                });
-            });
-
-            function getSelectedModels() {
-                return Array.from(
-                    document.querySelectorAll(".model-toggle input:checked")
-                ).map(cb => cb.value);
-            }
-
-            function setStatus(msg, type) {
-                statusEl.textContent = msg;
-                statusEl.className = "demo-status " + (type || "info");
-                statusEl.style.display = "block";
-            }
-
-            function hideStatus() { statusEl.style.display = "none"; }
-
-            /* ── Probability bar renderer ── */
-            function renderProbBars(probsMap) {
-                // probsMap: { modelName: Float32Array / plain array of 10 }
-                probBox.innerHTML = "";
-                const modelNames = Object.keys(probsMap);
-                if (modelNames.length === 0) return;
-
-                // header label
-                const header = document.createElement("p");
-                header.className = "demo-box-label";
-                header.textContent = "Xác suất từng lớp (%)";
-                header.style.marginBottom = "0.65rem";
-                probBox.appendChild(header);
-
-                modelNames.forEach(name => {
-                    const probs = probsMap[name];
-                    const topIdx = probs.indexOf(Math.max(...probs));
-
-                    const block = document.createElement("div");
-                    block.className = "prob-model-block";
-
-                    const titleRow = document.createElement("div");
-                    titleRow.className = "prob-model-name";
-                    titleRow.innerHTML =
-                        `<span>${name}</span>` +
-                        `<span class="prob-pred">→ ${CLASS_NAMES[topIdx]} (${(probs[topIdx]*100).toFixed(1)}%)</span>`;
-                    block.appendChild(titleRow);
-
-                    CLASS_NAMES.forEach((cls, i) => {
-                        const row = document.createElement("div");
-                        row.className = "prob-bar-row";
-
-                        const lbl = document.createElement("div");
-                        lbl.className = "prob-bar-label";
-                        lbl.textContent = cls;
-
-                        const track = document.createElement("div");
-                        track.className = "prob-bar-track";
-                        const fill = document.createElement("div");
-                        fill.className = "prob-bar-fill" + (i === topIdx ? " top-pred" : "");
-                        fill.style.width = "0%";
-                        track.appendChild(fill);
-
-                        const pct = document.createElement("div");
-                        pct.className = "prob-bar-pct";
-                        pct.textContent = (probs[i] * 100).toFixed(1) + "%";
-
-                        row.appendChild(lbl);
-                        row.appendChild(track);
-                        row.appendChild(pct);
-                        block.appendChild(row);
-
-                        // Animate bar after paint
-                        requestAnimationFrame(() => {
-                            setTimeout(() => {
-                                fill.style.width = (probs[i] * 100).toFixed(2) + "%";
-                            }, 60);
-                        });
-                    });
-
-                    probBox.appendChild(block);
-                });
-            }
-
-            /* ── Fetch image and run through HF API (inference endpoint) ── */
-            async function runDemo() {
-                const rawUrl = urlInput.value.trim();
-                if (!rawUrl) { setStatus("⚠ Vui lòng nhập URL ảnh.", "error"); return; }
-
-                const selected = getSelectedModels();
-                if (selected.length === 0) {
-                    setStatus("⚠ Vui lòng chọn ít nhất một model.", "error");
-                    return;
-                }
-
-                // Convert GitHub blob → raw
-                let imageUrl = rawUrl;
-                if (imageUrl.includes("github.com") && imageUrl.includes("/blob/")) {
-                    imageUrl = imageUrl
-                        .replace("github.com", "raw.githubusercontent.com")
-                        .replace("/blob/", "/");
-                }
-
-                runBtn.disabled = true;
-                btnLabel.textContent = "⏳ Đang tải…";
-                setStatus("Đang tải ảnh…", "info");
-                resultsEl.style.display = "none";
-
-                // Show image preview immediately
-                previewImg.onload  = () => {};
-                previewImg.onerror = () => setStatus("✗ Không tải được ảnh — kiểm tra URL.", "error");
-                previewImg.src = imageUrl;
-
-                // Update HF Space link
-                const hfWithParam = HF_SPACE_URL +
-                    "?__theme=light" +
-                    "&url=" + encodeURIComponent(imageUrl) +
-                    "&models=" + encodeURIComponent(selected.join(","));
-                hfLink.href = hfWithParam;
-
-                // Try calling the HF Inference API (gradio /predict endpoint)
-                // Falls back gracefully if the space is sleeping / unavailable.
-                const HF_API = HF_SPACE_URL.replace(
-                    "https://huggingface.co/spaces/",
-                    "https://api-inference.huggingface.co/models/"
-                );
-
-                let probsMap = {};
-                try {
-                    btnLabel.textContent = "⏳ Đang chạy model…";
-                    setStatus("Đang gửi request tới Hugging Face Space…", "info");
-
-                    // Gradio REST API v4 — /run/predict
-                    const apiBase = HF_SPACE_URL
-                        .replace("https://huggingface.co/spaces/", "https://")
-                        .replace(/\/$/, "");
-                    // Build a Gradio-compatible URL:
-                    // e.g. https://username-spacename.hf.space/run/predict
-                    const gradioBase = HF_SPACE_URL
-                        .replace("https://huggingface.co/spaces/", "")
-                        .replace("/", "-")
-                        .toLowerCase();
-                    const gradioApiUrl =
-                        `https://${gradioBase}.hf.space/run/predict`;
-
-                    const payload = {
-                        data: [imageUrl, selected],
-                        fn_index: 0
-                    };
-
-                    const resp = await fetch(gradioApiUrl, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload),
-                    });
-
-                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                    const json = await resp.json();
-
-                    // Parse response — Gradio returns data[0] = prob JSON string
-                    // We expect the first output to be a JSON string of {modelName: [p0..p9]}
-                    if (json.data && json.data[0]) {
-                        const raw = json.data[0];
-                        probsMap = typeof raw === "string" ? JSON.parse(raw) : raw;
-                    }
-
-                    setStatus(" Hoàn thành! Xem GradCAM/EigenCAM trên Hugging Face Space.", "ok");
-                } catch (err) {
-                    console.warn("HF API call failed:", err);
-                    // Graceful fallback: show random-looking uniform probs to indicate space is offline
-                    setStatus(
-                        "⚠ Không kết nối được tới HF Space (có thể đang ngủ). " +
-                        "Mở Space trực tiếp để xem kết quả đầy đủ.",
-                        "error"
-                    );
-                    // Still show the image + HF link
-                }
-
-                previewImg.onload = () => {
-                    resultsEl.style.display = "block";
-                    if (Object.keys(probsMap).length > 0) {
-                        renderProbBars(probsMap);
-                    } else {
-                        probBox.innerHTML =
-                            '<p style="font-size:0.83rem;color:var(--muted);padding:0.5rem 0;">' +
-                            'Không có kết quả xác suất — mở HF Space để chạy trực tiếp.</p>';
-                    }
-                };
-                // Trigger onload if already cached
-                if (previewImg.complete && previewImg.naturalWidth > 0) {
-                    resultsEl.style.display = "block";
-                    if (Object.keys(probsMap).length > 0) renderProbBars(probsMap);
-                    else {
-                        probBox.innerHTML =
-                            '<p style="font-size:0.83rem;color:var(--muted);padding:0.5rem 0;">' +
-                            'Không có kết quả xác suất — mở HF Space để chạy trực tiếp.</p>';
-                    }
-                }
-
-                runBtn.disabled = false;
-                btnLabel.textContent = "▶ Chạy";
-            }
-
-            runBtn.addEventListener("click", runDemo);
-            urlInput.addEventListener("keydown", e => {
-                if (e.key === "Enter") runDemo();
-            });
-        })();
 
     </script>
 </body>
