@@ -1,0 +1,131 @@
+<!doctype html>
+<html
+	lang="en"
+	style="
+		margin: 0;
+		padding: 0;
+		min-height: 100%;
+		display: flex;
+		flex-direction: column;
+	"
+>
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta property="og:title" content="Gradio" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="{url}" />
+		<meta property="og:description" content="Click to try out the app!" />
+		<meta
+			property="og:image"
+			content="https://raw.githubusercontent.com/gradio-app/gradio/main/js/_website/src/lib/assets/img/header-image.jpg"
+		/>
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:creator" content="@Gradio" />
+		<meta name="twitter:title" content="Gradio" />
+		<meta name="twitter:description" content="Click to try out the app!" />
+		<meta
+			name="twitter:image"
+			content="https://raw.githubusercontent.com/gradio-app/gradio/main/js/_website/src/lib/assets/img/header-image.jpg"
+		/>
+
+		<style>
+			:root {
+				--bg: white;
+				--col:   #27272a;
+				--bg-dark: #0f0f11;
+				--col-dark: #f4f4f5;
+			}
+
+
+			body {
+				background: var(--bg);
+				color: var(--col);
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: var(--bg-dark);
+					color: var(--col-dark);
+				}
+			}
+		</style>
+
+		<meta property="og:url" content="https://gradio.app/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="" />
+		<meta property="og:title" content="Gradio" />
+		<meta
+			property="og:description"
+			content=""
+		/>
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:creator" content="@teamGradio" />
+		<meta name="twitter:title" content="Gradio" />
+		<meta
+			name="twitter:description"
+			content=""
+		/>
+		<meta name="twitter:image" content="" />
+
+		<script>window.gradio_config = {"version":"6.11.0","api_prefix":"/gradio_api","mode":"blocks","app_id":17954158343991254780,"dev_mode":false,"vibe_mode":false,"analytics_enabled":true,"components":[{"id":1,"type":"markdown","props":{"value":"# Multimodal Movie Genre Classification","show_label":false,"rtl":false,"latex_delimiters":[{"left":"$$","right":"$$","display":true}],"visible":true,"elem_classes":[],"preserved_by_key":["value"],"sanitize_html":true,"line_breaks":false,"header_links":false,"container":false,"padding":false,"name":"markdown","_selectable":false},"skip_api":false,"component_class_id":"abd479b591fd1138d461fbe581c0c5bb7992056a2c6bb76e143e253690fa090d","key":null,"api_info":{"type":"string"},"api_info_as_input":{"type":"string"},"api_info_as_output":{"type":"string"},"example_inputs":"# Hello!"},{"id":2,"type":"row","props":{"variant":"default","visible":true,"elem_classes":[],"equal_height":false,"show_progress":false,"preserved_by_key":[],"name":"row"},"skip_api":true,"component_class_id":"7a99976e590e0ff6b1c6b6166be0ff61b03311ac5d386fd73166264c6d5a0ac1","key":null},{"id":3,"type":"column","props":{"scale":1,"min_width":320,"variant":"default","visible":true,"elem_classes":[],"show_progress":false,"preserved_by_key":[],"name":"column"},"skip_api":true,"component_class_id":"e354f79cf17fa8e3d8ebf4e815959fca1a6925f4215afe8ea1e1dd11623b1bee","key":null},{"id":4,"type":"image","props":{"streamable":false,"format":"webp","image_mode":"RGB","sources":["upload","webcam","clipboard"],"type":"pil","label":"Movie Poster","show_label":true,"buttons":["download","share","fullscreen"],"container":true,"min_width":160,"visible":true,"streaming":false,"elem_classes":[],"preserved_by_key":["value"],"webcam_options":{"mirror":true,"constraints":null},"watermark":{"watermark":null,"position":"bottom-right"},"name":"image","_selectable":false},"skip_api":false,"component_class_id":"1a7f7b81a71dc95598eb2d18a46c430a97a1ef4a827241e3441895445601d273","key":null,"api_info":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"api_info_as_input":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"api_info_as_output":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"example_inputs":{"path":"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png","meta":{"_type":"gradio.FileData"},"orig_name":"bus.png","url":"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png"}},{"id":5,"type":"textbox","props":{"type":"text","lines":5,"placeholder":"A young wizard discovers his magical heritage...","label":"Plot Summary","show_label":true,"container":true,"min_width":160,"visible":true,"autofocus":false,"autoscroll":true,"elem_classes":[],"preserved_by_key":["value"],"rtl":false,"buttons":[],"submit_btn":false,"stop_btn":false,"name":"textbox","_selectable":false},"skip_api":false,"component_class_id":"2fa20a206272d41961342de17192c4564130d8d30485ff43cac45d7b801d3522","key":null,"api_info":{"type":"string"},"api_info_as_input":{"type":"string"},"api_info_as_output":{"type":"string"},"example_inputs":"Hello!!"},{"id":6,"type":"row","props":{"variant":"default","visible":true,"elem_classes":[],"equal_height":false,"show_progress":false,"preserved_by_key":[],"name":"row"},"skip_api":true,"component_class_id":"7a99976e590e0ff6b1c6b6166be0ff61b03311ac5d386fd73166264c6d5a0ac1","key":null},{"id":7,"type":"checkbox","props":{"value":true,"label":"Use LoRA Model","show_label":true,"container":true,"min_width":160,"visible":true,"elem_classes":[],"preserved_by_key":["value"],"buttons":[],"name":"checkbox","_selectable":false},"skip_api":false,"component_class_id":"b652a5e84e0021d5548ab4b23bb4d08e0e497a29bb40871a1dc67da784e5897c","key":null,"api_info":{"type":"boolean"},"api_info_as_input":{"type":"boolean"},"api_info_as_output":{"type":"boolean"},"example_inputs":true},{"id":8,"type":"slider","props":{"minimum":1,"maximum":23,"value":5,"step":1,"label":"Top-K","show_label":true,"container":true,"min_width":160,"visible":true,"elem_classes":[],"preserved_by_key":["value"],"name":"slider","_selectable":false},"skip_api":false,"component_class_id":"3b070ec8833743abdc05b9428975783dd6095c4741ef362eb4524fdcf1776e9e","key":null,"api_info":{"type":"number","description":"numeric value between 1 and 23"},"api_info_as_input":{"type":"number","description":"numeric value between 1 and 23"},"api_info_as_output":{"type":"number","description":"numeric value between 1 and 23"},"example_inputs":1},{"id":9,"type":"form","props":{"scale":2,"min_width":320,"preserved_by_key":[],"name":"form"},"skip_api":true,"component_class_id":"762c363c328360cd798339d3b00c2bde4505863d3edb9e75717a89f96a906b45","key":null},{"id":10,"type":"button","props":{"value":"Predict","variant":"secondary","size":"lg","link_target":"_self","visible":true,"interactive":true,"elem_classes":[],"preserved_by_key":["value"],"name":"button","_selectable":false},"skip_api":true,"component_class_id":"86fb2019178c56decb3a19154b80f27859241bfadfc17931c8a82c48cf68e1b5","key":null},{"id":11,"type":"form","props":{"scale":0,"min_width":0,"preserved_by_key":[],"name":"form"},"skip_api":true,"component_class_id":"762c363c328360cd798339d3b00c2bde4505863d3edb9e75717a89f96a906b45","key":null},{"id":12,"type":"column","props":{"scale":1,"min_width":320,"variant":"default","visible":true,"elem_classes":[],"show_progress":false,"preserved_by_key":[],"name":"column"},"skip_api":true,"component_class_id":"e354f79cf17fa8e3d8ebf4e815959fca1a6925f4215afe8ea1e1dd11623b1bee","key":null},{"id":13,"type":"plot","props":{"format":"webp","label":"Confidence Scores","show_label":true,"container":true,"min_width":160,"visible":true,"elem_classes":[],"preserved_by_key":["value"],"buttons":[],"name":"plot","_selectable":false},"skip_api":false,"component_class_id":"5781e01089864f1f1a6712520327c46f5667c032ea30501308971998aea75a50","key":null,"api_info":{"properties":{"type":{"enum":["altair","bokeh","plotly","matplotlib"],"title":"Type","type":"string"},"plot":{"title":"Plot","type":"string"}},"required":["type","plot"],"title":"PlotData","type":"object","additional_description":null},"api_info_as_input":{"properties":{"type":{"enum":["altair","bokeh","plotly","matplotlib"],"title":"Type","type":"string"},"plot":{"title":"Plot","type":"string"}},"required":["type","plot"],"title":"PlotData","type":"object","additional_description":null},"api_info_as_output":{"properties":{"type":{"enum":["altair","bokeh","plotly","matplotlib"],"title":"Type","type":"string"},"plot":{"title":"Plot","type":"string"}},"required":["type","plot"],"title":"PlotData","type":"object","additional_description":null},"example_inputs":null},{"id":14,"type":"image","props":{"streamable":false,"format":"webp","image_mode":"RGB","sources":["upload","webcam","clipboard"],"type":"pil","label":"Attention Rollout","show_label":true,"buttons":["download","share","fullscreen"],"container":true,"min_width":160,"visible":true,"streaming":false,"elem_classes":[],"preserved_by_key":["value"],"webcam_options":{"mirror":true,"constraints":null},"watermark":{"watermark":null,"position":"bottom-right"},"name":"image","_selectable":false},"skip_api":false,"component_class_id":"1a7f7b81a71dc95598eb2d18a46c430a97a1ef4a827241e3441895445601d273","key":null,"api_info":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"api_info_as_input":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"api_info_as_output":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"example_inputs":{"path":"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png","meta":{"_type":"gradio.FileData"},"orig_name":"bus.png","url":"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png"}},{"id":15,"type":"html","props":{"_retryable":false,"_undoable":false,"likeable":false,"streamable":false,"label":"Text Attribution","html_template":"${value}","css_template":"","js_on_load":"element.addEventListener(\u0027click\u0027, function() { trigger(\u0027click\u0027) });","apply_default_css":true,"show_label":false,"visible":true,"elem_classes":[],"preserved_by_key":["value"],"container":false,"padding":false,"autoscroll":false,"buttons":[],"props":{},"name":"html","_selectable":false,"component_class_name":"HTML"},"skip_api":false,"component_class_id":"b0e618ea418cae01d0eaf55419f50cdeab2b7e9e652bf664a64c63d6f0dc8d17","key":null,"api_info":{"type":"string"},"api_info_as_input":{"type":"string"},"api_info_as_output":{"type":"string"},"example_inputs":"\u003cp\u003eHello\u003c/p\u003e"}],"css":null,"connect_heartbeat":false,"js":null,"head":null,"title":"Gradio","space_id":null,"enable_queue":true,"show_error":false,"footer_links":["api","gradio","settings"],"is_colab":false,"max_file_size":null,"stylesheets":["https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600\u0026display=swap"],"theme":"default","protocol":"sse_v3","body_css":{"body_background_fill":"white","body_text_color":"#27272a","body_background_fill_dark":"#0f0f11","body_text_color_dark":"#f4f4f5"},"fill_height":false,"fill_width":false,"theme_hash":"078b53afbcde6e67684be7a1e3236158d24ca87d4009f3a800e3e7b202955106","pwa":false,"pages":[["","Home",true]],"page":{"":{"layout":{"id":0,"children":[{"id":1},{"id":2,"children":[{"id":3,"children":[{"id":4},{"id":11,"children":[{"id":5}]},{"id":6,"children":[{"id":9,"children":[{"id":7},{"id":8}]}]},{"id":10}]},{"id":12,"children":[{"id":13},{"id":14},{"id":15,"children":[]}]}]}]},"components":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],"dependencies":[0]}},"mcp_server":false,"i18n_translations":null,"dependencies":[{"id":0,"targets":[[10,"click"]],"inputs":[5,4,7,8],"outputs":[13,14,15],"backend_fn":true,"js":null,"queue":true,"api_name":"predict","api_description":null,"scroll_to_output":false,"show_progress":"full","show_progress_on":null,"batch":false,"max_batch_size":4,"cancels":[],"types":{"generator":false,"cancel":false},"collects_event_data":false,"trigger_after":null,"trigger_only_on_success":false,"trigger_only_on_failure":false,"trigger_mode":"once","api_visibility":"public","rendered_in":null,"render_id":null,"connection":"sse","time_limit":null,"stream_every":0.5,"event_specific_args":null,"component_prop_inputs":[],"js_implementation":null}],"layout":{"id":0,"children":[{"id":1},{"id":2,"children":[{"id":3,"children":[{"id":4},{"id":11,"children":[{"id":5}]},{"id":6,"children":[{"id":9,"children":[{"id":7},{"id":8}]}]},{"id":10}]},{"id":12,"children":[{"id":13},{"id":14},{"id":15,"children":[]}]}]}]},"username":null,"deep_link_state":"none","current_page":"","root":"http://localhost:7860"};</script><script>window.gradio_api_info = {"named_endpoints":{"/predict":{"parameters":[{"label":"Plot Summary","parameter_name":"message","parameter_has_default":false,"parameter_default":null,"type":{"type":"string"},"python_type":{"type":"str","description":""},"component":"Textbox","example_input":"Hello!!"},{"label":"Movie Poster","parameter_name":"image","parameter_has_default":false,"parameter_default":null,"type":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"python_type":{"type":"filepath","description":"A local filepath or publicly available URL."},"component":"Image","example_input":{"path":"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png","meta":{"_type":"gradio.FileData"},"orig_name":"bus.png","url":"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png"}},{"label":"Use LoRA Model","parameter_name":"use_lora","parameter_has_default":true,"parameter_default":true,"type":{"type":"boolean"},"python_type":{"type":"bool","description":""},"component":"Checkbox","example_input":true},{"label":"Top-K","parameter_name":"top_k","parameter_has_default":true,"parameter_default":5,"type":{"type":"number","description":"numeric value between 1 and 23"},"python_type":{"type":"float","description":""},"component":"Slider","example_input":1}],"returns":[{"label":"Confidence Scores","type":{"properties":{"type":{"enum":["altair","bokeh","plotly","matplotlib"],"title":"Type","type":"string"},"plot":{"title":"Plot","type":"string"}},"required":["type","plot"],"title":"PlotData","type":"object","additional_description":null},"python_type":{"type":"dict(type: Literal[\u0027altair\u0027, \u0027bokeh\u0027, \u0027plotly\u0027, \u0027matplotlib\u0027], plot: str)","description":""},"component":"Plot"},{"label":"Attention Rollout","type":{"properties":{"path":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Path to a local file","title":"Path"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Publicly available url or base64 encoded image","title":"Url"},"size":{"anyOf":[{"type":"integer"},{"type":"null"}],"default":null,"description":"Size of image in bytes","title":"Size"},"orig_name":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"Original filename","title":"Orig Name"},"mime_type":{"anyOf":[{"type":"string"},{"type":"null"}],"default":null,"description":"mime type of image","title":"Mime Type"},"is_stream":{"default":false,"description":"Can always be set to False","title":"Is Stream","type":"boolean"},"meta":{"default":{"_type":"gradio.FileData"},"title":"Meta","type":"object"}},"title":"ImageData","type":"object","additional_description":"A local filepath or publicly available URL."},"python_type":{"type":"filepath","description":""},"component":"Image"},{"label":"Text Attribution","type":{"type":"string"},"python_type":{"type":"str","description":""},"component":"Html"}],"api_visibility":"public","description":"","code_snippets":{"python":"from gradio_client import Client, handle_file\n\nclient = Client(\"http://localhost:7860\")\nresult = client.predict(\n\tmessage=\"Hello!!\",\n\timage=handle_file(\u0027https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\u0027),\n\tuse_lora=True,\n\ttop_k=5,\n\tapi_name=\"/predict\",\n)\nprint(result)","javascript":"import { Client } from \"@gradio/client\";\n\nconst response_0 = await fetch(\"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\");\nconst exampleImage = await response_0.blob();\n\nconst client = await Client.connect(\"http://localhost:7860\");\nconst result = await client.predict(\"/predict\", {\n\t\tmessage: \"Hello!!\",\n\t\timage: exampleImage,\n\t\tuse_lora: true,\n\t\ttop_k: 5,\n});\n\nconsole.log(result.data);","bash":"curl -X POST http://localhost:7860/gradio_api/call/predict -s -H \"Content-Type: application/json\" -d \u0027{\"data\": [\"Hello!!\", {\"path\": \"https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png\", \"meta\": {\"_type\": \"gradio.FileData\"}}, true, 5]}\u0027 \\\n  | awk -F\u0027\"\u0027 \u0027{ print $4}\u0027 \\\n  | read EVENT_ID; curl -N http://localhost:7860/gradio_api/call/predict/$EVENT_ID"}}},"unnamed_endpoints":{}};</script>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.1/iframeResizer.contentWindow.min.js"
+			async
+		></script>
+		<script data-gradio-mode>
+			window.__gradio_mode__ = "app";
+			window.iFrameResizer = {
+				autoResize: false,
+				sizeWidth: false
+			};
+			window.parent?.postMessage(
+				{ type: "SET_SCROLLING", enabled: false },
+				"*"
+			);
+		</script>
+		<link rel="manifest" href="/manifest.json" />
+		<script type="module" crossorigin src="https://gradio.s3-us-west-2.amazonaws.com/6.11.0/gradio.js"></script>
+		
+	</head>
+
+	<body
+		style="
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+		"
+	>
+		<gradio-app
+			control_page_title="true"
+			embed="false"
+			eager="true"
+			style="display: flex; flex-direction: column; flex-grow: 1"
+		>
+		</gradio-app>
+		<script>
+			const ce = document.getElementsByTagName("gradio-app");
+
+			if (ce[0]) {
+				ce[0].addEventListener("domchange", () => {
+					document.body.style.padding = "0";
+				});
+				document.body.style.padding = "0";
+			}
+		</script>
+	</body>
+</html>
