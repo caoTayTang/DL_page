@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="assets/images/hcmut.webp">
-    <title>CO3133 – Học Sâu và Ứng Dụng</title>
+    <title>BTL1 - Multimodal Classification Report</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -879,68 +879,192 @@
 <body>
     <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
     <div class="container">
-        
-        <header class="hero" style="text-align: center;">
-            <img src="assets/images/hcmut.webp" alt="HCMUT Logo" style="height: 120px; margin-bottom: 1rem;">
-            <h1>CO3133 – Học Sâu và Ứng Dụng</h1>
-            <p style="margin: 0 auto 1.5rem;">Bài tập lớn – Học kỳ II, Năm học 2025–2026<br><br><strong>Nhóm ML4u</strong> (Thành viên: Đặng Vũ Tuấn Kiệt, Lê Chí Đại, Nguyễn Quốc Huy, Lương Minh Thuận)<br>GVHD: TS. Lê Thành Sách</p>
-            <div class="chip-row" style="justify-content: center;">
-                <span class="chip">CNN / ViT / Transformer</span>
-                <span class="chip">Zero-Shot / Few-Shot</span>
-                <span class="chip">Pytorch</span>
-            </div>
-            <div style="margin-top: 1.5rem;">
-               <a href="https://github.com/caoTayTang/DL_page" class="chip" style="background:#111; color:white; text-decoration:none;"><svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:bottom; margin-right:4px;"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.379.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg> Github Repository</a>
+        <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
+
+        <header class="hero">
+            <h1>BTL 1 - Multimodal Classification Report</h1>
+            <p>
+                Trang báo cáo tổng hợp cho Assignment 1 - phần Multimodal Classification.
+                Tập trung phân tích mô hình Zero-Shot CLIP và LoRA Few-Shot trên tập MM-IMDB (23 genres).
+            </p>
+            <div class="chip-row">
+                <span class="chip">Dataset: MM-IMDB</span>
+                <span class="chip">Framework: PyTorch + Transformers</span>
+                <span class="chip">Method: LoRA CLIP (r=8)</span>
+                <span class="chip">Visualization: Attention Rollout</span>
             </div>
         </header>
 
-        <section class="section-card reveal visible" id="intro">
+        <nav class="toc" id="toc">
+            <a href="#intro">Giới thiệu</a>
+            <a href="#eda">EDA</a>
+            <a href="#data-split">Data Split</a>
+            <a href="#model-selection">Model Selection</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#training">Training</a>
+            <a href="#comparison">Comparison</a>
+            <a href="#interpretability">Interpretability</a>
+            <a href="#demo">Gradio Demo</a>
+            <a href="#efficiency">Efficiency</a>
+        </nav>
+
+        <section class="section-card reveal" id="intro">
             <div class="section-head">
+                <span class="idx">01</span>
                 <h2>Giới thiệu</h2>
             </div>
-            <p>Trang web này là landing page cho 3 bài tập lớn môn Học Sâu và Ứng dụng (CO3133). Mỗi bài tập lớn được triển khai như một dự án áp dụng kiến trúc mạng nơ-ron sâu (Deep Neural Networks) vào các loại dữ liệu phổ biến:</p>
-            <ul style="padding-left: 2rem; color: var(--muted); line-height:1.8;">
-                <li><strong>Dữ liệu ảnh (Image Classification):</strong> Khảo sát Convolutional Neural Networks (CNN) và Vision Transformers (ViT).</li>
-                <li><strong>Dữ liệu văn bản (Text Classification):</strong> Khảo sát Recurrent Neural Networks (RNN) và Transformers.</li>
-                <li><strong>Đa phương thức (Multimodal):</strong> Phân loại với mô hình Zero-shot và Few-shot.</li>
-            </ul>
+            <p>Bài toán là phân loại đa phương thức đa nhãn (Multi-label multimodal classification), sử dụng cặp thông tin Ảnh poster và Tiêu đề phim. Tập dữ liệu chứa tổng cộng 23 thể loại (genres).</p>
+            <div class="kpis">
+                <div class="kpi"><div class="label">Bài toán</div><div class="value">Multi-label Classification</div></div>
+                <div class="kpi"><div class="label">Số lớp (genres)</div><div class="value">23</div></div>
+                <div class="kpi"><div class="label">Mô hình gốc</div><div class="value">CLIP ViT-B/32</div></div>
+                <div class="kpi"><div class="label">Kỹ thuật</div><div class="value">LoRA Few-Shot</div></div>
+            </div>
         </section>
 
-        <section class="section-card reveal visible" id="danh-sach">
+        <section class="section-card reveal" id="eda">
             <div class="section-head">
-                <h2>Danh sách Bài tập lớn</h2>
+                <span class="idx">02</span>
+                <h2>EDA (Exploratory Data Analysis)</h2>
             </div>
-            
+            <p>Phân bố các nhãn thể loại trên tập dữ liệu và vài sample poster.</p>
+            <iframe src="assets/plots/genre_distribution.html" width="100%" height="500px" style="border:1px solid var(--line); border-radius:var(--radius); margin-bottom: 1rem;"></iframe>
+        </section>
+
+        <section class="section-card reveal" id="data-split">
+            <div class="section-head">
+                <span class="idx">03</span>
+                <h2>Data Split & K-shot Sampling</h2>
+            </div>
+            <p>Dữ liệu được chia train/val/test theo tỉ lệ 70/15/15. Vì bài toán nhắm vào Few-Shot, tập huấn luyện được lấy mẫu ngẫu nhiên thành K mẫu mỗi lớp.</p>
+            <div class="kpis">
+                <div class="kpi"><div class="label">K-shot</div><div class="value">K = 16, 32, 64</div></div>
+                <div class="kpi"><div class="label">Train</div><div class="value">70%</div></div>
+                <div class="kpi"><div class="label">Validation</div><div class="value">15%</div></div>
+                <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="model-selection">
+            <div class="section-head">
+                <span class="idx">04</span>
+                <h2>Model Selection</h2>
+            </div>
+            <p>So sánh hai hướng tiếp cận chính: Zero-Shot sử dụng thẳng Text Embeddings làm classifier weights và LoRA Few-Shot train mảng Adapter trên CLIP Backbone.</p>
+            <div class="grid-2">
+                <div class="backbone-card">
+                    <div class="head"><span>Zero-Shot CLIP</span><span>Baseline</span></div>
+                    <div style="padding: 1.5rem; text-align: center; color: var(--muted); font-weight: 500;">
+                        Sử dụng prompt template "A movie poster for a {genre} movie". KHÔNG huấn luyện thêm.
+                    </div>
+                </div>
+                <div class="backbone-card">
+                    <div class="head"><span>LoRA CLIP</span><span>Fine-tuning</span></div>
+                    <div style="padding: 1.5rem; text-align: center; color: var(--muted); font-weight: 500;">
+                        Thêm Linear Layers phụ trợ vào Q, V Attention Blocks. Huấn luyện trên K-shot samples.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="architecture">
+            <div class="section-head">
+                <span class="idx">05</span>
+                <h2>Architecture</h2>
+            </div>
+            <p>CLIP ViT-B/32 + LoRA configuration (r=8, alpha=16). Custom Classifier Head nhận ghép cặp Text + Image Embeddings.</p>
+            <div class="code-box">
+<pre><code class="language-python"># CLIP LoRA Configuration
+peft_config = LoraConfig(
+    r=8,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0.1,
+    bias="none",
+    modules_to_save=["classifier_head"]
+)
+</code></pre>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="training">
+            <div class="section-head">
+                <span class="idx">06</span>
+                <h2>Training Logs</h2>
+            </div>
+            <p>Biểu đồ quá trình huấn luyện theo phong cách WandB (Loss và Macro F1 curves).</p>
+            <iframe src="assets/plots/training_progress.html" width="100%" height="450px" style="border:1px solid var(--line); border-radius:var(--radius);"></iframe>
+        </section>
+
+        <section class="section-card reveal" id="comparison">
+            <div class="section-head">
+                <span class="idx">07</span>
+                <h2>Comparison (Metrics)</h2>
+            </div>
+            <p>Bảng so sánh Zero-Shot và các bản LoRA K=16/32/64 về Metric (F1, mAP) và Cost (Params, Time).</p>
+            <iframe src="assets/plots/metrics_comparison.html" width="100%" height="550px" style="border:1px solid var(--line); border-radius:var(--radius);"></iframe>
+        </section>
+
+        <section class="section-card reveal" id="interpretability">
+            <div class="section-head">
+                <span class="idx">08</span>
+                <h2>Interpretability (Attention Rollout)</h2>
+            </div>
+            <p>Mô hình Transformer-native sử dụng Attention Rollout phân loại vùng trọng điểm trên ảnh các phim (ViT-native, không dùng phương pháp grad-based như GradCAM).</p>
             <div class="grid-2">
                 <div class="compare-item">
-                    <div class="title" style="font-size:1.1rem">Bài tập lớn 1: Phân loại Đa mô thức</div>
-                    <div style="padding: 1rem;">
-                        <ul style="padding-left: 1.5rem; color: var(--text-color); line-height: 2;">
-                            <li><a href="assignment1_image.html" class="back-link" style="margin:0; font-weight:700">Phân loại Ảnh (CNN & ViT)</a><br><span style="font-size:0.85rem; color: #627469;">(Huấn luyện trên Image Dataset)</span></li>
-                            <li style="margin-top:0.8rem;"><a href="assignment1_text.html" class="back-link" style="margin:0; font-weight:700">Phân loại Văn bản (RNN & Transformer)</a><br><span style="font-size:0.85rem; color: #627469;">(Xử lý NLP Text Data)</span></li>
-                            <li style="margin-top:0.8rem;"><a href="assignment1_multimodal.html" class="back-link" style="margin:0; font-weight:700; color:var(--accent);">Phân loại Đa phương thức</a><br><span style="font-size:0.85rem; color: #627469;">(Zero-shot & LoRA Few-shot Learning)</span></li>
-                        </ul>
-                    </div>
+                    <div class="title">Attention Rollout: Parasite</div>
+                    <figure class="card-figure"><img src="assets/images/assignment1_multimodal/parasite.jpg" alt="Parasite Attention Rollout"></figure>
                 </div>
-                
                 <div class="compare-item">
-                    <div class="title" style="font-size:1.1rem">Các phần khác</div>
-                    <div style="padding: 1rem;">
-                        <ul style="padding-left: 1.5rem; color: var(--text-color); line-height: 2;">
-                            <li><strong>Bài tập lớn 2</strong><br><span style="font-size:0.85rem; color: #a9b5ae;">[Đang cập nhật]</span></li>
-                            <li style="margin-top:0.8rem;"><strong>Bài tập lớn 3</strong><br><span style="font-size:0.85rem; color: #a9b5ae;">[Đang cập nhật]</span></li>
-                            <li style="margin-top:0.8rem;"><strong>Phần mở rộng</strong><br><span style="font-size:0.85rem; color: #a9b5ae;">Các kỹ thuật nâng cao / Mở rộng model [TODO]</span></li>
-                        </ul>
-                    </div>
+                    <div class="title">Attention Rollout: Inception</div>
+                    <figure class="card-figure"><img src="assets/images/assignment1_multimodal/inception.jpg" alt="Inception Attention Rollout"></figure>
+                </div>
+            </div>
+            <div class="grid-2" style="margin-top:0.8rem">
+                <div class="compare-item">
+                    <div class="title">Attention Rollout: La La Land</div>
+                    <figure class="card-figure"><img src="assets/images/assignment1_multimodal/lalaland.jpg" alt="La La Land Attention Rollout"></figure>
+                </div>
+                <div class="compare-item">
+                    <div class="title">Attention Rollout: Titanic</div>
+                    <figure class="card-figure"><img src="assets/images/assignment1_multimodal/titanic.jpg" alt="Titanic Attention Rollout"></figure>
                 </div>
             </div>
         </section>
 
-        <footer style="text-align:center; padding: 2rem 0; color:var(--muted); font-size: 0.9rem;">
-            <p>✨ Trang này sẽ được cập nhật liên tục trong suốt học kỳ.</p>
-        </footer>
+        <section class="section-card reveal" id="demo">
+            <div class="section-head">
+                <span class="idx">09</span>
+                <h2>Gradio Demo</h2>
+            </div>
+            <p>Giao diện ChatUI cho phép upload poster và phân tích đa phương thức. (UI Screenshot/Placeholder do bản deploy chưa public API).</p>
+            <div class="compare-item">
+                <div class="title">ChatUI Demo Interface</div>
+                <figure class="card-figure"><div class="img-placeholder" style="height: 480px; background: #e8f4fb; border: 2px dashed #b8d9ed; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2a3d35" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <span style="font-weight:700; color:#2a3d35">Gradio ChatUI Interface Screenshot</span>
+                </div></figure>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="efficiency">
+            <div class="section-head">
+                <span class="idx">10</span>
+                <h2>Efficiency & Latency</h2>
+            </div>
+            <p>
+                Đánh giá tối ưu độ hiệu quả. LoRA chỉ tốn <b>0.83% tham số huấn luyện</b> (~60x nhỏ hơn) và tốc độ huấn luyện nhanh gấp <b>2.25x</b>.
+            </p>
+            <iframe src="assets/plots/latency_distribution.html" width="100%" height="450px" style="border:1px solid var(--line); border-radius:var(--radius); margin-bottom: 1rem;"></iframe>
+            <div class="kpis">
+                <div class="kpi"><div class="label">P50 Latency</div><div class="value">ONNX / TensorRT</div></div>
+                <div class="kpi"><div class="label">P90 Latency</div><div class="value">Optimized Inference</div></div>
+                <div class="kpi"><div class="label">P99 Latency</div><div class="value">Low Tails</div></div>
+            </div>
+        </section>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
 
