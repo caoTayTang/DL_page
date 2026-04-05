@@ -1,55 +1,2169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="assets/images/hcmut.webp">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTL1 - Phân loại Văn bản</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/hcmut.webp">
+    <title>BTL1 - Text Classification Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css">
+    <style>
+        :root {
+            --bg: #f5f7ef;
+            --ink: #1e2a24;
+            --muted: #53615a;
+            --panel: #fefcf7;
+            --line: #d8dfd2;
+            --accent: #f0652a;
+            --accent-2: #1f9d8b;
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 0% 0%, #dcefcf 0%, transparent 35%),
+                radial-gradient(circle at 100% 0%, #f7d6b6 0%, transparent 38%),
+                var(--bg);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .progress-track {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.45);
+            z-index: 999;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width 0.15s linear;
+        }
+
+        .container {
+            width: min(1180px, 92vw);
+            margin: 0 auto;
+            padding: 2rem 0 4rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            margin-bottom: 1.2rem;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+        }
+
+        .back-link:hover {
+            border-color: var(--accent);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: calc(var(--radius) + 8px);
+            background:
+                linear-gradient(135deg, #fffaf0 0%, #f2fff8 52%, #f9f4ea 100%);
+            padding: 2.2rem;
+            margin-bottom: 1.4rem;
+            box-shadow: 0 22px 42px rgba(64, 86, 72, 0.14);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            right: -90px;
+            bottom: -110px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(31, 157, 139, 0.32), transparent 70%);
+        }
+
+        .hero h1 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(1.9rem, 3.6vw, 3rem);
+            line-height: 1.2;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 760px;
+            margin-bottom: 1.2rem;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            font-size: 0.85rem;
+            padding: 0.35rem 0.65rem;
+            border: 1px solid #cad7cc;
+            border-radius: 999px;
+            background: #fff;
+            color: #294239;
+            font-weight: 700;
+        }
+
+        .chip.mono {
+            font-family: "Consolas", "Courier New", monospace;
+            font-weight: 700;
+        }
+
+        .toc {
+            position: sticky;
+            top: 14px;
+            z-index: 10;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            background: rgba(254, 252, 247, 0.86);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(5px);
+            padding: 0.75rem;
+            border-radius: 14px;
+            margin-bottom: 1.2rem;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #2f3f38;
+            font-size: 0.82rem;
+            padding: 0.4rem 0.55rem;
+            border-radius: 9px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .toc a:hover,
+        .toc a.active {
+            color: #122019;
+            background: #fff;
+            border-color: #bfd1c3;
+        }
+
+        .section-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 2.2vw, 1.7rem);
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+
+        .section-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 0.7rem;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px dashed #d3dacd;
+            padding-bottom: 0.55rem;
+        }
+
+        .section-head .idx {
+            font-family: "Space Grotesk", sans-serif;
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+        }
+
+        .section-card p {
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 0.7rem;
+            margin-top: 0.35rem;
+        }
+
+        .kpi {
+            background: #fff;
+            border: 1px solid #d8e1d7;
+            border-radius: 13px;
+            padding: 0.8rem;
+        }
+
+        .kpi .label {
+            color: #5d6f67;
+            font-size: 0.83rem;
+        }
+
+        .kpi .value {
+            font-weight: 800;
+            font-size: 1.02rem;
+            margin-top: 0.12rem;
+            color: #1f2d26;
+        }
+
+        .grid-2,
+        .grid-4 {
+            display: grid;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+        .eda-split {
+            grid-template-columns: 7fr 3fr;
+            align-items: start;
+        }
+
+        .eda-split figure[data-map="eda-1"] img {
+            height: 360px;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        .preprocess-block {
+            margin-top: 1rem;
+        }
+
+        .preprocess-grid {
+            display: grid;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+            grid-template-columns: 1.1fr 1fr 1fr;
+        }
+
+        .preprocess-card {
+            border: 1px solid #d6ddd2;
+            border-radius: 15px;
+            background: #fff;
+            padding: 0.9rem;
+        }
+
+        .preprocess-card h4 {
+            font-size: 0.95rem;
+            color: #1f332a;
+            margin-bottom: 0.35rem;
+        }
+
+        .preprocess-card p {
+            color: #566a60;
+            font-size: 0.86rem;
+            margin: 0;
+        }
+
+        .preprocess-card .mode-title {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 0.45rem;
+            padding: 0.25rem 0.55rem;
+            border-radius: 999px;
+            background: #f2f8f3;
+            border: 1px solid #d9e6db;
+            color: #264036;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .preprocess-card figure.card-figure {
+            margin-top: 0.65rem;
+        }
+
+        .preprocess-card figure.card-figure img {
+            height: 220px;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        figure.card-figure {
+            border: 1px solid #d6ddd2;
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        figure.card-figure:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 22px rgba(41, 65, 54, 0.13);
+        }
+
+        .card-figure img,
+        .img-placeholder {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-placeholder {
+            border-bottom: 1px solid #dae3d6;
+            background: repeating-linear-gradient(
+                -45deg,
+                #ecf2e9,
+                #ecf2e9 12px,
+                #f7fbf6 12px,
+                #f7fbf6 24px
+            );
+            color: #627469;
+            font-weight: 700;
+            text-align: center;
+            padding: 1.2rem 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-figure figcaption {
+            padding: 0.65rem 0.8rem;
+            font-size: 0.86rem;
+            color: #4f6258;
+        }
+
+        .card-figure.metric-plot {
+            background: #fbfdfb;
+        }
+
+        .card-figure.metric-plot img {
+            object-fit: contain;
+            background: #fff;
+            padding: 0.5rem;
+            border-bottom: 1px solid #dae3d6;
+        }
+
+        .card-figure.custom-head-plot img,
+        .card-figure.custom-head-plot .img-placeholder {
+            height: 320px;
+            object-fit: contain;
+            background: #fff;
+            padding: 0.45rem;
+            border-bottom: 1px solid #dae3d6;
+        }
+
+        .code-box {
+            margin-top: 0.75rem;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #31413a;
+            background: linear-gradient(140deg, #16251f 0%, #1f2f28 100%);
+            box-shadow: inset 0 1px 0 rgba(214, 244, 227, 0.08);
+        }
+
+        .code-box pre {
+            margin: 0;
+            background: transparent;
+        }
+
+        .code-box code {
+            color: #ecf7f0;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            display: block;
+            padding: 1rem 1.05rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .code-box .hljs {
+            background: transparent;
+        }
+
+        .code-box .hljs-keyword,
+        .code-box .hljs-literal,
+        .code-box .hljs-type {
+            color: #ff8fb6;
+        }
+
+        .code-box .hljs-title.function_,
+        .code-box .hljs-title.class_ {
+            color: #ffd67a;
+        }
+
+        .code-box .hljs-string {
+            color: #bde87e;
+        }
+
+        .code-box .hljs-number,
+        .code-box .hljs-params {
+            color: #ffbd7a;
+        }
+
+        .code-box .hljs-comment {
+            color: #8fb29f;
+            font-style: italic;
+        }
+
+        .backbone-card {
+            border: 1px solid #d8dfd3;
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .backbone-card .head {
+            padding: 0.7rem;
+            border-bottom: 1px solid #e1e8dc;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .training-tabs {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+
+        .tab-btn,
+        .filter-btn {
+            border: 1px solid #bccbc0;
+            background: #fff;
+            color: #274038;
+            border-radius: 10px;
+            padding: 0.45rem 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.82rem;
+        }
+
+        .tab-btn.active,
+        .filter-btn.active {
+            background: #223730;
+            color: #f2fff7;
+            border-color: #223730;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .confusion-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.8rem;
+        }
+
+        .compare-item {
+            border: 1px solid #dae2d6;
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .compare-item .title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            padding: 0.65rem 0.75rem;
+            border-bottom: 1px solid #e1e8de;
+            color: #32453d;
+        }
+
+        .compare-item .card-figure {
+            flex: initial;
+        }
+
+        .compare-item .card-figure img {
+            height: auto;
+            object-fit: contain;
+            background: #fff;
+            border-bottom: 1px solid #e7ede8;
+        }
+
+        .compare-item .img-placeholder {
+            height: 220px;
+            font-size: 0.84rem;
+            background: #fff;
+            border-bottom: 1px solid #e7ede8;
+        }
+
+        .sample-label {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #223730;
+        }
+
+        .compare-table-card {
+            border: 1px solid #d6ddd2;
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .compare-table-card .title {
+            padding: 0.65rem 0.8rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e1e8dc;
+            color: #23352f;
+            background: #f5faf5;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+            min-width: 760px;
+        }
+
+        .ranking-table th,
+        .ranking-table td {
+            padding: 0.48rem 0.55rem;
+            border-bottom: 1px solid #edf2ec;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .ranking-table th {
+            background: #f9fcf8;
+            color: #4e6158;
+            font-size: 0.79rem;
+            font-weight: 700;
+        }
+
+        .ranking-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ranking-table .model-col {
+            min-width: 150px;
+            font-weight: 700;
+        }
+
+        .ranking-table .score-col,
+        .ranking-table .cost-col {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+        }
+
+        .ranking-table .metric-top1 {
+            background: #e8f8ed;
+            color: #17572d;
+        }
+
+        .ranking-table .metric-top2 {
+            background: #f7f9e8;
+            color: #5b5818;
+        }
+
+        .ranking-table .up::after {
+            content: " ↑";
+            color: #1e6d47;
+            font-weight: 800;
+        }
+
+        .ranking-table .down::after {
+            content: " ↓";
+            color: #8b5e1a;
+            font-weight: 800;
+        }
+
+        .table-legend {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            padding: 0.5rem 0.8rem 0.7rem;
+            border-top: 1px solid #e8eee5;
+            background: #fcfefb;
+        }
+
+        .legend-chip {
+            padding: 0.22rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            border: 1px solid #d6e2d8;
+            color: #364840;
+            font-weight: 700;
+        }
+
+        .legend-chip.top1 {
+            background: #e8f8ed;
+        }
+
+        .legend-chip.top2 {
+            background: #f7f9e8;
+        }
+
+        .comparison-controls {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(170px, 1fr));
+            gap: 0.7rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .comparison-control {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .comparison-control label {
+            font-size: 0.8rem;
+            color: #4f6358;
+            font-weight: 700;
+        }
+
+        .comparison-control select {
+            border: 1px solid #c8d5cb;
+            border-radius: 10px;
+            background: #fff;
+            color: #274038;
+            font-size: 0.83rem;
+            font-weight: 700;
+            padding: 0.5rem 0.65rem;
+            font-family: inherit;
+        }
+
+        .comparison-empty {
+            margin-top: 0.7rem;
+            color: #5a6d62;
+            font-weight: 700;
+        }
+
+        .experiment-text-box {
+            margin-top: 0.7rem;
+            border: 1px solid #d7dfd4;
+            border-radius: 12px;
+            background: #f9fcf8;
+            padding: 0.8rem;
+        }
+
+        .experiment-text-box .label {
+            font-size: 0.78rem;
+            color: #50645a;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            display: block;
+        }
+
+        .experiment-text-box p {
+            margin: 0;
+            color: #2f4239;
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+        .experiment-viz-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+            margin-top: 0.9rem;
+        }
+
+        .experiment-viz-frame {
+            width: 100%;
+            height: 430px;
+            border: 0;
+            display: block;
+            background: #fff;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 20, 16, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .lightbox.open { display: flex; }
+
+        .lightbox img {
+            width: min(1100px, 96vw);
+            max-height: 90vh;
+            border-radius: 14px;
+            border: 2px solid #f2f6f3;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            color: white;
+            font-size: 1.9rem;
+            cursor: pointer;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .sample-preview-card {
+            border: 1px solid #d6ddd2;
+            border-radius: 15px;
+            background: #fff;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .sample-preview-card h4 {
+            font-size: 0.95rem;
+            color: #1f332a;
+            margin: 0;
+        }
+
+        .sample-preview-text {
+            border: 1px dashed #cdd9cf;
+            border-radius: 10px;
+            background: #f8fbf7;
+            padding: 0.65rem 0.7rem;
+            font-size: 0.8rem;
+            color: #40564b;
+            line-height: 1.5;
+            max-height: 220px;
+            overflow: hidden;
+        }
+
+        .sample-preview-note {
+            font-size: 0.78rem;
+            color: #5b7066;
+            margin: 0;
+        }
+
+        .sample-open-btn {
+            align-self: flex-start;
+            border: 1px solid #223730;
+            background: #223730;
+            color: #f4fff8;
+            border-radius: 10px;
+            padding: 0.45rem 0.8rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .sample-open-btn:hover {
+            opacity: 0.9;
+        }
+
+        .text-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(11, 20, 16, 0.86);
+            z-index: 2100;
+            padding: 1rem;
+        }
+
+        .text-modal.open {
+            display: flex;
+        }
+
+        .text-modal-card {
+            width: min(980px, 96vw);
+            max-height: 90vh;
+            background: #fdfefc;
+            border: 1px solid #d6ddd2;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.9rem;
+            border-bottom: 1px solid #e2e9e1;
+            background: #f2f8f3;
+        }
+
+        .text-modal-head h4 {
+            margin: 0;
+            font-size: 0.92rem;
+            color: #1e3128;
+        }
+
+        .text-modal-close {
+            border: none;
+            background: transparent;
+            color: #2d4339;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .text-modal-body {
+            margin: 0;
+            padding: 0.85rem 0.95rem;
+            overflow: auto;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 0.77rem;
+            line-height: 1.45;
+            color: #2a3f35;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #fff;
+        }
+
+
+        /* ─── LIVE DEMO SECTION ─────────────────────────────────── */
+        .demo-examples {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.45rem;
+            margin: 0.9rem 0 0.6rem;
+        }
+        .demo-examples-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--muted);
+        }
+        .demo-example-btn {
+            border: 1px solid #bfd1c3;
+            background: #fff;
+            color: #1e3329;
+            border-radius: 999px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: inherit;
+        }
+        .demo-example-btn:hover,
+        .demo-example-btn.active-example {
+            background: #1e3329;
+            color: #f2fff7;
+            border-color: #1e3329;
+        }
+        .demo-input-row {
+            display: flex;
+            gap: 0.6rem;
+            align-items: stretch;
+            margin: 0.5rem 0 0.65rem;
+        }
+        .demo-url-input {
+            flex: 1;
+            border: 1px solid #c5d4c8;
+            border-radius: 11px;
+            padding: 0.55rem 0.85rem;
+            font-size: 0.85rem;
+            font-family: "Consolas", "Courier New", monospace;
+            color: var(--ink);
+            background: #fff;
+            outline: none;
+            transition: border-color 0.18s;
+        }
+        .demo-url-input:focus {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 3px rgba(31,157,139,0.12);
+        }
+        .demo-run-btn {
+            border: none;
+            background: linear-gradient(135deg, var(--accent) 0%, #e04e1e 100%);
+            color: #fff;
+            border-radius: 11px;
+            padding: 0.55rem 1.2rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.18s, transform 0.18s;
+            font-family: inherit;
+        }
+        .demo-run-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .demo-run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .demo-model-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .demo-model-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            margin-right: 0.2rem;
+        }
+        .model-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid #c5d4c8;
+            border-radius: 8px;
+            padding: 0.28rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #fff;
+            color: #2a3d35;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+        .model-toggle:has(input:checked) {
+            background: #1e3329;
+            color: #f2fff7;
+            border-color: #1e3329;
+        }
+        .model-toggle input { display: none; }
+        .demo-status {
+            border-radius: 11px;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.86rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .demo-status.info  { background: #e8f4fb; color: #1a5a7a; border: 1px solid #b8d9ed; }
+        .demo-status.error { background: #fdecea; color: #8b2017; border: 1px solid #f3bcb8; }
+        .demo-status.ok    { background: #e6f9ee; color: #1a5c34; border: 1px solid #a7dfc0; }
+        .demo-results { margin-top: 0.5rem; }
+        .demo-top-row {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0.9rem;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        .demo-box-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+        .demo-preview-box {
+            border: 1px solid #d6ddd2;
+            border-radius: 13px;
+            background: #fff;
+            padding: 0.65rem;
+        }
+        .demo-preview-box img {
+            width: 100%;
+            border-radius: 9px;
+            object-fit: cover;
+            display: block;
+        }
+        .demo-prob-box {
+            border: 1px solid #d6ddd2;
+            border-radius: 13px;
+            background: #fff;
+            padding: 0.8rem 1rem;
+            overflow-x: auto;
+        }
+        /* Probability bar chart rendered in JS */
+        .prob-model-block { margin-bottom: 1rem; }
+        .prob-model-block:last-child { margin-bottom: 0; }
+        .prob-model-name {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #1e3329;
+            margin-bottom: 0.35rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .prob-model-name .prob-pred {
+            color: var(--accent);
+        }
+        .prob-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.22rem;
+        }
+        .prob-bar-label {
+            font-size: 0.75rem;
+            width: 80px;
+            flex-shrink: 0;
+            color: #3a4f45;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .prob-bar-track {
+            flex: 1;
+            height: 12px;
+            background: #edf2ec;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .prob-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent-2), #2ec4a1);
+            transition: width 0.55s cubic-bezier(0.22,1,0.36,1);
+        }
+        .prob-bar-fill.top-pred {
+            background: linear-gradient(90deg, var(--accent), #ff8c55);
+        }
+        .prob-bar-pct {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #4a6258;
+            width: 42px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        /* HF CTA box */
+        .demo-hf-wrap {
+            border: 1px solid #d6ddd2;
+            border-radius: 13px;
+            background: #fff;
+            padding: 1rem 1.1rem;
+        }
+        .demo-hf-iframe {
+            width: 100%;
+            min-height: 680px;
+            border: 1px solid #d6ddd2;
+            border-radius: 12px;
+            background: #fff;
+            margin: 0.4rem 0 0.9rem;
+        }
+        .demo-hf-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .demo-hf-icon { font-size: 2.5rem; line-height: 1; }
+        .demo-hf-cta p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            max-width: 500px;
+            margin: 0;
+        }
+        .demo-hf-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6f00 0%, #f5b642 100%);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 11px;
+            text-decoration: none;
+            transition: opacity 0.18s, transform 0.18s;
+        }
+        .demo-hf-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .demo-hf-note {
+            font-size: 0.78rem !important;
+            color: #7a9287 !important;
+        }
+        @media (max-width: 680px) {
+            .demo-top-row { grid-template-columns: 1fr; }
+            .demo-input-row { flex-direction: column; }
+            .demo-hf-iframe { min-height: 520px; }
+            .eda-split { grid-template-columns: 1fr; }
+            .eda-split figure[data-map="eda-1"] img { height: 260px; }
+            .preprocess-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 980px) {
+            .preprocess-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 980px) {
+            .compare-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .comparison-controls { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 680px) {
+            .container { width: min(100%, 94vw); }
+            .hero { padding: 1.35rem; }
+            .section-card { border-radius: 16px; }
+            .card-figure img,
+            .img-placeholder { height: 180px; }
+            .card-figure.custom-head-plot img,
+            .card-figure.custom-head-plot .img-placeholder { height: 240px; }
+            .compare-row { grid-template-columns: 1fr; }
+            .comparison-controls { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
+    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
     <div class="container">
         <a href="index.html" class="back-link">&larr; Quay lại trang chủ</a>
-        
-        <article class="report-content">
-            <header class="report-meta">
-                <h1 class="report-title">BTL 1: Phân loại Văn bản (NLP)</h1>
-                <p>Khảo sát các RNN và mô hình phân loại chuỗi Transformer cho tác vụ phân loại văn bản y khoa / review.</p>
-            </header>
 
-            <section class="content-section">
-                <h3>1. Tiền xử lý văn bản (Text Processing)</h3>
-                <p>Dữ liệu dạng text thường chứa nhiễu, URL, và stop words. Quá trình tiền xử lý bao gồm tokenization (BPE/WordPiece) và padding sequence để chuyển đổi câu thành ma trận tensor input.</p>
-                
-                <div class="figures-grid">
-                    <figure class="figure">
-                        <img src="assets/images/text_task_out_0.png" alt="Sentence Length Distribution">
-                        <figcaption>Hình 1: Phân bố số lượng tokens trong câu. Support cho việc chọn max_seq_length.</figcaption>
+        <header class="hero">
+            <h1>BTL 1 - Text Classification Report</h1>
+            <p>
+                Trang báo cáo tổng hợp cho Assignment 1 - phần phân loại văn bản bất động sản. Bài toán sử dụng phần mô tả quảng cáo
+                để dự đoán nhóm bất động sản, kết hợp EDA, tiền xử lý text, huấn luyện mô hình và trực quan hóa kết quả đánh giá.
+            </p>
+            <div class="chip-row">
+                <a href="https://www.kaggle.com/datasets/kanchana1990/real-estate-data-oregon-2026" class="chip">Dataset: Oregon Real Estate 2026</a>
+                <span class="chip">Framework: PyTorch</span>
+                <span class="chip">Tracking: Weights & Biases</span>
+                <span class="chip">Input: Text description</span>
+            </div>
+        </header>
+
+        <nav class="toc" id="toc">
+            <a href="#intro">Giới thiệu</a>
+            <a href="#eda">EDA</a>
+            <a href="#data-split">Data Split & Loader</a>
+            <a href="#backbone">Backbone</a>
+            <a href="#training">Training</a>
+            <a href="#comparison">So sánh mô hình</a>
+            <a href="#experiments">Kết quả thực nghiệm</a>
+            <a href="#live-demo">Live Demo</a>
+        </nav>
+
+        <section class="section-card reveal" id="intro">
+            <div class="section-head">
+                <span class="idx">01</span>
+                <h2>Giới thiệu và mô tả bài toán</h2>
+            </div>
+            <p>
+                Bài toán là phân loại văn bản mô tả bất động sản thành 6 nhóm `type` dựa trên nội dung quảng cáo của mỗi bất đống sản.
+                Đầu vào của mô hình là chuỗi mô tả text đã được làm sạch, còn đầu ra là nhãn lớp thuộc một trong sáu loại:
+                condos, farm, land, multi_family, single_family và townhomes.
+            </p>
+            <p>
+                Mục tiêu của bài toán là khai thác tín hiệu ngôn ngữ trong phần mô tả để dự đoán đúng nhóm bất động sản,
+                đánh giá mô hình bằng Accuracy, Macro F1 và Weighted F1, đồng thời kiểm tra ảnh hưởng của tiền xử lý text, cách biểu diễn
+                đặc trưng và lựa chọn mô hình phân loại.
+            </p>
+            <div class="kpis">
+                <div class="kpi">
+                    <div class="label">Bài toán</div>
+                    <div class="value">Text Multi-class Classification</div>
+                </div>
+                <div class="kpi">
+                    <div class="label">Số lớp</div>
+                    <div class="value">6 classes</div>
+                </div>
+                <div class="kpi">
+                    <div class="label">Metrics</div>
+                    <div class="value">Macro F1 + Accuracy + Weighted F1</div>
+                </div>
+                <div class="kpi">
+                    <div class="label">Số cấu hình chạy</div>
+                    <div class="value">13 experiments</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="eda">
+            <div class="section-head">
+                <span class="idx">02</span>
+                <h2>EDA (Exploratory Data Analysis)</h2>
+            </div>
+            <p>
+                Trực quan hóa phân bố mẫu theo lớp và khảo sát các đặc trưng text trước bước tiền xử lý để kiểm tra chất lượng dữ liệu.
+            </p>
+             <p>
+                Kích thước dataset: 10403 đoạn mô tả - 8 lớp
+            </p>
+            <div class="grid-2 eda-split">
+                <figure class="card-figure auto-map" data-map="eda-1">
+                    <img src="assets/images/btl1_text_dis_type.png" alt="Phân bố lớp dữ liệu">
+                    <figcaption>Phân bố số lượng mẫu theo từng lớp.</figcaption>
+                </figure>
+                <div class="sample-preview-card">
+                    <h4>Text Samples (compact view)</h4>
+                    <div class="sample-preview-text">
+                        <strong>Samples for Class: single_family</strong><br>
+                        Sample 1: Showings subject to accepted offer. Investor opportunity in Cathedral Park...<br>
+                        Sample 2: *DO NOT DRIVE BY WITHOUT AN APPOINTMENT* Distressed property due to land movement...<br><br>
+                        <strong>Samples for Class: condos</strong><br>
+                        Sample 1: This exceptional property is priced to sell and is a must-see for fly fishing enthusiasts...<br>
+                        Sample 2: Sophisticated and beautifully updated riverfront townhome in an exceptional location...<br><br>
+                        <strong>Samples for Class: land, farm, multi_family, townhome, unknown, townhomes</strong><br>
+                    </div>
+                    <p class="sample-preview-note">Nội dung đầy đủ rất dài, đã được đặt trong popup để dễ đọc hơn.</p>
+                    <button class="sample-open-btn" id="openSampleText" type="button">Xem full đoạn text sample</button>
+                </div>
+            </div>
+
+            <div class="preprocess-block">
+                <div class="section-head" style="margin-top: 1rem;">
+                    <span class="idx">02.1</span>
+                    <h2>Tiền xử lý text</h2>
+                </div>
+                <p>
+                    Dữ liệu text được chuẩn hóa theo hai chế độ để phục vụ so sánh thực nghiệm. Cách <strong>Minimal</strong> giữ lại tối đa cấu trúc gốc của mô tả,
+                    chỉ đưa về chữ thường và chuẩn hóa khoảng trắng. Cách <strong>Aggressive</strong> đi xa hơn bằng việc loại bỏ ký tự không phải chữ/số,
+                    tách token và loại stopwords để giảm nhiễu từ các mô tả bất động sản dài, lặp ý và nhiều ký tự trang trí.
+                </p>
+                <div class="preprocess-grid">
+                    <div class="preprocess-card">
+                        <span class="mode-title">Minimal</span>
+                        <h4>Mục tiêu</h4>
+                        <p>
+                            Giữ ngữ nghĩa gần với văn bản gốc nhất có thể, phù hợp khi muốn bảo toàn tín hiệu mô tả, tên riêng,
+                            cụm từ chỉ vị trí và các chi tiết quan trọng trong listing.
+                        </p>
+                    </div>
+                    <figure class="card-figure preprocess-card auto-map metric-plot" data-map="text-len">
+                        <img src="assets/images/btl1_text_len.png" alt="Phân bố độ dài văn bản">
+                        <figcaption>Phân bố độ dài text sau tiền xử lý.</figcaption>
                     </figure>
-                    <figure class="figure">
-                        <img src="assets/images/text_task_out_1.png" alt="Loss curve">
-                        <figcaption>Hình 2: Biểu đồ hội tụ qua các epochs khi dùng BERT tokenizer.</figcaption>
+                    <figure class="card-figure preprocess-card auto-map metric-plot" data-map="text-len-class">
+                        <img src="assets/images/btl1_text_len_class.png" alt="Phân bố độ dài văn bản theo lớp">
+                        <figcaption>Độ dài văn bản theo từng class.</figcaption>
                     </figure>
                 </div>
-            </section>
-
-            <section class="content-section">
-                <h3>2. LSTM vs Transformers (BERT)</h3>
-                <p>Nghiên cứu đối chiếu khả năng xử lý ngữ cảnh dài của **LSTM hai chiều (BiLSTM)** đối với kiến trúc **Transformers (DistilBERT)**. DistilBERT nhanh chóng chứng minh ưu thế về khả năng attention toàn cục, cho chỉ số F1-Score vượt trên 10% đỉnh tại epoch 15 so với đường cơ sở LSTM.</p>
-                
-                <div class="figures-grid">
-                    <figure class="figure">
-                        <img src="assets/images/text_task_out_2.png" alt="Model Evaluation">
-                        <figcaption>Hình 3: Đánh giá AUC / ROC Curve của DistilBERT Classification.</figcaption>
+                <div class="preprocess-grid" style="margin-top: 0.8rem;">
+                    <div class="preprocess-card">
+                        <span class="mode-title">Aggressive</span>
+                        <h4>Mục tiêu</h4>
+                        <p>
+                            Tập trung vào các token mang tính phân biệt cao, giảm nhiễu từ dấu câu và stopwords để hỗ trợ mô hình
+                            học rõ hơn những cụm từ quan trọng cho từng loại bất động sản.
+                        </p>
+                    </div>
+                    <figure class="card-figure preprocess-card auto-map metric-plot" data-map="text-n-gram">
+                        <img src="assets/images/btl1_text_n-gram.png" alt="Top 5 word xuất hiện nhiều nhất mỗi class">
+                        <figcaption>Top 5 word xuất hiện nhiều nhất theo class.</figcaption>
                     </figure>
-                    <figure class="figure">
-                        <img src="assets/images/text_task_out_3.png" alt="Results Overview">
-                        <figcaption>Hình 4: Trực quan hóa ma trận biểu diễn từ (Word Embeddings) sau huấn luyện (tSNE / PCA).</figcaption>
+                    <div class="preprocess-card">
+                        <h4>Nhận xét thực nghiệm</h4>
+                        <p>
+                            Minimal phù hợp khi cần giữ nguyên nhiều tín hiệu mô tả tự nhiên của listing. Aggressive hữu ích khi muốn
+                            làm gọn không gian từ vựng và nhấn mạnh từ khóa đặc trưng cho từng lớp.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="data-split">
+            <div class="section-head">
+                <span class="idx">03</span>
+                <h2>Cách chia Data Split và Data Augmentation</h2>
+            </div>
+            <p>
+                Dữ liệu được chia theo tỉ lệ 80/10/10 để đảm bảo phân phối lớp ổn định giữa train/val/test.
+                Cách chia này giúp tập huấn luyện có đủ dữ liệu để học đặc trưng văn bản, đồng thời vẫn giữ được tập val/test
+                cân bằng để đánh giá khách quan.
+            </p>
+            <div class="kpis">
+                <div class="kpi"><div class="label">Train</div><div class="value">8302 rows</div></div>
+                <div class="kpi"><div class="label">Validation</div><div class="value">1038 rows</div></div>
+                <div class="kpi"><div class="label">Test</div><div class="value">1038 rows</div></div>
+                <div class="kpi"><div class="label">Split ratio</div><div class="value">80 / 10 / 10</div></div>
+            </div>
+            <div class="compare-table-card" style="margin-top: 0.9rem;">
+                <div class="title">Phân bố class theo từng split (%)</div>
+                <div class="table-scroll">
+                    <table class="ranking-table" aria-label="Bang thong ke phan bo class theo split">
+                        <thead>
+                            <tr>
+                                <th class="model-col">type</th>
+                                <th class="score-col">train_%</th>
+                                <th class="score-col">val_%</th>
+                                <th class="score-col">test_%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="model-col">single_family</td><td class="score-col">63.07</td><td class="score-col">63.01</td><td class="score-col">63.10</td></tr>
+                            <tr><td class="model-col">land</td><td class="score-col">18.00</td><td class="score-col">18.02</td><td class="score-col">18.02</td></tr>
+                            <tr><td class="model-col">condos</td><td class="score-col">8.26</td><td class="score-col">8.29</td><td class="score-col">8.29</td></tr>
+                            <tr><td class="model-col">townhomes</td><td class="score-col">4.85</td><td class="score-col">4.91</td><td class="score-col">4.82</td></tr>
+                            <tr><td class="model-col">multi_family</td><td class="score-col">3.96</td><td class="score-col">3.95</td><td class="score-col">3.95</td></tr>
+                            <tr><td class="model-col">farm</td><td class="score-col">1.85</td><td class="score-col">1.83</td><td class="score-col">1.83</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p style="margin-top: 10px;">
+                Data augmentation cho tập train được thực hiện bằng back translation để tạo thêm sample (tăng tính đa dạng) cho các class
+                <strong>farm</strong>, <strong>multi_family</strong>, <strong>townhomes</strong> và <strong>condos</strong>. Mục tiêu là tạo thêm
+                các biến thể diễn đạt mà vẫn giữ nguyên nhãn, đặc biệt hữu ích cho những lớp có số lượng mẫu thấp hơn.
+            </p>
+        </section>
+
+        <section class="section-card reveal" id="backbone">
+            <div class="section-head">
+                <span class="idx">04</span>
+                <h2>Lựa chọn mô hình Backbone (3 loại)</h2>
+            </div>
+            <p>
+                So sánh ba kiến trúc chính cho bài toán phân loại văn bản: BiLSTM, BERT base và DistillBert.
+            </p>
+            <div class="grid-2">
+                <div class="backbone-card">
+                    <div class="head"><span>BiLSTM</span><span>RNN-based</span></div>
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_bilstm.png" alt="Kien truc mo hinh BiLSTM">
+                        <figcaption>Kiến trúc BiLSTM cho phân loại text.</figcaption>
                     </figure>
                 </div>
-            </section>
-        </article>
+                <div class="backbone-card">
+                    <div class="head"><span>BERT base + DistillBert</span><span>Transformer-based</span></div>
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_bert_distillbert.png" alt="So sanh BERT base va DistillBert">
+                        <figcaption>So sánh kiến trúc BERT base và DistillBert.</figcaption>
+                    </figure>
+                </div>
+            </div>
+            <p style="margin-top: 0.75rem;">
+                BiLSTM đại diện cho nhóm mô hình tuần tự nhẹ, trong khi BERT base và DistillBert đại diện cho nhóm Transformer
+                với khả năng nắm bắt ngữ cảnh mạnh hơn. DistillBert được dùng như lựa chọn cân bằng giữa hiệu năng và chi phí tính toán.
+            </p>
+        </section>
+
+        <section class="section-card reveal" id="training">
+            <div class="section-head">
+                <span class="idx">05</span>
+                <h2>Kết quả Training (Wandb log)</h2>
+            </div>
+            <p>
+                Chuyển tab để xem các nhóm biểu đồ train/val theo metric.
+            </p>
+            <p>
+                Theo dõi đầy đủ trên Weights & Biases:
+                <a href="https://wandb.ai/huy-nguyen2504-ho-chi-minh-city-university-of-technology/oregon-real-estate-classification?nw=nwuserhuynguyen2504" target="_blank" rel="noopener">
+                    wandb.ai/.../oregon-real-estate-classification
+                </a>
+            </p>
+
+            <div class="training-tabs" role="tablist" aria-label="Training Metrics Tabs">
+                <button class="tab-btn active" data-tab="loss">Loss Curves</button>
+                <button class="tab-btn" data-tab="acc">Accuracy + F1 Curves</button>
+                <button class="tab-btn" data-tab="lr">Learning Rate</button>
+            </div>
+
+            <div class="tab-panel active" data-panel="loss">
+                <div class="grid-2">
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_train_loss.png" alt="Train loss curves">
+                        <figcaption>Train loss toàn bộ các run.</figcaption>
+                    </figure>
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_val_loss.png" alt="Validation loss curves">
+                        <figcaption>Validation loss toàn bộ các run.</figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <div class="tab-panel" data-panel="acc">
+                <div class="grid-2">
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_val_acc.png" alt="Validation accuracy curves">
+                        <figcaption>Validation accuracy theo epoch.</figcaption>
+                    </figure>
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_marcoF1.png" alt="Validation macro F1 curves">
+                        <figcaption>Validation Macro F1 theo epoch.</figcaption>
+                    </figure>
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_val_weightedF1.png" alt="Validation weighted F1 curves">
+                        <figcaption>Validation Weighted F1 theo epoch.</figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <div class="tab-panel" data-panel="lr">
+                <div class="grid-2">
+                    <figure class="card-figure metric-plot">
+                        <img src="assets/images/btl1_text_lr.png" alt="Learning rate schedule">
+                        <figcaption>Learning rate schedule trong quá trình huấn luyện.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="comparison">
+            <div class="section-head">
+                <span class="idx">06</span>
+                <h2>So sánh 13 cấu hình mô hình</h2>
+            </div>
+            <p>
+                Bảng dưới đây dùng toàn bộ 13 cấu hình. Bạn có thể lọc theo preprocess, data, setup và sắp xếp theo cả hai chiều tăng dần/giảm dần.
+            </p>
+
+            <div class="training-tabs" aria-label="Data Filter">
+                <button class="filter-btn active" data-filter="all">All Data</button>
+                <button class="filter-btn" data-filter="std">Standard</button>
+                <button class="filter-btn" data-filter="aug">Augmented</button>
+            </div>
+
+            <div class="comparison-controls" aria-label="Comparison Controls">
+                <div class="comparison-control">
+                    <label for="preprocessFilter">Preprocess</label>
+                    <select id="preprocessFilter">
+                        <option value="all">All</option>
+                        <option value="minimal">Minimal</option>
+                        <option value="aggressive">Aggressive</option>
+                    </select>
+                </div>
+                <div class="comparison-control">
+                    <label for="setupFilter">Setup</label>
+                    <select id="setupFilter">
+                        <option value="all">All</option>
+                        <option value="standard">Standard (LSTM)</option>
+                        <option value="freeze">Freeze Backbone</option>
+                        <option value="full">Full Fine-tune</option>
+                    </select>
+                </div>
+                <div class="comparison-control">
+                    <label for="sortMetric">Sort Metric</label>
+                    <select id="sortMetric">
+                        <option value="default">Default</option>
+                        <option value="acc">Acc</option>
+                        <option value="macroF1">Macro F1</option>
+                        <option value="weightedF1">Weighted F1</option>
+                        <option value="time">Test Time</option>
+                        <option value="trainTime">Train Time</option>
+                        <option value="paramsM">Total Params (M)</option>
+                        <option value="sizeMb">Model Size (MB)</option>
+                    </select>
+                </div>
+                <div class="comparison-control">
+                    <label for="sortDirection">Sort Direction</label>
+                    <select id="sortDirection">
+                        <option value="desc">Giảm dần</option>
+                        <option value="asc">Tăng dần</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="compare-table-card" id="comparisonCard">
+                <div class="title" id="comparisonTitle">So sánh toàn bộ cấu hình</div>
+                <div class="table-scroll">
+                    <table class="ranking-table" aria-label="Bang so sanh 13 cau hinh mo hinh text classification">
+                        <thead>
+                            <tr>
+                                <th class="model-col">Model</th>
+                                <th>Text</th>
+                                <th>Data</th>
+                                <th>Setup</th>
+                                <th class="score-col up">Acc (%)</th>
+                                <th class="score-col up">Macro F1 (%)</th>
+                                <th class="score-col up">Weighted F1 (%)</th>
+                                <th class="cost-col down">Time (s)</th>
+                                <th class="cost-col down">Train Time (s)</th>
+                                <th class="cost-col down">Params (M)</th>
+                                <th class="cost-col down">Size (MB)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparisonTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="table-legend">
+                    <span class="legend-chip top1">Default: Top 1 theo từng cột | Sort mode: Top 1 theo cột được chọn</span>
+                    <span class="legend-chip top2">Default: Top 2 theo từng cột | Sort mode: Top 2 theo cột được chọn</span>
+                </div>
+            </div>
+            <p class="comparison-empty" id="comparisonEmpty" style="display: none;">Không có cấu hình nào khớp bộ lọc hiện tại.</p>
+
+            <h3 style="margin-top: 1rem; font-size: 1.02rem;">Confusion Matrix cho 13 cấu hình</h3>
+            <div class="confusion-gallery" style="margin-top: 0.75rem;">
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_lstm_min_std.png" alt="Confusion matrix LSTM Minimal Standard">
+                    <figcaption>LSTM - Minimal - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_lstm_aggr_std.png" alt="Confusion matrix LSTM Aggressive Standard">
+                    <figcaption>LSTM - Aggressive - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_lstm_min_aug.png" alt="Confusion matrix LSTM Minimal Augmented">
+                    <figcaption>LSTM - Minimal - Augmented</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_lstm_aggr_aug.png" alt="Confusion matrix LSTM Aggressive Augmented">
+                    <figcaption>LSTM - Aggressive - Augmented</figcaption>
+                </figure>
+
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_bert_frz_min_std.png" alt="Confusion matrix BERT Freeze Minimal Standard">
+                    <figcaption>BERT Freeze - Minimal - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_bert_frz_aggr_std.png" alt="Confusion matrix BERT Freeze Aggressive Standard">
+                    <figcaption>BERT Freeze - Aggressive - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_bert_frz_min_aug.png" alt="Confusion matrix BERT Freeze Minimal Augmented">
+                    <figcaption>BERT Freeze - Minimal - Augmented</figcaption>
+                </figure>
+
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_bert_full_min_std.png" alt="Confusion matrix BERT Full Fine-tune Minimal Standard">
+                    <figcaption>BERT Full Fine-tune - Minimal - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_bert_full_aggr_std.png" alt="Confusion matrix BERT Full Fine-tune Aggressive Standard">
+                    <figcaption>BERT Full Fine-tune - Aggressive - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_bert_full_min_aug.png" alt="Confusion matrix BERT Full Fine-tune Minimal Augmented">
+                    <figcaption>BERT Full Fine-tune - Minimal - Augmented</figcaption>
+                </figure>
+
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_distil_full_min_std.png" alt="Confusion matrix DistilBERT Full Fine-tune Minimal Standard">
+                    <figcaption>DistilBERT Full Fine-tune - Minimal - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_distil_full_aggr_std.png" alt="Confusion matrix DistilBERT Full Fine-tune Aggressive Standard">
+                    <figcaption>DistilBERT Full Fine-tune - Aggressive - Standard</figcaption>
+                </figure>
+                <figure class="card-figure metric-plot">
+                    <img src="assets/images/btl1_text_distil_full_min_aug.png" alt="Confusion matrix DistilBERT Full Fine-tune Minimal Augmented">
+                    <figcaption>DistilBERT Full Fine-tune - Minimal - Augmented</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="experiments">
+            <div class="section-head">
+                <span class="idx">08</span>
+                <h2>Kết quả thực nghiệm: Giải thích dự đoán trên từng ví dụ</h2>
+            </div>
+            <p>
+                Mục này trình bày các ví dụ cụ thể để phân tích hành vi mô hình. Bên dưới là <strong>Ví dụ 1</strong> cùng trực quan hóa của top-3 cấu hình.
+            </p>
+
+            <h3 class="sample-label">Ví dụ 1</h3>
+            <div class="experiment-text-box">
+                <span class="label">Ground Truth Label: Townhomes</span>
+                <p>
+                    Newly Available Owner Occupied Opportunity in Cimmaron Terrace. Beautiful 3 bedroom &amp; 2.5 bath newer townhome has a one car garage. Open kitchen with stainless steel appliances. Laminate floors throughout kitchen, dining and living area. Walk in closet. Beautifully landscaped. Home Warranty. Appointment only.
+                </p>
+            </div>
+
+            <div class="experiment-viz-grid">
+                <div class="compare-item">
+                    <div class="title">Top 1 - BERT Full Fine-tune (Minimal + Augmented)</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_All_Correct_bert_full_min_aug.html" title="Visualization BERT Full Min Aug" loading="lazy"></iframe>
+                </div>
+                <div class="compare-item">
+                    <div class="title">Top 2 - DistilBERT Full Fine-tune (Minimal + Standard)</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_All_Correct_distil_full_min_std.html" title="Visualization DistilBERT Full Min Std" loading="lazy"></iframe>
+                </div>
+                <div class="compare-item">
+                    <div class="title">Top 3 - DistilBERT Full Fine-tune (Minimal + Augmented)</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_All_Correct_distil_full_min_aug.html" title="Visualization DistilBERT Full Min Aug" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <h3 class="sample-label">Ví dụ 2</h3>
+            <div class="experiment-text-box">
+                <span class="label">Ground Truth Label: Townhomes</span>
+                <p>
+                    Dream property! Whether you are an investor who wants to buy all four units, or a Buyer looking for a great home, take a look at these brand new 2 bed/2 bath homes! With all new appliances, spacious 1 car garages, and bathroom/bedroom combos on both the main and 2nd floor, this is the perfect fit for investors or families looking for a home to fit their current needs. Located close to shopping &amp; other amenities, Park Springs is a great place to call home.
+                </p>
+            </div>
+            <p style="margin-top: 0.55rem; margin-bottom: 0; color: #6b3a2f; font-weight: 700;">Ghi chú: cấu hình BERT Full Fine-tune (Minimal + Augmented) dự đoán sai ở ví dụ này.</p>
+
+            <div class="experiment-viz-grid">
+                <div class="compare-item">
+                    <div class="title">BERT Full Fine-tune (Minimal + Augmented) - Mixed Case</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_Mixed_bert_full_min_aug.html" title="Visualization Mixed BERT Full Min Aug" loading="lazy"></iframe>
+                </div>
+                <div class="compare-item">
+                    <div class="title">DistilBERT Full Fine-tune (Minimal + Augmented) - Mixed Case</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_Mixed_distil_full_min_aug.html" title="Visualization Mixed DistilBERT Full Min Aug" loading="lazy"></iframe>
+                </div>
+                <div class="compare-item">
+                    <div class="title">DistilBERT Full Fine-tune (Minimal + Standard) - Mixed Case</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_Mixed_distil_full_min_std.html" title="Visualization Mixed DistilBERT Full Min Std" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <h3 class="sample-label">Ví dụ 3: Sai label</h3>
+            <div class="experiment-text-box">
+                <span class="label">Ground Truth Label hiện tại: Townhomes</span>
+                <p>
+                    Charming Renovated Farmhouse on 2.86 Acres!Discover peaceful country living in this adorable, updated farmhouse nestled on nearly 3 acres of open, usable land. Perfect for homesteading or hobby farming, this property features a lush garden, greenhouse, and fenced pasture ideal for animals. Recent updates include a durable metal roof and a sand filter septic system for peace of mind. Whether you're looking to garden, raise livestock, or simply enjoy quiet rural life, this property offers the perfect blend!
+                </p>
+            </div>
+            <p style="margin-top: 0.55rem; margin-bottom: 0; color: #6b3a2f; font-weight: 700;">Nhận xét: sau khi xem lại nội dung, nhãn hợp lý hơn có thể là <strong>Farm</strong> thay vì Townhomes.</p>
+
+            <div class="experiment-viz-grid">
+                <div class="compare-item">
+                    <div class="title">BERT Full Fine-tune (Minimal + Augmented) - All Incorrect</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_All_Incorrect_bert_full_min_aug.html" title="Visualization All Incorrect BERT Full Min Aug" loading="lazy"></iframe>
+                </div>
+                <div class="compare-item">
+                    <div class="title">DistilBERT Full Fine-tune (Minimal + Augmented) - All Incorrect</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_All_Incorrect_distil_full_min_aug.html" title="Visualization All Incorrect DistilBERT Full Min Aug" loading="lazy"></iframe>
+                </div>
+                <div class="compare-item">
+                    <div class="title">DistilBERT Full Fine-tune (Minimal + Standard) - All Incorrect</div>
+                    <iframe class="experiment-viz-frame" src="assets/html/viz_All_Incorrect_distil_full_min_std.html" title="Visualization All Incorrect DistilBERT Full Min Std" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!--  SECTION 09 — LIVE DEMO                                 -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- <section class="section-card reveal" id="live-demo">
+            <div class="section-head">
+                <span class="idx">09</span>
+                <h2>Thử nghiệm trực tiếp trên Gradio - Hugging Face Space</h2>
+            </div>
+             
+            <div class="demo-hf-wrap">
+                <p class="demo-box-label" style="margin-bottom:0.5rem;">
+                    Gradio - Hugging Face Space
+                </p>
+                <iframe
+                    class="demo-hf-iframe"
+                    src="https://thuanluong-dl-asssignment.hf.space"
+                    title="DL_Asssignment Demo Space"
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+                <div class="demo-hf-cta">
+                    <p>
+                        Nếu iframe bị lỗi, bấm nút bên dưới để mở Hugging Face Space ở tab mới.
+                    </p>
+                    <a href="https://huggingface.co/spaces/ThuanLuong/DL_Asssignment" target="_blank" rel="noopener" class="demo-hf-btn">
+                        Mở Hugging Face Space
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div> -->
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img id="lightboxImage" alt="Preview">
     </div>
+
+    <div class="text-modal" id="sampleTextModal" aria-hidden="true">
+        <div class="text-modal-card" role="dialog" aria-modal="true" aria-labelledby="sampleTextTitle">
+            <div class="text-modal-head">
+                <h4 id="sampleTextTitle">Full Text Samples</h4>
+                <button class="text-modal-close" id="closeSampleText" type="button">&times;</button>
+            </div>
+            <pre class="text-modal-body">
+Samples for Class: single_family
+Sample 1: Showings subject to accepted offer. Investor opportunity in Cathedral Park on a nearly 10,000 sq ft CM3-zoned lot. Property is located within the Richmond/Crawford Improvement Project area; planned improvements, timelines, and associated costs apply e City of Portland link buyer to perform all due diligence. Convenient location near downtown St. Johns, shops, and parks. No sign on property. Do not disturb tenant.
+--------------------
+Sample 2: *DO NOT DRIVE BY WITHOUT AN APPOINTMENT* Distressed property due to land movement, drainage and foundation damage. Tucked away on 7 peaceful acres, this private retreat offers the perfect balance of nature, space, and convenience. A year-round creek winds through the property, creating a serene setting surrounded by mature trees and the quiet beauty of the outdoors. The home features 4 bedrooms plus a versatile bonus space-ideal for a home office, creative studio, or even a home-based business. Inside, you'll find fresh new carpet and interior paint, giving the home a clean and welcoming feel. The kitchen includes a center island, all appliances, and a window overlooking the woods, bringing natural light and tranquil views into the heart of the home. Step outside onto the expansive deck and take in the peaceful scenery-an ideal spot for morning coffee, outdoor dining, or simply enjoying the privacy and sounds of the creek below. The property also includes a 24x30 shop, perfect for hobbies, projects, storage, or extra workspace. This is truly a retreat-like setting-a place to escape, unwind, and enjoy the beauty of nature, while still being close to town with easy freeway access for everyday convenience.
+--------------------
+Samples for Class: condos
+Sample 1: This exceptional property is priced to sell & is a must-see for fly fishing enthusiasts. One-quarter shared interest is available in this stunning 3 bedroom cabin (2 en-suite), 3 baths; located at the historic Lake Creek Lodge in Camp Sherman. The cabin, constructed in 2011, seamlessly blends modern amenities w/ vintage charm, featuring fir plank floors, knotty pine paneling, & a beautiful stone and gas fireplace. The kitchen is a cook's delight, equipped with butcher block countertops, gas cooktop, & farmhouse sink. Special attention has been given to the tile bathroom floors & showers, & the cabin includes a washer/dryer, expansive wood decks, & attractive stone exterior accents. Homeowners enjoy access to a range of amenities: swimming pool, tennis / pickleball cts, a fly-fishing pond, scenic trails, & Lodge/restaurant. Furthermore, the Resort offers abundant recreational opportunities; including golf, skiing, and world-class fly fishing on the Metolius River.
+--------------------
+Sample 2: Sophisticated and beautifully updated riverfront townhome in an exceptional location just steps from the Willamette River. Designed for modern living and effortless entertaining, this 3 bedroom, 4 bath home features a stunning remodeled chef's kitchen with walnut cabinetry, waterfall-edge island, and premium appliances. The light-filled second level offers a serene primary suite with floor-to-ceiling windows, a custom walk-in closet, and a luxurious primary bath retreat. The expansive top floor provides flexibility for a media room, office, or guest suite and opens out to two generous rooftop decks showcasing panoramic views of downtown Portland and the Willamette River. With over 600 square feet of outdoor living space, this is a rare opportunity for elevated waterfront living at The Strand. Enjoy the convenience of living in this unbeatable location with trails, kayaking, Streetcar, restaurants, and so much more right outside your door.
+--------------------
+Samples for Class: land
+Sample 1: Owner financing available! Explore and enjoy 5.7-acre land! Perfect for geole who enjy a suburbon rural mix place
+--------------------
+Sample 2: Here's your chance to own 1/[Redacted Entity] County with hunting & fishing rights and approximately 4,200 feet of Coast Fork Willamette River frontage. (Property may also be sold as single ownership at $1,250,000) Pasture provides space for grazing livestock, and five scenic ponds and lakes are ideal for water sports, serious bass fishing, dog training, and waterfowl. Currently leased month to month to a duck hunting club and they'd be happy to stay, or go. Ideally located just 16 miles south of Eugene and 3 miles north of Cottage Grove with easy I-5 access. This is a multifaceted, serious recreational holding where weekends become competence and character building traditions. Please ask your favorite agent to get you access to the VIDEO that MLS won't let us load as it features a person catching a REALLY big fish.
+--------------------
+Samples for Class: farm
+Sample 1: Turnkey Irrigated Farm with Established Infrastructure: Fairview Farms presents a rare opportunity to own a well-rounded Eastern Oregon agricultural operation designed for both alfalfa production and cattle management. Located west of Burns in a region recognized for strong irrigation wells and high-yield alfalfa ground, this productive farm encompasses 885 deeded acres with 680 acres of water rights dating back to 1982 and 1993. Set up as a turnkey farm and ranch, the property includes productive irrigated ground, cross-fenced pasture, cattle working facilities, hay storage, equipment buildings, and two homes. The thoughtful layout allows efficient movement of equipment and livestock while maintaining a functional and organized operation. With decades of proven production, Fairview Farms offers an excellent opportunity for owner-operators looking to expand their hay base, cattle producers seeking a balanced outfit, or investors looking for a productive agricultural asset. Reliable Irrigation & Productive Crop Ground: Irrigation at Fairview Farms is both extensive and diversified, supported by four irrigation wells and multiple delivery systems that maximize production across the farm. The majority of the acreage is irrigated by three center pivots covering approximately 550 acres, including one large pivot encompassing 275 acres. Additional irrigation is provided through wheel lines covering over 80 acres, along with smaller areas of handlines and flood irrigation. This system allows flexibility in crop rotation, pasture development, and seasonal management. Historically the farm has been planted in alfalfa and grass, with the grass stands primarily utilized for irrigated pasture. Currently, 250 acres are planted in triticale, seeded as part of a rotation program and positioned to transition back into new alfalfa stands. The remaining irrigated ground is primarily planted in alfalfa, creating strong hay production potential. Several pivot corners are planted in crested wheatgrass and fenced, offering additional grazing opportunities throughout the year and further supporting a balanced cattle operation. Balanced Cattle Operation with Expansion Potential: While hay production has been the primary focus, the current owners maintain a year-round herd of approximately 40-50 cow/calf pairs. Thoughtfully designed cross fencing and irrigated pastures allow efficient livestock management while supporting rotational grazing. The property includes two irrigated pastures-one flood irrigated and one under pivot-allowing cattle access to quality forage during the grazing season. With existing infrastructure already in place, a future owner could easily expand cattle numbers and transition the operation toward a larger cow outfit with minimal investment. A well-designed set of corrals and cattle working facilities sits near one of the homesites. The setup includes sorting pens, a covered working facility with alley and chute, and a heated veterinary or medication room. Several pens are located beneath the covered working area, and a small feedlot positioned behind the facility provides convenient winter feeding access. Well-Planned Improvements & Operational Facilities: The improvements at Fairview Farms are strategically located along Scott Road, allowing convenient access for trucks, hay equipment, and farm machinery. Each improvement site is perimeter fenced and built with gravel pads designed for equipment storage and efficient operation. Hay storage is a major asset of the property, with three large hay sheds providing over 28, 000 square feet of covered storage. One of the sheds, constructed in 2015 using powerline poles, spans more than 12, 000 square feet, while two additional steel-beam structures provide over 16, 000 square feet combined.
+--------------------
+Sample 2: Discover 58.55 acres in the heart of Tumalo, where sweeping Cascade Mountain views set the backdrop for endless possibilities. Whether your vision is an expansive private estate, a premier equestrian facility, or productive farmland, this exceptional property offers a remarkable canvas. Currently home to a hunting dog operation, the land features 39.21 acres of TID irrigation (portion in in-stream lease), open pastures, and garden areas. The single-level 3,016 sq. ft. residence showcases a great room concept, an updated kitchen with granite counters and custom cabinetry, and a primary suite with office, private view deck, and spacious bath with walk-in closet. Two additional ensuite bedrooms. Property amenities include a heated and plumbed dog kennel, outbuilding, and multiple run-in/storage sheds. With three tax parcels and EFU zoning, this is an extraordinary opportunity to create your dream property in a highly sought-after Tumalo location.
+--------------------
+Samples for Class: multi_family
+Sample 1: Motivated Sellers Rural Commercial Zoning, lots of possibilities. Come see the opportunities available to you with this income property. The Old House is a tear-down special. There is a Fixer-upper duplex, with tenants in place. This is an AS/IS purchase. Will need 24-hour notice for showings. Please do not disturb current tenants.
+--------------------
+Sample 2: Santa Clara duplex built in [Redacted Entity] with one vacant unit and one occupied at $1,600 per month. Each unit offers 3 bedrooms, 2 full bathrooms, and a half bath on the main level. The vacant side is move-in ready with LVP flooring and carpet. Kitchens and bathrooms feature tile flooring for durability. Forced air HVAC. The occupied side has a long-term month-to-month tenant with a strong rental history, providing immediate income. Both units include a one-car garage with washer and dryer hookups, fenced backyards, and very low-maintenance landscaping. Convenient location near Albertsons, Fred Meyer, restaurants, Santa Clara Station Park & Ride, and easy access to the Beltline. Strong option for an owner-occupant looking to offset a mortgage payment, or an investor seeking a solid 1031 exchange opportunity. DO NOT DISTURB TENANT! By Appointment Only.
+--------------------
+Samples for Class: townhome
+Sample 1: This new three-story home boasts a modern and low-maintenance layout. The first floor is host to an inviting open floorplan that combines the kitchen and Great Room, with a nearby patio offering convenient outdoor access. Three bedrooms can be found on the second floor, including the luxurious owner's suite. A versatile bonus room makes up the third level, providing a convenient shared living area that everyone can enjoy.
+--------------------
+Sample 2: This new two-story townhome offers plenty of space to live and grow. The first floor is host to an inviting open-concept floorplan where the kitchen, living room and dining area meet, perfect for everyday transitions and entertaining. Two luxurious owner's suites are located on the second floor, each featuring a full bathroom and walk-in closet, just steps from a versatile and inviting loft space. The home includes a convenient single-bay garage.
+--------------------
+Samples for Class: unknown
+Sample 1: This thoughtfully designed three-story townhome offers maximum living space, beginning with a two-car garage featuring extra space for parking and storage.. The second floor welcomes you with an open and spacious layout, seamlessly connecting the main living areas, including the living, and dining areas. The spacious kitchen is a highlight, boasting a center island perfect for gathering, ample counterspace, and modern appliances, making meal prep a breeze. Enjoy quiet mornings and serene evenings on the covered balcony, soaking in the fresh air. Ascending to the third floor, youll find three bedrooms, including a primary bedroom and bath with dual sinks and a shower. The conveniently located laundry near the bedrooms adds to the comfort and ease of everyday living.
+--------------------
+Sample 2: The Provence floorplan offers a spacious and modern living experience with a tandem 2-car garage and a fenced backyard.. The first floor features an inviting entry porch, a powder room, and a coat closet. The second floor boasts a well-designed kitchen with a pantry, dining, and living areas, along with a balcony for outdoor relaxation. The third floor includes a primary bedroom with a walk-in closet and primary bath, two additional bedrooms, a second bath, and a convenient stacked washer/dryer laundry area.
+--------------------
+Samples for Class: townhomes
+Sample 1: Tucked into the natural beauty of Westfir, [Redacted Entity] offers a rare chance to create something truly special.Set on .41 acres, the property features a 2-bedroom, 1-bath main home with a spacious living room, generous kitchen, dedicated laundry room, and two covered porches perfect for enjoying peaceful surroundings.A detached ADU adds even more potential, complete with its own kitchen, bathroom, living area, and bedroom - ideal for future rental income, guest space, or multi-generational living.Two additional outbuildings provide storage and workshop possibilities. One structure was damaged in a storm and will require removal.This is a fixer and will need substantial renovation. For the right buyer, this is an opportunity to restore, reimagine, and build equity on nearly half an acre in a scenic Oregon setting.Priced at $200,000 and sold as-is.Bring your vision. The potential is here.
+--------------------
+Sample 2: This beautifully designed duet home offers a welcoming blend of style and functionality. On the main floor, an open-concept design creates a natural flow between the kitchen, living, and dining areas, making the space feel bright and connected. The kitchen includes a refrigerator, while everyday conveniences like a washer, dryer, and window blinds are already in place. Just beyond the living area, a private patio provides a quiet outdoor escape. Upstairs, three spacious bedrooms await, including a serene owner's suite with a walk-in closet and attached full bathroom.
+--------------------</pre>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+
+    <script>
+        const progressBar = document.getElementById("progressBar");
+
+        if (window.hljs) {
+            window.hljs.configure({ languages: ["python"] });
+            window.hljs.highlightAll();
+        }
+
+        window.addEventListener("scroll", () => {
+            const scrolled = window.scrollY;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            const percent = height > 0 ? (scrolled / height) * 100 : 0;
+            progressBar.style.width = percent + "%";
+        });
+
+        const reveals = document.querySelectorAll(".reveal");
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.12 });
+        reveals.forEach((item) => sectionObserver.observe(item));
+
+        const tocLinks = document.querySelectorAll("#toc a");
+        const sections = Array.from(document.querySelectorAll("section[id]"));
+        window.addEventListener("scroll", () => {
+            const y = window.scrollY + 180;
+            let current = sections[0]?.id || "";
+            sections.forEach((sec) => {
+                if (y >= sec.offsetTop) {
+                    current = sec.id;
+                }
+            });
+            tocLinks.forEach((a) => {
+                a.classList.toggle("active", a.getAttribute("href") === "#" + current);
+            });
+        });
+
+        const tabs = document.querySelectorAll(".tab-btn");
+        const tabPanels = document.querySelectorAll(".tab-panel");
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                tabs.forEach((t) => t.classList.remove("active"));
+                tab.classList.add("active");
+                const key = tab.dataset.tab;
+                tabPanels.forEach((panel) => {
+                    panel.classList.toggle("active", panel.dataset.panel === key);
+                });
+            });
+        });
+
+        const comparisonFilterButtons = document.querySelectorAll("#comparison .filter-btn");
+        const preprocessFilter = document.getElementById("preprocessFilter");
+        const setupFilter = document.getElementById("setupFilter");
+        const sortMetric = document.getElementById("sortMetric");
+        const sortDirection = document.getElementById("sortDirection");
+        const comparisonTableBody = document.getElementById("comparisonTableBody");
+        const comparisonTitle = document.getElementById("comparisonTitle");
+        const comparisonEmpty = document.getElementById("comparisonEmpty");
+
+        const comparisonRows = [
+            { order: 0, model: "LSTM", text: "Minimal", data: "Standard", setup: "Standard", acc: 0.8266, macroF1: 0.6877, weightedF1: 0.8445, time: 0.758, trainTime: 54.4519, totalParams: 1300998, sizeMb: 4.96 },
+            { order: 1, model: "LSTM", text: "Aggressive", data: "Standard", setup: "Standard", acc: 0.8324, macroF1: 0.6878, weightedF1: 0.846, time: 0.6072, trainTime: 52.1773, totalParams: 1300998, sizeMb: 4.96 },
+            { order: 2, model: "LSTM", text: "Minimal", data: "Augmented", setup: "Standard", acc: 0.8237, macroF1: 0.6746, weightedF1: 0.836, time: 0.6555, trainTime: 60.6873, totalParams: 1300998, sizeMb: 4.96 },
+            { order: 3, model: "LSTM", text: "Aggressive", data: "Augmented", setup: "Standard", acc: 0.8083, macroF1: 0.6908, weightedF1: 0.8327, time: 0.6075, trainTime: 47.4674, totalParams: 1300998, sizeMb: 4.96 },
+            { order: 4, model: "BERT", text: "Minimal", data: "Standard", setup: "Freeze Backbone", acc: 0.8632, macroF1: 0.75, weightedF1: 0.8787, time: 37.3861, trainTime: 4175.02, totalParams: 109482240, sizeMb: 417.64 },
+            { order: 5, model: "BERT", text: "Aggressive", data: "Standard", setup: "Freeze Backbone", acc: 0.8757, macroF1: 0.756, weightedF1: 0.8868, time: 32.396, trainTime: 4733.0064, totalParams: 109482240, sizeMb: 417.64 },
+            { order: 6, model: "BERT", text: "Minimal", data: "Augmented", setup: "Freeze Backbone", acc: 0.8738, macroF1: 0.7617, weightedF1: 0.8868, time: 35.8051, trainTime: 4262.0672, totalParams: 109482240, sizeMb: 417.64 },
+            { order: 7, model: "BERT", text: "Minimal", data: "Standard", setup: "Full Fine-tune", acc: 0.8526, macroF1: 0.7332, weightedF1: 0.8717, time: 36.2498, trainTime: 3527.185, totalParams: 109482240, sizeMb: 417.64 },
+            { order: 8, model: "BERT", text: "Aggressive", data: "Standard", setup: "Full Fine-tune", acc: 0.8931, macroF1: 0.7762, weightedF1: 0.8992, time: 32.4869, trainTime: 4354.9345, totalParams: 109482240, sizeMb: 417.64 },
+            { order: 9, model: "BERT", text: "Minimal", data: "Augmented", setup: "Full Fine-tune", acc: 0.9094, macroF1: 0.8088, weightedF1: 0.9127, time: 35.9479, trainTime: 3787.7722, totalParams: 109482240, sizeMb: 417.64 },
+            { order: 10, model: "DistilBERT", text: "Minimal", data: "Standard", setup: "Full Fine-tune", acc: 0.9017, macroF1: 0.7903, weightedF1: 0.907, time: 18.684, trainTime: 1901.1171, totalParams: 66362880, sizeMb: 253.15 },
+            { order: 11, model: "DistilBERT", text: "Aggressive", data: "Standard", setup: "Full Fine-tune", acc: 0.9046, macroF1: 0.7857, weightedF1: 0.9079, time: 17.0128, trainTime: 1877.7353, totalParams: 66362880, sizeMb: 253.15 },
+            { order: 12, model: "DistilBERT", text: "Minimal", data: "Augmented", setup: "Full Fine-tune", acc: 0.9037, macroF1: 0.7913, weightedF1: 0.9094, time: 19.1351, trainTime: 2566.183, totalParams: 66362880, sizeMb: 253.15 }
+        ];
+
+        const numericSortKeys = {
+            acc: "acc",
+            macroF1: "macroF1",
+            weightedF1: "weightedF1",
+            time: "time",
+            trainTime: "trainTime",
+            paramsM: "totalParams",
+            sizeMb: "sizeMb"
+        };
+
+        const defaultHighlightRules = [
+            { classKey: "acc", valueKey: "acc", direction: "desc" },
+            { classKey: "macroF1", valueKey: "macroF1", direction: "desc" },
+            { classKey: "weightedF1", valueKey: "weightedF1", direction: "desc" },
+            { classKey: "time", valueKey: "time", direction: "asc" },
+            { classKey: "trainTime", valueKey: "trainTime", direction: "asc" },
+            { classKey: "paramsM", valueKey: "totalParams", direction: "asc" },
+            { classKey: "sizeMb", valueKey: "sizeMb", direction: "asc" }
+        ];
+
+        function getActiveDataFilter() {
+            return document.querySelector("#comparison .filter-btn.active")?.dataset.filter || "all";
+        }
+
+        function formatPercent(value) {
+            return (value * 100).toFixed(2);
+        }
+
+        function formatSeconds(value) {
+            return value.toFixed(3);
+        }
+
+        function formatParamsMillion(totalParams) {
+            return (totalParams / 1000000).toFixed(2);
+        }
+
+        function buildDefaultHighlightMap(rows) {
+            const highlightMap = {};
+            rows.forEach((row) => {
+                highlightMap[row.order] = {};
+            });
+
+            defaultHighlightRules.forEach((rule) => {
+                const values = Array.from(new Set(rows.map((row) => row[rule.valueKey])));
+                values.sort((a, b) => rule.direction === "asc" ? a - b : b - a);
+
+                const top1Value = values[0];
+                const top2Value = values.length > 1 ? values[1] : undefined;
+
+                rows.forEach((row) => {
+                    if (row[rule.valueKey] === top1Value) {
+                        highlightMap[row.order][rule.classKey] = "metric-top1";
+                    } else if (top2Value !== undefined && row[rule.valueKey] === top2Value) {
+                        highlightMap[row.order][rule.classKey] = "metric-top2";
+                    } else {
+                        highlightMap[row.order][rule.classKey] = "";
+                    }
+                });
+            });
+
+            return highlightMap;
+        }
+
+        function matchDataFilter(row, dataFilter) {
+            if (dataFilter === "all") return true;
+            if (dataFilter === "std") return row.data === "Standard";
+            if (dataFilter === "aug") return row.data === "Augmented";
+            return true;
+        }
+
+        function matchPreprocessFilter(row, selectedPreprocess) {
+            if (selectedPreprocess === "all") return true;
+            return row.text.toLowerCase() === selectedPreprocess;
+        }
+
+        function matchSetupFilter(row, selectedSetup) {
+            if (selectedSetup === "all") return true;
+            if (selectedSetup === "standard") return row.setup === "Standard";
+            if (selectedSetup === "freeze") return row.setup === "Freeze Backbone";
+            if (selectedSetup === "full") return row.setup === "Full Fine-tune";
+            return true;
+        }
+
+        function renderComparisonTable() {
+            const dataFilter = getActiveDataFilter();
+            const selectedPreprocess = preprocessFilter?.value || "all";
+            const selectedSetup = setupFilter?.value || "all";
+            const selectedSort = sortMetric?.value || "default";
+            const selectedDirection = sortDirection?.value || "desc";
+
+            const filtered = comparisonRows
+                .filter((row) => matchDataFilter(row, dataFilter))
+                .filter((row) => matchPreprocessFilter(row, selectedPreprocess))
+                .filter((row) => matchSetupFilter(row, selectedSetup));
+
+            const sorted = [...filtered];
+            if (selectedSort === "default") {
+                sorted.sort((a, b) => a.order - b.order);
+            } else {
+                const key = numericSortKeys[selectedSort];
+                const multiplier = selectedDirection === "asc" ? 1 : -1;
+                sorted.sort((a, b) => multiplier * (a[key] - b[key]));
+            }
+
+            const defaultHighlightMap = selectedSort === "default"
+                ? buildDefaultHighlightMap(sorted)
+                : null;
+
+            if (comparisonTitle) {
+                comparisonTitle.textContent = `So sánh cấu hình (${sorted.length} dòng)`;
+            }
+
+            if (!comparisonTableBody || !comparisonEmpty) {
+                return;
+            }
+
+            comparisonTableBody.innerHTML = "";
+            comparisonEmpty.style.display = sorted.length ? "none" : "block";
+
+            sorted.forEach((row, idx) => {
+                const tr = document.createElement("tr");
+                const topClass = selectedSort !== "default" && idx === 0
+                    ? "metric-top1"
+                    : selectedSort !== "default" && idx === 1
+                        ? "metric-top2"
+                        : "";
+
+                const accClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].acc
+                    : selectedSort === "acc" ? topClass : "";
+                const macroClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].macroF1
+                    : selectedSort === "macroF1" ? topClass : "";
+                const weightedClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].weightedF1
+                    : selectedSort === "weightedF1" ? topClass : "";
+                const timeClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].time
+                    : selectedSort === "time" ? topClass : "";
+                const trainClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].trainTime
+                    : selectedSort === "trainTime" ? topClass : "";
+                const paramsClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].paramsM
+                    : selectedSort === "paramsM" ? topClass : "";
+                const sizeClass = selectedSort === "default"
+                    ? defaultHighlightMap[row.order].sizeMb
+                    : selectedSort === "sizeMb" ? topClass : "";
+
+                tr.innerHTML = `
+                    <td class="model-col">${row.model}</td>
+                    <td>${row.text}</td>
+                    <td>${row.data}</td>
+                    <td>${row.setup}</td>
+                    <td class="score-col ${accClass}">${formatPercent(row.acc)}</td>
+                    <td class="score-col ${macroClass}">${formatPercent(row.macroF1)}</td>
+                    <td class="score-col ${weightedClass}">${formatPercent(row.weightedF1)}</td>
+                    <td class="cost-col ${timeClass}">${formatSeconds(row.time)}</td>
+                    <td class="cost-col ${trainClass}">${formatSeconds(row.trainTime)}</td>
+                    <td class="cost-col ${paramsClass}">${formatParamsMillion(row.totalParams)}</td>
+                    <td class="cost-col ${sizeClass}">${row.sizeMb.toFixed(2)}</td>
+                `;
+                comparisonTableBody.appendChild(tr);
+            });
+        }
+
+        comparisonFilterButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                comparisonFilterButtons.forEach((b) => b.classList.remove("active"));
+                btn.classList.add("active");
+                renderComparisonTable();
+            });
+        });
+
+        [preprocessFilter, setupFilter, sortMetric, sortDirection].forEach((selectEl) => {
+            if (!selectEl) return;
+            selectEl.addEventListener("change", renderComparisonTable);
+        });
+
+        renderComparisonTable();
+
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImage = document.getElementById("lightboxImage");
+        const lightboxClose = document.getElementById("lightboxClose");
+
+        const imageBase = "assets/images/";
+        const imageMap = {
+            "eda-1": ["img_eda1.png"],
+            "eda-2": ["img_eda2.png"],
+            "backbone-resnet18": ["img_resnet18.png"],
+            "backbone-efficientnetb0": ["img_efficientNet.png"],
+            "backbone-vit-b16": ["img_vit.png"],
+            "backbone-swin-t": ["img_swin.png"],
+            "custom-head": ["img_head.png"],
+            "train-loss": ["img_train_loss.png"],
+            "val-loss": ["img_val_loss.png"],
+            "train-acc": ["img_train_acc.png"],
+            "val-acc": ["img_val_acc.png"],
+            "val-f1": ["img_val_f1.png"],
+            "val-pr": ["img_val_prec.png"],
+            "val-re": ["img_val_recall.png"],
+            "f1-all": ["comparison_f1_all.png", "model_compare_f1.png"],
+            "f1-aug": ["comparison_f1_aug.png"],
+            "f1-noaug": ["comparison_f1_noaug.png"],
+            "cm-resnet18-aug": ["img_cm_resnet_aug.png"],
+            "cm-resnet18-noaug": ["img_cm_resnet_noaug.png"],
+            "cm-efficientnetb0-aug": ["img_cm_efficientnet_aug.png"],
+            "cm-efficientnetb0-noaug": ["img_cm_efficientnet_noaug.png"],
+            "cm-vit-b16-aug": ["img_cm_vit_aug.png"],
+            "cm-vit-b16-noaug": ["img_cm_vit_noaug.png"],
+            "cm-swint-aug": ["img_cm_swin_aug.png"],
+            "cm-swint-noaug": ["img_cm_swin_noaug.png"],
+            "cam-cnn1": ["cam_cnn1.png"],
+            "cam-cnn2": ["cam_cnn2.png"],
+            "cam-cnn3": ["cam_cnn3.png"],
+            "cam-cnn4": ["cam_cnn4.png"],
+            "cam-cnn5": ["cam_cnn5.png"],
+            "cam-cnn6": ["cam_cnn6.png"],
+            "cam-cnn7": ["cam_cnn7.png"],
+            "cam-cnn8": ["cam_cnn8.png"],
+            "cam-cnn9": ["cam_cnn9.png"],
+            "cam-cnn10": ["cam_cnn10.png"],
+            "cam-cnn11": ["cam_cnn11.png"],
+            "cam-cnn12": ["cam_cnn12.png"],
+            "cam-trans1": ["cam_trans1.png"],
+            "cam-trans2": ["cam_trans2.png"],
+            "cam-trans3": ["cam_trans3.png"],
+            "cam-trans4": ["cam_trans4.png"],
+            "cam-trans5": ["cam_trans5.png"],
+            "cam-trans6": ["cam_trans6.png"],
+            "cam-trans7": ["cam_trans7.png"],
+            "cam-trans8": ["cam_trans8.png"],
+            "cam-trans9": ["cam_trans9.png"],
+            "cam-trans10": ["cam_trans10.png"],
+            "cam-trans11": ["cam_trans11.png"],
+            "cam-trans12": ["cam_trans12.png"]
+        };
+
+        function resolveImage(candidates, onSuccess, onFail) {
+            let idx = 0;
+            function tryNext() {
+                if (!candidates || idx >= candidates.length) {
+                    onFail();
+                    return;
+                }
+                const src = imageBase + candidates[idx];
+                idx += 1;
+                const probe = new Image();
+                probe.onload = () => onSuccess(src);
+                probe.onerror = tryNext;
+                probe.src = src;
+            }
+            tryNext();
+        }
+
+        document.querySelectorAll(".auto-map[data-map]").forEach((figure) => {
+            const key = figure.dataset.map;
+            const candidates = imageMap[key] || [];
+
+            // If an explicit <img src="..."> is already provided in HTML,
+            // keep it and skip auto remapping for this figure.
+            const existingImg = figure.querySelector("img");
+            if (existingImg && existingImg.getAttribute("src")) {
+                return;
+            }
+
+            resolveImage(
+                candidates,
+                (resolvedSrc) => {
+                    let media = figure.querySelector("img");
+                    if (!media) {
+                        const placeholder = figure.querySelector(".img-placeholder");
+                        media = document.createElement("img");
+                        media.alt = placeholder ? placeholder.textContent.trim() : key;
+                        if (placeholder) {
+                            placeholder.replaceWith(media);
+                        } else {
+                            figure.prepend(media);
+                        }
+                    }
+                    media.src = resolvedSrc;
+                    media.loading = "lazy";
+                },
+                () => {
+                    // Keep placeholder if no candidate file is found.
+                }
+            );
+        });
+
+        document.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLImageElement)) {
+                return;
+            }
+            if (!target.closest("figure.card-figure")) {
+                return;
+            }
+            lightboxImage.src = target.src;
+            lightboxImage.alt = target.alt;
+            lightbox.classList.add("open");
+            lightbox.setAttribute("aria-hidden", "false");
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove("open");
+            lightbox.setAttribute("aria-hidden", "true");
+            lightboxImage.src = "";
+        }
+
+        lightboxClose.addEventListener("click", closeLightbox);
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        const sampleTextModal = document.getElementById("sampleTextModal");
+        const openSampleText = document.getElementById("openSampleText");
+        const closeSampleText = document.getElementById("closeSampleText");
+
+        function hideSampleTextModal() {
+            sampleTextModal.classList.remove("open");
+            sampleTextModal.setAttribute("aria-hidden", "true");
+        }
+
+        if (openSampleText && closeSampleText && sampleTextModal) {
+            openSampleText.addEventListener("click", () => {
+                sampleTextModal.classList.add("open");
+                sampleTextModal.setAttribute("aria-hidden", "false");
+            });
+
+            closeSampleText.addEventListener("click", hideSampleTextModal);
+            sampleTextModal.addEventListener("click", (event) => {
+                if (event.target === sampleTextModal) {
+                    hideSampleTextModal();
+                }
+            });
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeLightbox();
+                hideSampleTextModal();
+            }
+        });
+
+    </script>
 </body>
 </html>
