@@ -1,67 +1,88 @@
-# Deep Learning Projects – CO3133 (2025-2026)
+<div align="center">
+  <h1>🚀 Deep Learning Projects & Reports (CO3133)</h1>
+  <p>
+    <b>Course:</b> CO3133 (Học Sâu và Ứng dụng) – 2025/2026<br>
+    <b>Instructor:</b> TS. Lê Thành Sách
+  </p>
+  
+  [![Website](https://img.shields.io/badge/Website-HTML5_Report-success?style=for-the-badge&logo=html5)](#)
+  [![Hugging Face](https://img.shields.io/badge/Demo-HuggingFace_Space-FFD21E?style=for-the-badge&logo=huggingface)](#)
+  [![PyTorch](https://img.shields.io/badge/Framework-PyTorch-EE4C2C?style=for-the-badge&logo=pytorch)](#)
+</div>
 
-**Authors:** Đặng Vũ Tuấn Kiệt, Lê Chí Đại, Nguyễn Quốc Huy, Lương Minh Thuận (Nhóm **ML4u** – Đại học Bách Khoa TP.HCM)
+<br>
 
-**Course:** CO3133 – Bài tập lớn môn Học Sâu và Ứng dụng (2025-2026)  
-**Instructor:** TS. Lê Thành Sách
+## 👥 Nhóm Thực Hiện: **ML4u**
+*Đại học Bách Khoa TP.HCM (HCMUT)*
+- Đặng Vũ Tuấn Kiệt
+- Lê Chí Đại
+- Nguyễn Quốc Huy
+- Lương Minh Thuận
 
-🌐 **Landing Page & Reports:** [🔗 ML4u - Học Sâu và Ứng dụng CO3133](https://caotaytang.github.io/DL_page/)
+---
+
+## 🌟 Trực quan hóa & Báo cáo Tương tác
+Toàn bộ kết quả nghiên cứu, bảng xếp hạng mô hình và các tiện ích dùng thử trực tiếp (ChatUI/Gradio) được trình bày chi tiết trên **Hệ thống HTML Report**:
+
+👉 **[Truy cập Landing Page Chính - ML4u DL Projects](https://caotaytang.github.io/DL_page/)**
 
 ---
 
 ## 🚀 Projects Overview
 
-Repo này chứa các dự án bài tập lớn trong khuôn khổ môn học Học Sâu và Ứng dụng (CO3133):
+Repository này chứa toàn bộ mã nguồn, tài liệu và hệ thống deploy HTML cho các bài tập lớn môn Học Sâu và Ứng dụng.
 
-| Project | Domain | Status | Landing Page | Demo (Colab/Notebook) |
-| :--- | :--- | :---: | :--- | :--- |
-| **BTL1 – Phân loại Ảnh (CNN/ViT)** | Computer Vision | ✅ Completed | [Báo cáo BTL1](assignment1.html) | [Open DL_Assignment1_Image.ipynb](DL_Assignment1_Image.ipynb) |
-| **BTL1 – Phân loại Văn bản (RNN/Transformer)** | NLP / Text Data | ✅ Completed | [Báo cáo BTL1](assignment1.html) | [Open DL_BTL1_Text.ipynb](DL_BTL1_Text.ipynb) |
-| **BTL 1 – Đa phương thức (Zero/Few-shot)** | Multimodal | ⏳ In Progress | - | - |
-
----
-
-## 📊 Nội dung học thuật
-
-Mỗi bài tập lớn được triển khai với luồng nghiên cứu sâu, bao gồm các bước chính:
-
-- Khám phá và phân tích bộ dữ liệu ảnh, văn bản thực tế.
-- Tiền xử lý dữ liệu & Data Augmentation.
-- Xây dựng mô hình với các block hiện đại (ResNet, Vision Transformer, Transformer, LSTM).
-- Fine-tune các pre-trained models, đánh giá & so sánh hiệu suất qua Accuracy, F1-Score.
-- Viết báo cáo chuẩn hóa và thảo luận kết quả nghiên cứu cho môn Học Sâu và Ứng dụng CO3133.
+| 🗂️ Bài tập lớn | Trạng thái | Báo cáo chi tiết | Cấu trúc code | Demo Notebook |
+| :--- | :---: | :--- | :--- | :--- |
+| **1. Phân loại Ảnh (Image Classification)**<br><sub>ResNet, EfficientNet, ViT, Swin Transformer</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Image](assignment1_image.html) | Notebook thuần | [DL_Assignment1_Image.ipynb](DL_Assignment1_Image.ipynb) |
+| **2. Phân loại Văn bản (Text Classification)**<br><sub>RNN, LSTM, Text Transformer</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Text](assignment1_text.html) | Notebook thuần | [DL_BTL1_Text.ipynb](DL_BTL1_Text.ipynb) |
+| **3. Đa phương thức (Multimodal Classification)**<br><sub>Zero-Shot CLIP, LoRA Few-Shot CLIP, ONNX</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Multimodal](assignment1_multimodal.html) | Gradio / HuggingFace | 🚀 Tích hợp trong báo cáo |
 
 ---
 
-## 📂 Repo Structure
+## 🛠️ Công Nghệ Sử Dụng
+
+- **Deep Learning Framework:** PyTorch, Transformers (Hugging Face), PEFT (LoRA).
+- **Computer Vision & NLP:** Torchvision, ViT, Swin, CLIP.
+- **Explainable AI (XAI):** GradCAM (đối với CNN architectures), EigenCAM & Attention Rollout (đối với Transformer architectures).
+- **Optimization & Deployment:** ONNX Runtime, Gradio Blocks.
+- **Frontend / Reporting:** Vanilla HTML5/CSS3/JS, Plotly (Interactive Charts).
+
+---
+
+## 📂 Repository Structure
 
 ```text
 DL_page/
-│── assets/
-│   │── css/                    # Custom CSS
-│   │── images/                 # Hình ảnh trích xuất từ EDA và Charts
-│   │── js/                     # Scripts tương tác (Intersection Observers)
-│── DL_Assignment1_Image.ipynb  # Notebook thực nghiệm dữ liệu Ảnh
-│── DL_BTL1_Text.ipynb          # Notebook thực nghiệm dữ liệu Văn bản
-│── spec.md                     # Tài liệu tham khảo, yêu cầu đồ án
-│── index.html                  # Landing Page trang chủ
-│── assignment1.html            # Báo cáo BTL1 style Research
-│── README.md                   # Thông tin project
+├── assets/                     # Tài nguyên nội dung tĩnh (Data/Images)
+│   ├── css/                    # Custom CSS framework cho báo cáo
+│   ├── images/                 # Ảnh EDA, Heatmaps, Attention Rollout
+│   ├── js/                     # JS Hooks cho Intersection Observers
+│   └── plots/                  # Plotly HTML Visualizations (Latency, Loss, vv)
+├── app.py                      # (Multimodal) Gradio application file
+├── benchmark.py                # Pipeline đo đạc P50/P90/P99 latency
+├── export_onnx.py              # Export model PyTorch sang ONNX
+├── index.html                  # Giao diện Landing Page toàn project
+├── assignment1_*.html          # Các site báo cáo tương ứng cho từng phần
+└── *.ipynb                     # Các file jupyter notebook training gốc
 ```
 
 ---
 
-## ▶️ Usage
+## ▶️ Xem báo cáo nội bộ (Local Usage)
 
-Clone repo và trải nghiệm hệ thống:
+Clone repository này về máy và dùng Live Server để chạy hệ thống HTML, giúp load đầy đủ các interactive plots (`iframes`):
 
 ```bash
+# 1. Clone repository
 git clone https://github.com/caoTayTang/DL_page.git
 cd DL_page
 
-# Để xem Landing Page, mở file index.html qua Live Server hoặc trình duyệt:
-# Hoặc tham khảo trực tiếp trên GitHub Pages.
+# 2. Khởi chạy HTTP Server nhẹ (Python)
+python -m http.server 8000
+
+# 3. Mở trình duyệt tại địa chỉ:
+# http://localhost:8000
 ```
 
-**Môi trường thực thi cho Notebooks:**
-Các notebook `.ipynb` được khuyến nghị mở và chạy thử nghiệm trên Google Colab với cấu hình GPU (T4 hoặc L4) do kích thước mô hình Pre-trained lớn.
+> **Lưu ý:** Các notebook `.ipynb` chứa quá trình training với pre-trained model dung lượng lớn, hãy mở trên Google Colab với GPU (T4 hoặc ưu tiên L4) để có thể chạy mượt mà nhất.
