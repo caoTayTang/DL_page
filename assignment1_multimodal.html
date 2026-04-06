@@ -901,6 +901,7 @@
             <a href="#data-split">Data Split</a>
             <a href="#model-selection">Model Selection</a>
             <a href="#architecture">Architecture</a>
+            <a href="#hyperparams">Loss strategy</a>
             <a href="#training">Training</a>
             <a href="#comparison">Comparison</a>
             <a href="#interpretability">Interpretability</a>
@@ -934,6 +935,44 @@
                     <iframe src="assets/plots/genre_distribution.html" width="100%" height="450px" style="border:none;"></iframe>
                     <figcaption style="background:var(--panel);">Hình 2.1: Phân bố các nhãn thể loại (Genres Distribution) trên tập huấn luyện mẫu thực tế, phản ánh rõ rệt sự chênh lệch tần suất giữa các nhãn phổ biến (Drama, Comedy) và nhãn hiếm (Short, Film-Noir).</figcaption>
                 </figure>
+            </div>
+            
+            <h4 style="margin-top: 2rem; margin-bottom: 0.5rem;">Sự Mở Rộng Thống Kê Dữ Liệu (Advanced EDA)</h4>
+            <p>Để lượng hóa chính xác mức độ thử thách của bài toán Multimodal, ta tiến hành 4 phép phân tích cốt lõi (sử dụng Matplotlib/Seaborn):</p>
+            <ul style="margin-left:1.8rem; margin-bottom:1rem; color:var(--muted); font-size:0.95rem; line-height:1.6;">
+                <li><strong>1. Label Co-occurrence Matrix:</strong> Mô tả tần suất xuất hiện đồng thời giữa các nhãn (e.g., Action thuờng đi chung với Adventure, Crime đi chung với Thriller). Đây là cơ sở để mạng học được tính tương quan ẩn (hidden correlations).</li>
+                <li><strong>2. Modality Correlation:</strong> Đối chiếu độ dài của cốt truyện (Text length) vs. Độ phức tạp của hình ảnh (Color distribution/Entropy) để phát hiện signature: phim tài liệu thường chứa văn bản rất dài nhưng poster đơn giản.</li>
+                <li><strong>3. Label Cardinality & Density:</strong> Tính toán trung bình lượng genre/phim. Sự thưa thớt đạt cực đại tạo ra vệt 'long-tail' nơi một số phim có đến 5 nhãn trong khi đa phần chỉ có 1 nhãn.</li>
+                <li><strong>4. K-Shot Distribution Verification:</strong> Biểu đồ Before vs. After của quá trình stratified sampling (K=16, 32, 64) nhằm nghiệm chứng hiệu quả chống đuôi dài của thuật toán chia tập.</li>
+            </ul>
+
+            <div class="code-box">
+<pre><code class="language-python"># 1. Label Co-occurrence Matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+co_matrix = np.dot(y_train.T, y_train)
+np.fill_diagonal(co_matrix, 0)
+plt.figure(figsize=(10, 8))
+sns.heatmap(co_matrix, cmap='viridis', xticklabels=genres, yticklabels=genres)
+plt.title('Genre Co-occurrence Heatmap')
+plt.show()
+
+# 3. Label Cardinality
+cardinality = y_train.sum(axis=1)
+plt.hist(cardinality, bins=range(1, 8), align='left', rwidth=0.8, color='#6d9c82')
+plt.title('Label Cardinality (Genres per Movie)')
+plt.xlabel('Number of Genres')
+plt.show()
+
+# 4. K-Shot Verification
+plt.plot(genres, original_counts, label='Original Imbalance', color='red')
+plt.plot(genres, k_shot_counts, label='K-Shot Balanced', color='green')
+plt.legend()
+plt.title('Before vs After Stratified Sampling')
+plt.show()
+</code></pre>
             </div>
         </section>
 
@@ -985,22 +1024,74 @@
                 <li><strong>Classifier Head:</strong> Vector phân loại đi qua hàm thất thoát <code>BCEWithLogitsLoss</code>. Ma trận <code>pos_weight</code> được tích hợp để tự động tăng cấu trúc phạt đối với các nhãn thiểu số (rare genres), đẩy lùi nguy cơ sụp đổ mô hình (collapse).</li>
             </ul>
             
-            <div style="background:#223730; padding:1.5rem; border-radius:12px; margin-bottom:1rem; color:#bcf0d7; font-family:monospace; cursor:help; overflow-x:auto; line-height: 1.5; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);" title="PyTorch Impl: peft_model = get_peft_model(model, LoraConfig(r=8, alpha=16, target_modules=['q_proj', 'v_proj', 'fc1']))">
-<pre style="margin: 0;">
-                              [ Visual Inputs  ]               [ Textual Inputs ]
-                                      |                                |
-   (LoRA injected in QKV Blocks) -> [ ViT Transformer]      [ Text Transformer ] <- (LoRA injected in Attention)
-                                      |                                |
-                              [ Visual Embed: 512 ]            [ Text Embed: 512 ]
-                                      \                                /
-                                       \-- L2 Norm  ---  L2 Norm -----/
-                                                 \      /
-                                           [ Concatenate: 1024 ]
-                                                     |
-                                   [ MLP Classifier Head w/ Dropout ]
-                                                     |
-                                      [ Output Logits: 23 Genres ]</pre>
-               <p style="color:#6d9c82; font-size:0.8rem; margin-top:0.8rem; text-align:right; font-family:'Be Vietnam Pro', sans-serif;">* Hover over diagram to see underlying PyTorch implementation details.</p>
+            <div style="background:#1e1e1e; padding:1.5rem; border-radius:12px; margin-bottom:1rem; position: relative;">
+                <div class="mermaid" id="multimodal-diagram">
+flowchart TD
+    classDef lora fill:#3730a3,stroke:#8b5cf6,stroke-width:2px,color:#fff
+    classDef norm fill:#065f46,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef fuse fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff
+    classDef base fill:#1f2937,stroke:#4b5563,stroke-width:1px,color:#e5e7eb
+
+    subgraph Vision_Stream [Vision Stream]
+        V1[Visual Inputs]:::base --> V2[ViT-B/32 Transformer]:::lora
+        V2 --> V3[Visual Embed: 512]:::base
+    end
+
+    subgraph Text_Stream [Text Stream]
+        T1[Textual Inputs]:::base --> T2[Text Transformer]:::lora
+        T2 --> T3[Text Embed: 512]:::base
+    end
+
+    V3 --> N1[L2 Normalization]:::norm
+    T3 --> N2[L2 Normalization]:::norm
+
+    N1 --> F1{Concatenate 1024-dim}:::fuse
+    N2 --> F1
+
+    F1 --> C1[MLP Classifier Head + Dropout]:::base
+    C1 --> O1((Output Logits: 23 Genres)):::base
+                </div>
+                <div id="diagram-tooltip" style="position: absolute; display: none; background: rgba(15, 23, 42, 0.95); color: #22d3ee; padding: 0.8rem; border-radius: 8px; border: 1px solid #06b6d4; font-family: monospace; font-size: 0.85rem; z-index: 100; pointer-events: none; width: max-content; box-shadow: 0 4px 15px rgba(0,0,0,0.5);"></div>
+                <script type="module">
+                    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+                    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+
+                    // PyTorch hover logic
+                    const tooltipData = {
+                        'ViT-B/32 Transformer': 'LoRA QKV: nn.Linear + LowRankAdapter(in_feat, out_feat, r=8)\nForward: h = W₀x + (α/r)BAx',
+                        'Text Transformer': 'LoRA Attention: nn.Linear + LowRankAdapter(in_feat, out_feat, r=8)\nForward: h = W₀x + (α/r)BAx',
+                        'L2 Normalization': 'F.normalize(embed, p=2, dim=1)\nPrevents modality dominance',
+                        'Concatenate 1024-dim': 'torch.cat([l2_norm(v), l2_norm(t)], dim=-1)\nFusion projection ready',
+                        'MLP Classifier Head + Dropout': 'nn.Sequential(\n  nn.Linear(1024, 512),\n  nn.Dropout(0.2),\n  nn.Linear(512, 23)\n)'
+                    };
+
+                    window.addEventListener('load', () => {
+                        setTimeout(() => {
+                            const nodes = document.querySelectorAll('.mermaid .node');
+                            const tooltip = document.getElementById('diagram-tooltip');
+                            const container = document.getElementById('multimodal-diagram');
+                            
+                            nodes.forEach(node => {
+                                const text = node.textContent.trim();
+                                if(tooltipData[text]) {
+                                    node.style.cursor = 'help';
+                                    node.addEventListener('mouseenter', (e) => {
+                                        tooltip.innerText = tooltipData[text];
+                                        tooltip.style.display = 'block';
+                                    });
+                                    node.addEventListener('mousemove', (e) => {
+                                        const rect = container.getBoundingClientRect();
+                                        tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+                                        tooltip.style.top = (e.clientY - rect.top + 15) + 'px';
+                                    });
+                                    node.addEventListener('mouseleave', () => {
+                                        tooltip.style.display = 'none';
+                                    });
+                                }
+                            });
+                        }, 2000); // give mermaid time to render
+                    });
+                </script>
             </div>
 
             <div style="background:#f5faf5; padding:1.2rem; border-left:4px solid var(--accent-2); border-radius:8px; margin-bottom:1.2rem;">
@@ -1027,9 +1118,34 @@ logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
             </div>
         </section>
 
-        <section class="section-card reveal" id="training">
+        <section class="section-card reveal" id="hyperparams">
             <div class="section-head">
                 <span class="idx">06</span>
+                <h2>Hyper-parameter Strategy & Loss Optimization</h2>
+            </div>
+            <p style="margin-bottom: 1rem;">Quá trình tối ưu hoá bài toán đa nhãn với đặc thù thưa thớt nhãn yêu cầu thiết kế hàm loss và cấu hình siêu tham số tinh tế.</p>
+            
+            <div style="background:#f5faf5; padding:1.5rem; border-radius:12px; border-left: 5px solid var(--accent); margin-bottom: 1.5rem;">
+                <h4 style="color:#2f3f38; margin-bottom:0.8rem;">1. Tại sao BCEWithLogitsLoss lại Superior đối với Multi-label?</h4>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--muted); margin-bottom: 1rem;">
+                    BCEWithLogitsLoss kết hợp tầng <code>Sigmoid</code> và <code>BCELoss</code> vào duy nhất một class, mang tính ổn định số học (numerical stability) vượt trội so với sử dụng hàm Softmax. Với bài toán mà 1 bộ phim vừa có thể là "Action" vừa là "Comedy", <strong>CrossEntropyLoss là phi thực tế</strong> bởi nó giả định tổng xác suất của mọi nhãn phải bằng 1 (chỉ có duy nhất 1 nhãn đúng). Ngược lại, BCEWithLogitsLoss xử lý từng nơ-ron nhãn một cách hoàn toàn độc lập, dự đoán nhãn nhị phân dạng Independent Bernoulli cho chính xác 23 genres song song.
+                </p>
+                
+                <h4 style="color:#2f3f38; margin-bottom:0.8rem;">2. Đối phó 95% Sparse Matrix bằng <code>pos_weight</code></h4>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--muted); margin-bottom: 1rem;">
+                    Bởi ma trận MM-IMDB chứa hơn 95% giá trị <code>0</code> (phần lớn nhãn là Negative), một mô hình cơ bản sẽ dính "Cạm bẫy Collapse" – luôn luôn dự đoán kết quả là <code>0</code> toàn dải để thu về accuracy 95%. Tham số <code>pos_weight</code> được cài cắm để trừng phạt lỗi False Negatives mạnh gấp nhiều lần. Khi mô hình dự đoán sai một nhãn Positive (nhãn số 1 - cực kiếm gặp), hàm loss sẽ nhân trọng số này lên lỗi thất thoát nhằm ép Gradient dịch chuyển về hướng ưu tiên phát hiện ra đối tượng thiểu số.
+                </p>
+
+                <h4 style="color:#2f3f38; margin-bottom:0.8rem;">3. Cơ chế Khóa Nhận Thức: LoRA Ratio ($\alpha/r$)</h4>
+                <p style="font-size:0.95rem; line-height:1.6; color:var(--muted);">
+                    Hệ số Scale của LoRA hoạt động theo dạng <code>scale = $\alpha / r$</code>. Với r=8 và $\alpha=16$, scale được khóa cứng ở mức 2. Con số scaling này là phòng tuyến tối đa giúp mạng Neural <strong>không bị Catastrophic Forgetting</strong> (chứng quên kiến thức cục bộ). Thay vì Fine-tuning chập chờn toàn bộ tỷ trọng của backbone Transformer làm vỡ không gian pre-trained, tỷ lệ chuẩn xác này giữ module LoRA chỉ đóng vai trò như lực "Push" nhỏ để định vị lại (Alignment) bề mặt tri thức điện ảnh của MM-IMDB chứ không tàn phá nền tảng ViT/Transformer khổng lồ bên dưới.
+                </p>
+            </div>
+        </section>
+
+        <section class="section-card reveal" id="training">
+            <div class="section-head">
+                <span class="idx">07</span>
                 <h2>Training Logs</h2>
             </div>
             <p>Biểu đồ quá trình huấn luyện theo phong cách WandB (Loss và Macro F1 curves).</p>
@@ -1038,7 +1154,7 @@ logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
 
         <section class="section-card reveal" id="comparison">
             <div class="section-head">
-                <span class="idx">07</span>
+                <span class="idx">08</span>
                 <h2>Comparison (Metrics)</h2>
             </div>
             <p>Bảng so sánh Zero-Shot và các bản LoRA K=16/32/64 về Metric (F1, mAP) và Cost (Params, Time).</p>
@@ -1047,7 +1163,7 @@ logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
 
         <section class="section-card reveal" id="interpretability">
             <div class="section-head">
-                <span class="idx">08</span>
+                <span class="idx">09</span>
                 <h2>Interpretability (Attention Rollout)</h2>
             </div>
             <p>Mô hình Transformer-native sử dụng Attention Rollout phân loại vùng trọng điểm trên ảnh các phim (ViT-native, không dùng phương pháp grad-based như GradCAM).</p>
@@ -1098,7 +1214,7 @@ logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
 
         <section class="section-card reveal" id="demo">
             <div class="section-head">
-                <span class="idx">09</span>
+                <span class="idx">10</span>
                 <h2>Thử nghiệm trực tiếp trên Gradio - Hugging Face Space</h2>
             </div>
              
@@ -1127,7 +1243,7 @@ logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
 
         <section class="section-card reveal" id="efficiency">
             <div class="section-head">
-                <span class="idx">10</span>
+                <span class="idx">11</span>
                 <h2>Efficiency & Latency</h2>
             </div>
             <p>
