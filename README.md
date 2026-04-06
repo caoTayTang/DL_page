@@ -36,7 +36,7 @@ Repository này chứa toàn bộ mã nguồn, tài liệu và hệ thống depl
 | :--- | :---: | :--- | :--- | :--- |
 | **1. Phân loại Ảnh (Image Classification)**<br><sub>ResNet, EfficientNet, ViT, Swin Transformer</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Image](assignment1_image.html) | Notebook thuần | [DL_Assignment1_Image.ipynb](DL_Assignment1_Image.ipynb) |
 | **2. Phân loại Văn bản (Text Classification)**<br><sub>RNN, LSTM, Text Transformer</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Text](assignment1_text.html) | Notebook thuần | [DL_BTL1_Text.ipynb](DL_BTL1_Text.ipynb) |
-| **3. Đa phương thức (Multimodal Classification)**<br><sub>Zero-Shot CLIP, LoRA Few-Shot CLIP, ONNX</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Multimodal](assignment1_multimodal.html) | Gradio / HuggingFace | 🚀 Tích hợp trong báo cáo |
+| **3. Đa phương thức (Multimodal Classification)**<br><sub>Zero-Shot CLIP, LoRA Few-Shot CLIP, ONNX</sub> | ✅ **Hoàn thành** | [📄 Xem Báo Cáo Multimodal](assignment1_multimodal.html) | Gradio / HuggingFace | [DL_Assignment1_Multimodal.ipynb](DL_Assignment1_Multimodal.ipynb) |
 
 ---
 
