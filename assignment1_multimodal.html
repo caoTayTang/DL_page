@@ -925,10 +925,16 @@
         <section class="section-card reveal" id="eda">
             <div class="section-head">
                 <span class="idx">02</span>
-                <h2>EDA (Exploratory Data Analysis)</h2>
+                <h2>EDA (Exploratory Data Analysis) & Thống kê Dữ liệu</h2>
             </div>
-            <p>Phân bố các nhãn thể loại trên tập dữ liệu và vài sample poster.</p>
-            <iframe src="assets/plots/genre_distribution.html" width="100%" height="500px" style="border:1px solid var(--line); border-radius:var(--radius); margin-bottom: 1rem;"></iframe>
+            <p>Phân tích sâu tập dữ liệu MM-IMDB cho thấy tính chất đặc thù của bài toán phân loại đa nhãn (multi-label) trong không gian điện ảnh. Đa số các bộ phim chỉ sở hữu từ 1 đến 3 thể loại trong tổng số 23 nhãn có sẵn, dẫn đến ma trận nhãn thưa thớt (sparse matrix) với hơn 95% giá trị là <code>0</code>. Đặc tính mất cân bằng nghiêm trọng (extreme class imbalance) và phân bố đuôi dài (long-tail distribution) này đặt ra thách thức lớn, dễ khiến mô hình rơi vào "bẫy" giả định toàn bộ nhãn là 0 (collapse). Vì vậy, kỹ thuật lấy mẫu K-shot và áp dụng trọng số mảng <code>pos_weight</code> được sử dụng như giải pháp triệt để.</p>
+            
+            <div class="figures-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem;">
+                <figure class="figure card-figure">
+                    <iframe src="assets/plots/genre_distribution.html" width="100%" height="450px" style="border:none;"></iframe>
+                    <figcaption style="background:var(--panel);">Hình 2.1: Phân bố các nhãn thể loại (Genres Distribution) trên tập huấn luyện mẫu thực tế, phản ánh rõ rệt sự chênh lệch tần suất giữa các nhãn phổ biến (Drama, Comedy) và nhãn hiếm (Short, Film-Noir).</figcaption>
+                </figure>
+            </div>
         </section>
 
         <section class="section-card reveal" id="data-split">
@@ -936,32 +942,31 @@
                 <span class="idx">03</span>
                 <h2>Data Split & K-shot Sampling</h2>
             </div>
-            <p>Dữ liệu được chia train/val/test theo tỉ lệ 70/15/15. Vì bài toán nhắm vào Few-Shot, tập huấn luyện được lấy mẫu ngẫu nhiên thành K mẫu mỗi lớp.</p>
+            <p>Dữ liệu được chia train/val/test theo tỉ lệ 70/15/15. Vì bài toán nhắm vào Few-Shot learning, tập huấn luyện được lấy mẫu ngẫu nhiên (stratified) đảm bảo mỗi lớp có ít nhất K mẫu để mô hình có đủ khái niệm cơ bản về từng thể loại.</p>
             <div class="kpis">
-                <div class="kpi"><div class="label">K-shot</div><div class="value">K = 16, 32, 64</div></div>
-                <div class="kpi"><div class="label">Train</div><div class="value">70%</div></div>
-                <div class="kpi"><div class="label">Validation</div><div class="value">15%</div></div>
-                <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
+                <div class="kpi"><div class="label">K-shot Configuration</div><div class="value">K = 16, 32, 64</div></div>
+                <div class="kpi"><div class="label">Train / Val / Test</div><div class="value">70% / 15% / 15%</div></div>
+                <div class="kpi"><div class="label">Zero-Shot Baseline</div><div class="value">Full Test Set</div></div>
             </div>
         </section>
 
         <section class="section-card reveal" id="model-selection">
             <div class="section-head">
                 <span class="idx">04</span>
-                <h2>Model Selection</h2>
+                <h2>Model Selection & Baseline</h2>
             </div>
-            <p>So sánh hai hướng tiếp cận chính: Zero-Shot sử dụng thẳng Text Embeddings làm classifier weights và LoRA Few-Shot train mảng Adapter trên CLIP Backbone.</p>
+            <p>Dự án thực hiện đánh giá chéo giữa 2 cấu hình tiếp cận (Approaches): Zero-Shot Inference truyền thống và Few-Shot Fine-tuning bằng cơ chế Parameter-Efficient Fine-Tuning (PEFT).</p>
             <div class="grid-2">
                 <div class="backbone-card">
                     <div class="head"><span>Zero-Shot CLIP</span><span>Baseline</span></div>
                     <div style="padding: 1.5rem; text-align: center; color: var(--muted); font-weight: 500;">
-                        Sử dụng prompt template "A movie poster for a {genre} movie". KHÔNG huấn luyện thêm.
+                        Khai thác tính chất Alignment Image-Text bằng Prompt Matrix: "A movie poster for a {genre} movie" nhân chập cosine similarity với ảnh. KHÔNG cập nhật tham số.
                     </div>
                 </div>
                 <div class="backbone-card">
-                    <div class="head"><span>LoRA CLIP</span><span>Fine-tuning</span></div>
+                    <div class="head"><span>LoRA CLIP Fine-tuning</span><span>Proposed</span></div>
                     <div style="padding: 1.5rem; text-align: center; color: var(--muted); font-weight: 500;">
-                        Thêm Linear Layers phụ trợ vào Q, V Attention Blocks. Huấn luyện trên K-shot samples.
+                        Tích hợp Low-Rank Adaptation (LoRA) vào QKV Attention Blocks của mảng Text/Vision Backbone. Dữ liệu huấn luyện ở mức K-shot.
                     </div>
                 </div>
             </div>
@@ -970,19 +975,48 @@
         <section class="section-card reveal" id="architecture">
             <div class="section-head">
                 <span class="idx">05</span>
-                <h2>Architecture</h2>
+                <h2>Architecture & Multimodal Fusion Stream</h2>
             </div>
-            <p>CLIP ViT-B/32 + LoRA configuration (r=8, alpha=16). Custom Classifier Head nhận ghép cặp Text + Image Embeddings.</p>
+            <p>Mô hình dựa trên cơ sở là <code>openai/clip-vit-base-patch32</code>. Kiến trúc được tùy biến dưới dạng Late Fusion Network đa phương thức, sử dụng cơ chế xử lý đồng thời (parallel streams) cho tín hiệu Hình ảnh và Văn bản (Cốt truyện). Các đặc trưng Vector sau khi thu được (512-dim) sẽ được chuẩn hóa cấp độ L2 (L2 Normalization) trước khi hợp nhất xuyên không gian bằng phép nối (Concatenate) thành vector 1024-dim. Thông qua Classifier Head đa tầng cùng hàm thất thoát <code>BCEWithLogitsLoss(pos_weight)</code>, mạng tự động trích xuất Tương tác Xuyên chiều (Cross-Modal Interactivity) giải quyết triệt để sự cố sụp đổ trọng F1.</p>
+            
+            <div style="background:#223730; padding:1.5rem; border-radius:12px; margin-bottom:1rem; color:#bcf0d7; font-family:monospace; cursor:help; overflow-x:auto; line-height: 1.5; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);" title="PyTorch Impl: peft_model = get_peft_model(model, LoraConfig(r=8, alpha=16, target_modules=['q_proj', 'v_proj', 'fc1']))">
+<pre style="margin: 0;">
+                              [ Visual Inputs  ]               [ Textual Inputs ]
+                                      |                                |
+   (LoRA injected in QKV Blocks) -> [ ViT Transformer]      [ Text Transformer ] <- (LoRA injected in Attention)
+                                      |                                |
+                              [ Visual Embed: 512 ]            [ Text Embed: 512 ]
+                                      \                                /
+                                       \-- L2 Norm  ---  L2 Norm -----/
+                                                 \      /
+                                           [ Concatenate: 1024 ]
+                                                     |
+                                   [ MLP Classifier Head w/ Dropout ]
+                                                     |
+                                      [ Output Logits: 23 Genres ]</pre>
+               <p style="color:#6d9c82; font-size:0.8rem; margin-top:0.8rem; text-align:right; font-family:'Be Vietnam Pro', sans-serif;">* Hover over diagram to see underlying PyTorch implementation details.</p>
+            </div>
+
+            <div style="background:#f5faf5; padding:1.2rem; border-left:4px solid var(--accent-2); border-radius:8px; margin-bottom:1.2rem;">
+                <h4 style="color:var(--accent-2); margin-bottom:0.5rem;">LoRA Integration (Low-Rank Adaptation)</h4>
+                <p style="margin-bottom:0.6rem;"><strong>Technical Approach:</strong> LoRA surgically alters the forward pass of massive Linear layers (such as the <code>q_proj</code> and <code>v_proj</code> matrices in Self-Attention blocks) by freezing the dense pre-trained weights <var>W<sub>0</sub></var> and introducing low-rank rank-decomposition trainable matrices <var>B</var> and <var>A</var>. The updated forward pass computes <code>h = W_0(x) + (α/r)*B(A(x))</code>. This bypasses computing enormous gradients and isolates knowledge extraction to minimal adapters.</p>
+                <p><strong>Simplified Intuition:</strong> Imagine learning a new painting style. Instead of scraping and repainting an entire canvas (full fine-tuning), LoRA acts like placing a thin, semi-transparent colored film over the masterpiece. You only physically paint on the colored film. This requires vastly less paint (parameters) but perfectly changes the visual tone to accomplish the new task, leaving the original masterpiece entirely intact!</p>
+            </div>
             <div class="code-box">
-<pre><code class="language-python"># CLIP LoRA Configuration
-peft_config = LoraConfig(
+<pre><code class="language-python"># CLIP LoRA Configuration & Custom Fusion Classifier
+lora_config = LoraConfig(
     r=8,
     lora_alpha=16,
-    target_modules=["q_proj", "v_proj"],
-    lora_dropout=0.1,
+    target_modules=["q_proj", "k_proj", "v_proj", "out_proj", "fc1", "fc2", "qkv", "proj"],
+    lora_dropout=0.05,
     bias="none",
+    task_type=TaskType.FEATURE_EXTRACTION,
     modules_to_save=["classifier_head"]
 )
+
+# Classifier Head Projection
+concat_features = torch.cat((image_features, text_features), dim=1) # 512 + 512 = 1024
+logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
 </code></pre>
             </div>
         </section>
@@ -1011,6 +1045,14 @@ peft_config = LoraConfig(
                 <h2>Interpretability (Attention Rollout)</h2>
             </div>
             <p>Mô hình Transformer-native sử dụng Attention Rollout phân loại vùng trọng điểm trên ảnh các phim (ViT-native, không dùng phương pháp grad-based như GradCAM).</p>
+            
+            <div style="background:#fffaf0; padding:1.2rem; border-left:4px solid var(--accent); border-radius:8px; margin-bottom:1.5rem;">
+                <h4 style="color:var(--accent); margin-bottom:0.5rem; font-size:1.1rem;">Decoding Attention Rollout Mechanisms</h4>
+                <p style="margin-bottom:0.5rem;"><strong>What it is:</strong> A visual mapping tool that tracks exactly where the Deep Learning model is "looking" when it makes its final prediction. Instead of treating the network like a black box, it forces the AI to highlight its focal points.</p>
+                <p style="margin-bottom:0.5rem;"><strong>How it works (Technically):</strong> Unlike CNN-based Grad-CAM which relies on gradient backward passes, Attention Rollout iteratively traverses the attention matrices across multiple Transformer blocks. It aggregates the raw self-attention heads, accounts for the residual identity connections <code>I</code> to track preserved spatial structures, and multiplies these maps across layers (<code>A_rollout = A_n * A_n-1 * ... * A_0</code>). We then isolate the vector connecting to the global <code>[CLS]</code> token to see which image patches/words contributed most rigidly to the output.</p>
+                <p><strong>Simplified Intuition:</strong> It visualizes the internal neural network's "eye-tracking". The heatmaps generated (like the red highlights below) actively prove that the AI isn't randomly guessing; it genuinely learns to focus on key facial expressions or pivotal vocabulary words to judge the film's genre.</p>
+            </div>
+            
             <div class="grid-2">
                 <div class="compare-item">
                     <div class="title">Attention Rollout: Parasite</div>
@@ -1083,6 +1125,18 @@ peft_config = LoraConfig(
                 Đánh giá tối ưu độ hiệu quả. LoRA chỉ tốn <b>0.83% tham số huấn luyện</b> (~60x nhỏ hơn) và tốc độ huấn luyện nhanh gấp <b>2.25x</b>.
             </p>
             <iframe src="assets/plots/latency_distribution.html" width="100%" height="450px" style="border:1px solid var(--line); border-radius:var(--radius); margin-bottom: 1rem;"></iframe>
+            
+            <div style="background:#fefcf7; padding:1.2rem; border:1px dashed #d8dfd2; border-radius:8px; margin-bottom:1.2rem;">
+                <h4 style="color:#2f3f38; margin-bottom:0.6rem; font-size:1.05rem;">Visualization Legend & Metrics Interpretation</h4>
+                <p style="font-size:0.9rem; color:var(--muted); margin-bottom:0.6rem;">Understanding the Inference Hardware Profiling:</p>
+                <ul style="margin-left:1.5rem; color:var(--muted); font-size:0.92rem; line-height: 1.7;">
+                    <li><strong>Colors & Plots:</strong> The <span style="color:#636EFA; font-weight:800;">Purple histograms</span> represent the baseline PyTorch execution latencies. The <span style="color:#EF553B; font-weight:800;">Red histograms</span> showcase the highly optimized ONNX inference, highlighting a distinct shift left (significantly faster speeds!).</li>
+                    <li><strong>P50 (Median Latency):</strong> The 50th percentile metric. Exactly 50% of the inference requests finished faster than this time limit. This represents the "average" real-world speed experienced by half of the user base.</li>
+                    <li><strong>P90 (90th Percentile):</strong> 90% of requests successfully resolved under this duration. Architectures use this metric as the golden standard for guaranteed responsiveness.</li>
+                    <li><strong>P99 (Tail Latency):</strong> Resolves the absolute worst-case scenario. Guaranteeing only the slowest 1% of inferences exceed this threshold ensures real-time production systems do not suffer stuttering.</li>
+                </ul>
+            </div>
+            
             <div class="kpis">
                 <div class="kpi"><div class="label">P50 Latency</div><div class="value">ONNX / TensorRT</div></div>
                 <div class="kpi"><div class="label">P90 Latency</div><div class="value">Optimized Inference</div></div>
