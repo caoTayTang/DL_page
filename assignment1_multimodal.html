@@ -925,10 +925,16 @@
         <section class="section-card reveal" id="eda">
             <div class="section-head">
                 <span class="idx">02</span>
-                <h2>EDA (Exploratory Data Analysis)</h2>
+                <h2>EDA (Exploratory Data Analysis) & Thống kê Dữ liệu</h2>
             </div>
-            <p>Phân bố các nhãn thể loại trên tập dữ liệu và vài sample poster.</p>
-            <iframe src="assets/plots/genre_distribution.html" width="100%" height="500px" style="border:1px solid var(--line); border-radius:var(--radius); margin-bottom: 1rem;"></iframe>
+            <p>Phân tích sâu tập dữ liệu MM-IMDB cho thấy tính chất đặc thù của bài toán phân loại đa nhãn (multi-label) trong không gian điện ảnh. Đa số các bộ phim chỉ sở hữu từ 1 đến 3 thể loại trong tổng số 23 nhãn có sẵn, dẫn đến ma trận nhãn thưa thớt (sparse matrix) với hơn 95% giá trị là <code>0</code>. Đặc tính mất cân bằng nghiêm trọng (extreme class imbalance) và phân bố đuôi dài (long-tail distribution) này đặt ra thách thức lớn, dễ khiến mô hình rơi vào "bẫy" giả định toàn bộ nhãn là 0 (collapse). Vì vậy, kỹ thuật lấy mẫu K-shot và áp dụng trọng số mảng <code>pos_weight</code> được sử dụng như giải pháp triệt để.</p>
+            
+            <div class="figures-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem;">
+                <figure class="figure card-figure">
+                    <iframe src="assets/plots/genre_distribution.html" width="100%" height="450px" style="border:none;"></iframe>
+                    <figcaption style="background:var(--panel);">Hình 2.1: Phân bố các nhãn thể loại (Genres Distribution) trên tập huấn luyện mẫu thực tế, phản ánh rõ rệt sự chênh lệch tần suất giữa các nhãn phổ biến (Drama, Comedy) và nhãn hiếm (Short, Film-Noir).</figcaption>
+                </figure>
+            </div>
         </section>
 
         <section class="section-card reveal" id="data-split">
@@ -936,32 +942,31 @@
                 <span class="idx">03</span>
                 <h2>Data Split & K-shot Sampling</h2>
             </div>
-            <p>Dữ liệu được chia train/val/test theo tỉ lệ 70/15/15. Vì bài toán nhắm vào Few-Shot, tập huấn luyện được lấy mẫu ngẫu nhiên thành K mẫu mỗi lớp.</p>
+            <p>Dữ liệu được chia train/val/test theo tỉ lệ 70/15/15. Vì bài toán nhắm vào Few-Shot learning, tập huấn luyện được lấy mẫu ngẫu nhiên (stratified) đảm bảo mỗi lớp có ít nhất K mẫu để mô hình có đủ khái niệm cơ bản về từng thể loại.</p>
             <div class="kpis">
-                <div class="kpi"><div class="label">K-shot</div><div class="value">K = 16, 32, 64</div></div>
-                <div class="kpi"><div class="label">Train</div><div class="value">70%</div></div>
-                <div class="kpi"><div class="label">Validation</div><div class="value">15%</div></div>
-                <div class="kpi"><div class="label">Test</div><div class="value">15%</div></div>
+                <div class="kpi"><div class="label">K-shot Configuration</div><div class="value">K = 16, 32, 64</div></div>
+                <div class="kpi"><div class="label">Train / Val / Test</div><div class="value">70% / 15% / 15%</div></div>
+                <div class="kpi"><div class="label">Zero-Shot Baseline</div><div class="value">Full Test Set</div></div>
             </div>
         </section>
 
         <section class="section-card reveal" id="model-selection">
             <div class="section-head">
                 <span class="idx">04</span>
-                <h2>Model Selection</h2>
+                <h2>Model Selection & Baseline</h2>
             </div>
-            <p>So sánh hai hướng tiếp cận chính: Zero-Shot sử dụng thẳng Text Embeddings làm classifier weights và LoRA Few-Shot train mảng Adapter trên CLIP Backbone.</p>
+            <p>Dự án thực hiện đánh giá chéo giữa 2 cấu hình tiếp cận (Approaches): Zero-Shot Inference truyền thống và Few-Shot Fine-tuning bằng cơ chế Parameter-Efficient Fine-Tuning (PEFT).</p>
             <div class="grid-2">
                 <div class="backbone-card">
                     <div class="head"><span>Zero-Shot CLIP</span><span>Baseline</span></div>
                     <div style="padding: 1.5rem; text-align: center; color: var(--muted); font-weight: 500;">
-                        Sử dụng prompt template "A movie poster for a {genre} movie". KHÔNG huấn luyện thêm.
+                        Khai thác tính chất Alignment Image-Text bằng Prompt Matrix: "A movie poster for a {genre} movie" nhân chập cosine similarity với ảnh. KHÔNG cập nhật tham số.
                     </div>
                 </div>
                 <div class="backbone-card">
-                    <div class="head"><span>LoRA CLIP</span><span>Fine-tuning</span></div>
+                    <div class="head"><span>LoRA CLIP Fine-tuning</span><span>Proposed</span></div>
                     <div style="padding: 1.5rem; text-align: center; color: var(--muted); font-weight: 500;">
-                        Thêm Linear Layers phụ trợ vào Q, V Attention Blocks. Huấn luyện trên K-shot samples.
+                        Tích hợp Low-Rank Adaptation (LoRA) vào QKV Attention Blocks của mảng Text/Vision Backbone. Dữ liệu huấn luyện ở mức K-shot.
                     </div>
                 </div>
             </div>
@@ -970,19 +975,54 @@
         <section class="section-card reveal" id="architecture">
             <div class="section-head">
                 <span class="idx">05</span>
-                <h2>Architecture</h2>
+                <h2>Architecture & Multimodal Fusion Stream</h2>
             </div>
-            <p>CLIP ViT-B/32 + LoRA configuration (r=8, alpha=16). Custom Classifier Head nhận ghép cặp Text + Image Embeddings.</p>
+            <p style="margin-bottom: 1rem;">Mô hình giải quyết bài toán bằng chiến lược <strong>Late Fusion</strong> với hai luồng xử lý song song (parallel streams) để trích xuất đặc trưng độc lập trước khi dung hợp:</p>
+            <ul style="margin-left:1.8rem; margin-bottom:1rem; color:var(--muted); font-size:0.95rem; line-height:1.6;">
+                <li><strong>Modality Streams:</strong> Sử dụng <code>ViT-B/32</code> cho xử lý điểm ảnh (image pixels) và Transformer Encoder cho các token văn bản.</li>
+                <li><strong>LoRA Injection:</strong> Toàn bộ trọng số gốc (pretrained weights) được đóng băng. Mô hình chỉ tiêm (inject) các ma trận cập nhật rank thấp (Low-Rank Adapters với r=8) trực tiếp vào các module Linear thuộc Q, K, V Projection và FFN. Các hàm tuyến tính lúc này vận hành theo chuẩn <code>y = W_0x + (α/r)BAx</code>.</li>
+                <li><strong>L2 Normalization & Fusion:</strong> Các embedding thu được (vector đặc trưng <code>[CLS]</code> và <code>[EOS]</code> kích thước 512-dim) bị ép chuẩn hoá Euclidean (L2 Norm). Bước này cực kỳ cốt lõi để thu hẹp khoảng cách biên độ gốc, ngăn chặn hiện tượng một tín hiệu phân cực lấn át tín hiệu còn lại (modality dominance) trước khi ghép nối chuỗi (Concatenation) thành vector 1024-dim.</li>
+                <li><strong>Classifier Head:</strong> Vector phân loại đi qua hàm thất thoát <code>BCEWithLogitsLoss</code>. Ma trận <code>pos_weight</code> được tích hợp để tự động tăng cấu trúc phạt đối với các nhãn thiểu số (rare genres), đẩy lùi nguy cơ sụp đổ mô hình (collapse).</li>
+            </ul>
+            
+            <div style="background:#223730; padding:1.5rem; border-radius:12px; margin-bottom:1rem; color:#bcf0d7; font-family:monospace; cursor:help; overflow-x:auto; line-height: 1.5; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);" title="PyTorch Impl: peft_model = get_peft_model(model, LoraConfig(r=8, alpha=16, target_modules=['q_proj', 'v_proj', 'fc1']))">
+<pre style="margin: 0;">
+                              [ Visual Inputs  ]               [ Textual Inputs ]
+                                      |                                |
+   (LoRA injected in QKV Blocks) -> [ ViT Transformer]      [ Text Transformer ] <- (LoRA injected in Attention)
+                                      |                                |
+                              [ Visual Embed: 512 ]            [ Text Embed: 512 ]
+                                      \                                /
+                                       \-- L2 Norm  ---  L2 Norm -----/
+                                                 \      /
+                                           [ Concatenate: 1024 ]
+                                                     |
+                                   [ MLP Classifier Head w/ Dropout ]
+                                                     |
+                                      [ Output Logits: 23 Genres ]</pre>
+               <p style="color:#6d9c82; font-size:0.8rem; margin-top:0.8rem; text-align:right; font-family:'Be Vietnam Pro', sans-serif;">* Hover over diagram to see underlying PyTorch implementation details.</p>
+            </div>
+
+            <div style="background:#f5faf5; padding:1.2rem; border-left:4px solid var(--accent-2); border-radius:8px; margin-bottom:1.2rem;">
+                <h4 style="color:var(--accent-2); margin-bottom:0.5rem;">Cơ chế LoRA: Câu hỏi thường gặp</h4>
+                <p style="margin-bottom:0.6rem;"><strong>Hỏi: Mô hình thực sự học được điều gì từ LoRA với chưa tới 2% tham số? Nó có học nhận diện sự vật mới không?</strong></p>
+                <p><strong>Giải ảo (Intuition):</strong> Hoàn toàn không. Trọng số backbone CLIP đã có sẵn năng lực liên kết phân phối không gian hình ảnh/văn bản. LoRA rank-thấp <em>không tái trích xuất năng lực nhận dạng mới</em> (no new feature extraction). Thay vào đó, nó thuần túy tinh chỉnh phép chiếu không gian (affine transformation) nhằm phân rã và bóp méo (warp) các representations ngổn ngang tập trung thẳng vào một siêu mặt phẳng (hyperplane). Nơi đây cho phép tuyến tính hoá để chia tách ranh giới cho đúng 23 labels cụ thể trong tập dataset này. Sự hội tụ diễn ra tức thì trong khi triệt tiêu hoàn toàn rủi ro suy giảm nhận thức trí nhớ cũ (Catastrophic forgetting).</p>
+            </div>
             <div class="code-box">
-<pre><code class="language-python"># CLIP LoRA Configuration
-peft_config = LoraConfig(
+<pre><code class="language-python"># CLIP LoRA Configuration & Custom Fusion Classifier
+lora_config = LoraConfig(
     r=8,
     lora_alpha=16,
-    target_modules=["q_proj", "v_proj"],
-    lora_dropout=0.1,
+    target_modules=["q_proj", "k_proj", "v_proj", "out_proj", "fc1", "fc2", "qkv", "proj"],
+    lora_dropout=0.05,
     bias="none",
+    task_type=TaskType.FEATURE_EXTRACTION,
     modules_to_save=["classifier_head"]
 )
+
+# Classifier Head Projection
+concat_features = torch.cat((image_features, text_features), dim=1) # 512 + 512 = 1024
+logits = self.classifier_head(concat_features) # Output: [B, 23 Categories]
 </code></pre>
             </div>
         </section>
@@ -1011,6 +1051,17 @@ peft_config = LoraConfig(
                 <h2>Interpretability (Attention Rollout)</h2>
             </div>
             <p>Mô hình Transformer-native sử dụng Attention Rollout phân loại vùng trọng điểm trên ảnh các phim (ViT-native, không dùng phương pháp grad-based như GradCAM).</p>
+            
+            <div style="background:#fffaf0; padding:1.2rem; border-left:4px solid var(--accent); border-radius:8px; margin-bottom:1.5rem;">
+                <h4 style="color:var(--accent); margin-bottom:0.5rem; font-size:1.1rem;">Giải phẫu kỹ thuật Attention Rollout</h4>
+                <p style="margin-bottom:0.5rem;"><strong>What it is:</strong> Công cụ định lượng dạng visual attribution (hoàn toàn gradient-free) chuyên dùng truy vết các token/patch để xem phần thông tin nào có khả năng "sống sót" lọt qua nhiều hàm biến đổi tới tận classifier cuối.</p>
+                <p style="margin-bottom:0.5rem;"><strong>How it works (Technical):</strong> Cấu trúc Attention Block chính là một hệ ma trận định hướng (routing matrices). Trước tiên, ta bảo tồn tín hiệu rễ (identity) bằng cách bù thêm residual connections (<code>0.5 * A_l + 0.5 * I</code>). Lớp Attention Rollout kích kích chuỗi nhân ma trận liên hoàn (Matrix Scalar Iterations) gom chập từ tầng đích n ngược về tầng xuất phát 0: <code>A_rollout = A_n × A_n-1 ... × A_0</code>. Tại mặt phẳng Rollout tổng hợp, ta cô lập ra tensor tương tác thẳng với <code>[CLS]</code> token đại diện tổng để scale up (bilinear interpolation) thành màu trên lưới grid 2D.</p>
+                <p style="margin-bottom:0.5rem;"><strong>Intuition:</strong> Đóng vai trò là "máy quét Eye-Tracking" của bản thân mô hình Transformer, bác nghiệm sự phỏng đoán dựa vào hộp đen (black box guesswork) mà là suy diễn có cơ sở.</p>
+                <hr style="margin:0.8rem 0; border:0; border-top:1px dashed #e1cdc1;">
+                <p style="margin-bottom:0.4rem;"><strong>💡 Khắc Phục Lầm Tưởng: Màu đỏ đập vào mắt trên Heatmap thực sự có nghĩa là gì?</strong></p>
+                <p>Khu vực rực đỏ biểu thị vùng trọng số đạt giới hạn trên (peak attention magnitude). <strong>Mô hình không tư duy concept sự vật như não người.</strong> Sắc đỏ chỉ minh chứng vùng pixel tại ô đó đang phản xạ tương quan tĩnh học (statistical correlation) cosine hoàn hảo với label embedding định sẵn. Đặc biệt, nếu nền trống trơn (background darkness) vẫn cháy đỏ bừng — model đang ăn shortcut (ví dụ: bám vào tính chất "khung cảnh thiếu sáng độ phân giải bệch" làm thước đo cho nhãn <em>Thriller/Horror</em>), chứ model hoàn toàn không "tìm thấy con dao giấu ở góc tối"!</p>
+            </div>
+            
             <div class="grid-2">
                 <div class="compare-item">
                     <div class="title">Attention Rollout: Parasite</div>
@@ -1083,6 +1134,18 @@ peft_config = LoraConfig(
                 Đánh giá tối ưu độ hiệu quả. LoRA chỉ tốn <b>0.83% tham số huấn luyện</b> (~60x nhỏ hơn) và tốc độ huấn luyện nhanh gấp <b>2.25x</b>.
             </p>
             <iframe src="assets/plots/latency_distribution.html" width="100%" height="450px" style="border:1px solid var(--line); border-radius:var(--radius); margin-bottom: 1rem;"></iframe>
+            
+            <div style="background:#fefcf7; padding:1.2rem; border:1px dashed #d8dfd2; border-radius:8px; margin-bottom:1.2rem;">
+                <h4 style="color:#2f3f38; margin-bottom:0.6rem; font-size:1.05rem;">Phân tích phần cứng (Inference Profiling) & Ý nghĩa đồ thị</h4>
+                <p style="font-size:0.9rem; color:var(--muted); margin-bottom:0.6rem;">Diễn giải cấu trúc Histogram Biểu đồ Độ trễ phân phối (Latency Variance):</p>
+                <ul style="margin-left:1.5rem; color:var(--muted); font-size:0.92rem; line-height: 1.7;">
+                    <li><strong>Colors & Shift (Đọc Shape Data):</strong> Histogram màu Tím tương ứng với mô hình PyTorch thô. Histogram màu Đỏ là hệ thống export ONNX. Hãy quan sát cách đồ thị đỏ bị tịnh tiến mạnh về trái (shift left - tăng tốc thuần), rút hẹp dải phân bố biến thiên (decreased tail distribution - chống request nghẽn nút chai cục bộ).</li>
+                    <li><strong>P50 (Median Baseline):</strong> Điểm trung vị mà 50% khối tải inference vượt quan mốc nhịp thời gian đó. Dùng phản chiếu hành vi chuẩn (typical execution rate) với tài nguyên phần cứng bình thường.</li>
+                    <li><strong>P90 & P99 (Tail Latencies):</strong> Mốc giới hạn trần thời gian hứa hẹn hoàn tất gánh dứt điểm cho 90% (hay 99%) lượng truy vấn tổng. Đối với hạ tầng production REST API, một tác vụ trễ nhịp (timeout spike) đủ sức làm gián đoạn (block) quá trình cấp phát memory I/O cho batch sau, kéo dây chuyền deadlock.</li>
+                    <li><strong>💡 Khắc Phục Lầm Tưởng: Tại sao không nhìn Mean (Average) mà phải Optimize P99?</strong> Xoay sở ép P50 xuống sát 0ms vô nghĩa nếu dải P99 lại trồi lên chạm mốc 400ms (1 truy vấn kéo 100 truy vấn khác chết treo). Ép hệ thống chạy qua TensorRT Runtime thực chất là nén "cái đuôi bất đồng bộ" cực đoan đó sát lại P50, duy trì sai số xử lý thấp kỷ lục bảo vệ microservices không hỏng vỡ khi load concurrency.</li>
+                </ul>
+            </div>
+            
             <div class="kpis">
                 <div class="kpi"><div class="label">P50 Latency</div><div class="value">ONNX / TensorRT</div></div>
                 <div class="kpi"><div class="label">P90 Latency</div><div class="value">Optimized Inference</div></div>
