@@ -946,33 +946,27 @@
                 <li><strong>4. K-Shot Distribution Verification:</strong> Biểu đồ Before vs. After của quá trình stratified sampling (K=16, 32, 64) nhằm nghiệm chứng hiệu quả chống đuôi dài của thuật toán chia tập.</li>
             </ul>
 
-            <div class="code-box">
-<pre><code class="language-python"># 1. Label Co-occurrence Matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
+            <div class="kpis" style="margin-bottom: 1.5rem;">
+                <div class="kpi"><div class="label">Max Co-occurrence (Drama & Romance)</div><div class="value">2,184</div></div>
+                <div class="kpi"><div class="label">Max Label Cardinality</div><div class="value">9 Genres</div></div>
+                <div class="kpi"><div class="label">Avg Plot Summary Length</div><div class="value">104 Words</div></div>
+            </div>
 
-co_matrix = np.dot(y_train.T, y_train)
-np.fill_diagonal(co_matrix, 0)
-plt.figure(figsize=(10, 8))
-sns.heatmap(co_matrix, cmap='viridis', xticklabels=genres, yticklabels=genres)
-plt.title('Genre Co-occurrence Heatmap')
-plt.show()
-
-# 3. Label Cardinality
-cardinality = y_train.sum(axis=1)
-plt.hist(cardinality, bins=range(1, 8), align='left', rwidth=0.8, color='#6d9c82')
-plt.title('Label Cardinality (Genres per Movie)')
-plt.xlabel('Number of Genres')
-plt.show()
-
-# 4. K-Shot Verification
-plt.plot(genres, original_counts, label='Original Imbalance', color='red')
-plt.plot(genres, k_shot_counts, label='K-Shot Balanced', color='green')
-plt.legend()
-plt.title('Before vs After Stratified Sampling')
-plt.show()
-</code></pre>
+            <div class="grid-2" style="margin-bottom: 1rem;">
+                <figure class="figure card-figure" style="padding:0; overflow:hidden;">
+                    <iframe src="assets/plots/co_occurrence.html" width="100%" height="450px" style="border:none;"></iframe>
+                </figure>
+                <figure class="figure card-figure" style="padding:0; overflow:hidden;">
+                    <iframe src="assets/plots/modality_correlation.html" width="100%" height="450px" style="border:none;"></iframe>
+                </figure>
+            </div>
+            <div class="grid-2">
+                <figure class="figure card-figure" style="padding:0; overflow:hidden;">
+                    <iframe src="assets/plots/label_cardinality.html" width="100%" height="450px" style="border:none;"></iframe>
+                </figure>
+                <figure class="figure card-figure" style="padding:0; overflow:hidden;">
+                    <iframe src="assets/plots/k_shot.html" width="100%" height="450px" style="border:none;"></iframe>
+                </figure>
             </div>
         </section>
 
